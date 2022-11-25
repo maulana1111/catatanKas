@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "732363084015",
+    "project_id": "catatankas",
+    "storage_bucket": "catatankas.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732363084015:android:37cc53b5c4dc3aef584b1a",
+        "android_client_info": {
+          "package_name": "com.catatankas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "732363084015-tthb75t6qnbr345i244p8quggmhq20dd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.catatankas",
+            "certificate_hash": "c9172fd16980b26fbe0ea700efeb55937ad602c8"
+          }
+        },
+        {
+          "client_id": "732363084015-fl8rg588mh76g0urn7k6voi7v7ot2n43.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR7zylBhK8-2fz4jP39Buapb0SzO8Isrw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "732363084015-fl8rg588mh76g0urn7k6voi7v7ot2n43.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

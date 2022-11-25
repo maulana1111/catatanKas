@@ -33,7 +33,7 @@ function Logic() {
   console.log('hit');
   useEffect(() => {
     const setUser = async () => {
-      await db.getDataUser().then(data => {
+      await db.getDataUser('12344444').then(data => {
         if (data) {
           setUserLoggedIn(data.user_logged_in);
           setNamaUser(data.namaUser);

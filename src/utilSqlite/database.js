@@ -40,26 +40,29 @@ export default class Database {
     });
   }
 
-  async getDataUser() {
+  async getDataUser(id_user) {
     return new Promise((resolve, reject) => {
       this.initDb()
         .then(db => {
           db.transaction(async tx => {
             await tx.executeSql(
-              'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, nama_user VARCHAR(30))',
+              'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), nama_user VARCHAR(30), email VARCHAR(30), foto VARCHAR(255))',
             );
           })
             .then(async () => {
               db.transaction(async tx => {
                 await tx
-                  .executeSql('SELECT * FROM user', [])
+                  .executeSql('SELECT * FROM user WHERE id_user = ?', [id_user])
                   .then(([tx, res]) => {
                     if (res.rows.length !== 0) {
                       // console.log('res = ' + JSON.stringify(res.rows.item(0)));
                       const row = res.rows.item(0);
                       const {nama_user} = row;
                       const data_user = {
+                        id_user: id_user,
                         nama_user: nama_user,
+                        foto: foto,
+                        email: email,
                         user_logged_in: true,
                       };
                       resolve(data_user);
@@ -89,8 +92,8 @@ export default class Database {
           db.transaction(async tx => {
             await tx
               .executeSql(
-                'INSERT INTO user (nama_user) VALUES (?)',
-                [data.nama],
+                'INSERT INTO user (id_user, nama_user, email, foto) VALUES (?, ?, ?, ?)',
+                [data.id_user, data.nama_user, data.email, data.foto],
                 (tx, res) => {
                   if (res) {
                     console.log('Success Inserted = ' + res);
