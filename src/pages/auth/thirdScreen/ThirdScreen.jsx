@@ -74,9 +74,6 @@ function ThirdScreen() {
 
   const _doDownloadImage = async () => {
     let date = new Date();
-    console.log('foto = ' + linkFoto);
-    let ext = getExtention(linkFoto);
-    ext = '.' + ext[0];
     const {config, fs} = RNFetchBlob;
     let PictureDir = fs.dirs.PictureDir;
     const imageName =
@@ -97,11 +94,6 @@ function ThirdScreen() {
         console.log('res -> ', JSON.stringify(res));
         alert('Image For User Downloaded Successfully.');
       });
-  };
-
-  const getExtention = filename => {
-    // To get the file extension
-    return /[.]/.exec(filename) ? /[^.]+$/.exec(filename) : undefined;
   };
 
   const _isSignedIn = async () => {
