@@ -10,6 +10,12 @@ import Home from './src/pages/home/Home';
 import SecScreen from './src/pages/auth/secScreen/SecScreen';
 import ThirdScreen from './src/pages/auth/thirdScreen/ThirdScreen';
 
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+
 const db = new Database();
 const Stack = createNativeStackNavigator();
 function App() {
@@ -17,7 +23,7 @@ function App() {
     <NavigationContainer>
       <Provider store={store}>
         <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="app" component={Logic} />
+          <Stack.Screen name="App" component={Logic} />
         </Stack.Navigator>
       </Provider>
     </NavigationContainer>
@@ -25,48 +31,100 @@ function App() {
 }
 
 function Logic() {
-  const {user} = useSelector(state => state.stm);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
-  const [namaUser, setNamaUser] = useState('');
+  const [stateView, setStateView] = useState(false);
   const dispatch = useDispatch();
 
-  console.log('hit');
   useEffect(() => {
-    const setUser = async () => {
-      await db.getDataUser('12344444').then(data => {
-        if (data) {
-          setUserLoggedIn(data.user_logged_in);
-          setNamaUser(data.namaUser);
-          dispatch(
-            store({
-              nama: namaUser,
-            }),
-          );
+    GoogleSignin.configure({
+      webClientId:
+        '732363084015-fl8rg588mh76g0urn7k6voi7v7ot2n43.apps.googleusercontent.com',
+      offlineAccess: true,
+    });
+    async function _isSignedIn() {
+      const isSignedIn = await GoogleSignin.isSignedIn();
+      if (isSignedIn) {
+        const {id} = await _getCurrentUserInfo();
+        await db.getDataUser(id).then(data => {
+          if (data) {
+            const dt = {
+              id_user: data.idUser,
+              nama_user: data.nama_user,
+              email: data.email,
+              foto: data.foto,
+            };
+            dispatch(
+              storeUser({
+                dt,
+              }),
+            );
+            setUserLoggedIn(true);
+            setStateView(true);
+          }
+        });
+      }
+    }
+    async function _getCurrentUserInfo() {
+      try {
+        const userInfo = await GoogleSignin.signInSilently();
+        const {user} = JSON.parse(JSON.stringify(userInfo));
+        return user;
+      } catch (error) {
+        if (error.code === statusCodes.SIGN_IN_REQUIRED) {
+          console.log('user has not signed in yet');
+        } else {
+          console.log('some other error');
         }
-      });
-    };
-    setUser();
+      }
+    }
+
+    _isSignedIn();
   }, []);
+  console.log('status logged = ' + userLoggedIn);
 
-  return userLoggedIn === false ? AuthTab() : HomeTab();
-}
+  if (!stateView) return ;
 
-function AuthTab() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="SplashScreen" component={SplashScreen} />
+      {userLoggedIn === true ? (
+        <Stack.Screen
+          name="SplashScreen"
+          component={SplashScreen}
+          initialParams={{nextScreen: 'Home'}}
+        />
+      ) : (
+        <Stack.Screen
+          name="SplashScreen"
+          component={SplashScreen}
+          initialParams={{nextScreen: 'SecScreen'}}
+        />
+      )}
+      <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="SecScreen" component={SecScreen} />
       <Stack.Screen name="ThirdScreen" component={ThirdScreen} />
     </Stack.Navigator>
   );
 }
 
-function HomeTab() {
-  return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Home" component={Home} />
-    </Stack.Navigator>
-  );
+function Screen(userLoggedIn) {
+  <Stack.Navigator screenOptions={{headerShown: false}}>
+    {userLoggedIn === true ? (
+      <Stack.Screen
+        name="SplashScreen"
+        component={SplashScreen}
+        initialParams={{nextScreen: 'Home'}}
+      />
+    ) : (
+      <Stack.Screen
+        name="SplashScreen"
+        component={SplashScreen}
+        initialParams={{nextScreen: 'SecScreen'}}
+      />
+    )}
+    <Stack.Screen name="Home" component={Home} />
+    <Stack.Screen name="SecScreen" component={SecScreen} />
+    <Stack.Screen name="ThirdScreen" component={ThirdScreen} />
+  </Stack.Navigator>;
 }
 
 export default App;

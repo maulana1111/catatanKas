@@ -55,18 +55,15 @@ export default class Database {
                   .executeSql('SELECT * FROM user WHERE id_user = ?', [id_user])
                   .then(([tx, res]) => {
                     if (res.rows.length !== 0) {
-                      // console.log('res = ' + JSON.stringify(res.rows.item(0)));
-                      const row = res.rows.item(0);
-                      const {nama_user} = row;
+                      const row = JSON.parse(JSON.stringify(res.rows.item(0)));
                       const data_user = {
-                        id_user: id_user,
-                        nama_user: nama_user,
-                        foto: foto,
-                        email: email,
+                        id_user: row.id_user,
+                        nama_user: row.nama_user,
+                        foto: row.foto,
+                        email: row.email,
                         user_logged_in: true,
                       };
                       resolve(data_user);
-                      // this.closeDatabase(db);
                     }
                   });
               }).then(() => {
@@ -75,45 +72,52 @@ export default class Database {
             })
             .catch(er => {
               console.log(er);
+              // reject(er);r
             });
         })
         .catch(er => {
           console.log(er);
+          // reject(er);
         });
     });
   }
 
-  async addDataUser(data) {
-    console.log('nama = ' + data.nama);
+  async addDataUser({id_user, nama_user, email, foto}) {
     return new Promise((resolve, reject) => {
       this.initDb()
         .then(async db => {
-          resolve('hit');
           db.transaction(async tx => {
-            await tx
-              .executeSql(
-                'INSERT INTO user (id_user, nama_user, email, foto) VALUES (?, ?, ?, ?)',
-                [data.id_user, data.nama_user, data.email, data.foto],
-                (tx, res) => {
-                  if (res) {
-                    console.log('Success Inserted = ' + res);
-                    return res;
-                  }
-                },
-              )
-              .catch(err => {
-                console.log('error when insert user = ' + err);
-              });
-          })
-            .then(() => {
-              this.closeDatabase(db);
+            await tx.executeSql(
+              'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), nama_user VARCHAR(30), email VARCHAR(30), foto VARCHAR(255))',
+            );
+          }).then(() => {
+            db.transaction(async tx => {
+              await tx
+                .executeSql(
+                  'INSERT INTO user(id_user, nama_user, email, foto) VALUES(?, ?, ?, ?)',
+                  [id_user, nama_user, email, foto],
+                  (tx, res) => {
+                    if (res) {
+                      console.log('Success Inserted = ' + res);
+                      return res;
+                    }
+                  },
+                )
+                .catch(err => {
+                  console.log('error when insert user = ' + err);
+                });
             })
-            .catch(err => {
-              console.log('err 1 = ' + JSON.stringify(err));
-            });
+              .then(() => {
+                this.closeDatabase(db);
+              })
+              .catch(err => {
+                console.log('err 1 = ' + JSON.stringify(err));
+              });
+          });
         })
         .catch(err => {
           console.log('err = ' + err);
+          reject(err);
         });
     });
   }

@@ -18,125 +18,62 @@ import {
 } from '@react-native-google-signin/google-signin';
 import NetInfo from '@react-native-community/netinfo';
 import Database from '../../../utilSqlite/database';
+import {useDispatch} from 'react-redux';
+import {storeUser} from '../../../redux/features/stmSlice';
 
 import RNFetchBlob from 'rn-fetch-blob';
 
 const db = new Database();
+const date = new Date();
 
 function ThirdScreen() {
   const [idUser, setIdUser] = useState('');
   const [linkFoto, setLinkFoto] = useState('');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  // NetInfo.fetch().then(state => {
-  //   console.log("Connection type", state.type);
-  //   console.log("Is connected?", state.isConnected);
-  // })
+  const [image, setImage] = useState(
+    'image_' + Math.floor(date.getTime() + date.getSeconds() / 2) + '.jpg',
+  );
+
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
         '732363084015-fl8rg588mh76g0urn7k6voi7v7ot2n43.apps.googleusercontent.com',
       offlineAccess: true,
     });
-    _isSignedIn();
   }, []);
 
-  useEffect(() => {
-    if (linkFoto !== '') {
-      console.log('hitt');
-      _checkPermission();
-    }
-
-    async function _checkPermission() {
-      if (Platform.OS === 'ios') {
-        _doDownloadImage();
-      }
-
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          {
-            title: 'Storage Permission Required',
-            message: 'app need access to your storage to download Photo',
-          },
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('Storage Permission Granted.');
-          _doDownloadImage();
-        } else {
-          alert('Storage Permission Not Granted');
-        }
-      } catch (error) {
-        console.log('error = ' + error);
-      }
-    }
-  }, [linkFoto]);
-
-  const _doDownloadImage = async () => {
-    let date = new Date();
-    const {config, fs} = RNFetchBlob;
-    let PictureDir = fs.dirs.PictureDir;
-    const imageName =
-      'image_' + Math.floor(date.getTime() + date.getSeconds() / 2) + '.jpg';
-    let options = {
-      fileCache: true,
-      addAndroidDownloads: {
-        useDownloadManager: true,
-        notification: true,
-        path: PictureDir + '/' + imageName,
-        description: 'Image',
-      },
-    };
-    config(options)
-      .fetch('GET', linkFoto)
-      .then(res => {
-        // Showing alert after successful downloading
-        console.log('res -> ', JSON.stringify(res));
-        alert('Image For User Downloaded Successfully.');
-      });
-  };
-
-  const _isSignedIn = async () => {
-    const isSignedIn = await GoogleSignin.isSignedIn();
-    if (isSignedIn) {
-      alert('User is already signed in');
-      const data = await _getCurrentUserInfo();
-      setIdUser(data.id);
-      setName(data.name);
-      setEmail(data.email);
-      setLinkFoto(data.photo);
-    }
-    // setGettingLoginStatus(false);
-  };
-
-  _getCurrentUserInfo = async () => {
-    try {
-      const userInfo = await GoogleSignin.signInSilently();
-      // this.setState({userInfo});
-      const {user} = JSON.parse(JSON.stringify(userInfo));
-      // console.log(user);
-      return user;
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_REQUIRED) {
-        console.log('user has not signed in yet');
-      } else {
-        console.log('some other error');
-      }
-    }
-  };
-
-  const _signIn = async () => {
+  async function _signIn() {
     try {
       await GoogleSignin.hasPlayServices({
         showPlayServicesUpdateDialog: true,
       });
       const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
       const {user} = JSON.parse(JSON.stringify(userInfo));
-      setIdUser(user.id);
-      setName(user.name);
-      setEmail(user.email);
-      setLinkFoto(user.photo);
+      console.log('dt json = ' + user);
+      const dataSet = {
+        id_user: user.id,
+        nama_user: user.name,
+        email: user.email,
+        foto: image,
+      };
+      dispatch(
+        storeUser({
+          dataSet,
+        }),
+      );
+      db.addDataUser(dataSet)
+        .then(async res => {
+          await _checkPermission(user.photo);
+          console.log('res data = ' + res);
+          navigation.navigate('Home');
+        })
+        .catch(err => {
+          console.log('err = ' + err);
+        });
     } catch (error) {
       console.log(JSON.stringify(error));
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -149,7 +86,57 @@ function ThirdScreen() {
         console.log('some other error happened = ' + JSON.stringify(error));
       }
     }
-  };
+  }
+  async function _checkPermission(linkImage) {
+    if (Platform.OS === 'ios') {
+      _doDownloadImage();
+    }
+
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Storage Permission Required',
+          message: 'app need access to your storage to download Photo',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Storage Permission Granted.');
+        await _doDownloadImage(linkImage);
+      } else {
+        alert('Storage Permission Not Granted');
+      }
+    } catch (error) {
+      console.log('error = ' + error);
+    }
+  }
+
+  async function _doDownloadImage(linkImage) {
+    const {config, fs} = RNFetchBlob;
+    let PictureDir = fs.dirs.PictureDir;
+    // const imageName = image;
+    let options = {
+      fileCache: true,
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
+        path: PictureDir + '/' + image,
+        description: 'Image',
+      },
+    };
+
+    // console.log('data photo = ' + linkFoto);
+    config(options)
+      .fetch('GET', linkImage)
+      .then(res => {
+        // Showing alert after successful downloading
+        console.log('res -> ', JSON.stringify(res));
+        alert('Image For User Downloaded Successfully.');
+      })
+      .catch(err => {
+        console.log('err image = ' + err);
+      });
+  }
 
   return (
     <SafeAreaView style={Style.container}>

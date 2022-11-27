@@ -5,13 +5,15 @@ import {Style} from './style';
 import {useNavigation} from '@react-navigation/native';
 import MyStatusBar from '../component/StatusBar';
 
-function SplashScreen() {
+function SplashScreen(props) {
   const navigation = useNavigation();
+  const nxtScreen = props.route.params.nextScreen;
+  console.log('next screen = ' + nxtScreen);
 
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('SecScreen')
-    }, 3000)
+      navigation.navigate(nxtScreen);
+    }, 3000);
   }, []);
 
   return (
