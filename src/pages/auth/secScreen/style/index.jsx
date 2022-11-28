@@ -1,17 +1,6 @@
 import {StyleSheet} from 'react-native';
-import {StatusBar, Platform} from 'react-native';
-
-const STATUSBAR_HEIGHT = StatusBar.currentHeight;
-const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 
 export const Style = StyleSheet.create({
-  statusBar: {
-    height: STATUSBAR_HEIGHT,
-  },
-  appBar: {
-    backgroundColor: '#79B45D',
-    height: APPBAR_HEIGHT,
-  },
   container: {
     flex: 1,
     backgroundColor: '#40300F',
