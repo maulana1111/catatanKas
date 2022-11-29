@@ -8,22 +8,14 @@ function NavigationItem(props) {
 
   return (
     <View style={{marginHorizontal: 15}}>
-      <TouchableOpacity onPress={() => onChange(stateItem)}>
-        <DropShadow style={state === stateItem && style.styleShadow}>
-          <View
-            style={[
-              style.card,
-              state === stateItem
-                ? {backgroundColor: '#fff'}
-                : {backgroundColor: '#795B1B'},
-            ]}>
+      <TouchableOpacity>
+          <View style={style.card}>
             <Image
               source={image}
               style={{width: 36, height: 32, marginBottom: 8}}
             />
             <Text style={style.txt}>{text}</Text>
           </View>
-        </DropShadow>
       </TouchableOpacity>
     </View>
   );
@@ -31,9 +23,9 @@ function NavigationItem(props) {
 
 const style = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: '#795B1B',
     padding: 8,
-    width: 72,
+    width: 123,
     height: 94,
     justifyContent: 'center',
     alignItems: 'center',

@@ -14,21 +14,12 @@ import Card from './component/Card';
 import BottomSheet from '@gorhom/bottom-sheet';
 import BottomSheetNav from './component/BottomSheetNav';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import ScreenBottomSheetFilter from './component/BottomSheetFilter';
 
 function Home() {
-  // ref
-  // const bottomSheetRef = useRef(BottomSheet);
-
-  // // variables
-  // const snapPoints = useMemo(() => ['25%', '50%'], []);
-
-  // // callbacks
-  // const handleSheetChanges = useCallback(index => {
-  //   console.log('handleSheetChanges', index);
-  // }, []);
   return (
-    <SafeAreaView style={styles.container}>
-      <GestureHandlerRootView>
+    <GestureHandlerRootView style={styles.container}>
+      <SafeAreaView>
         <MyStatusBar backgroundColor="#40300F" barStyle="light-content" />
         <View
           style={{
@@ -62,8 +53,9 @@ function Home() {
           <Navigation />
         </View>
         <BottomSheetNav />
-      </GestureHandlerRootView>
-    </SafeAreaView>
+        <ScreenBottomSheetFilter />
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
 const styles = StyleSheet.create({
