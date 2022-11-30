@@ -16,7 +16,9 @@ import BottomSheetNav from './component/BottomSheetNav';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ScreenBottomSheetFilter from './component/BottomSheetFilter';
 
+
 function Home() {
+  
   return (
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaView>

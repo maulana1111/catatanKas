@@ -26,8 +26,10 @@ import {useDispatch, useSelector} from 'react-redux';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 60;
+import {useNavigation} from '@react-navigation/native';
 
 function BottomSheetNav() {
+  const navigation = useNavigation();
   const [condition, setCondition] = useState(false);
   const {conditionChildSheet} = useSelector(state => state.globalStm);
   const dispatch = useDispatch();
@@ -56,21 +58,19 @@ function BottomSheetNav() {
   });
 
   const handleFilter = async () => {
-    // condition ? setCondition(!condition) : setCondition(!condition);
     if (conditionChildSheet !== true) {
       translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50});
     } else {
       translateY.value = withSpring(-SCREEN_HEIGHT / 2, {damping: 50});
     }
-
-    console.log('condi = ' + conditionChildSheet);
     dispatch(storeGlobalChildSheet({condition: !conditionChildSheet}));
   };
 
   useEffect(() => {
-    console.log("parent = "+SCREEN_HEIGHT);
-    translateY.value = withSpring(-SCREEN_HEIGHT / 2, {damping: 50});
-  }, []);
+    conditionChildSheet
+      ? (translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50}))
+      : (translateY.value = withSpring(-SCREEN_HEIGHT / 2, {damping: 50}));
+  }, [conditionChildSheet]);
   return (
     <GestureDetector gesture={gesture}>
       <Animated.View style={[styles.container, rBottomSheetStyle]}>
@@ -88,16 +88,18 @@ function BottomSheetNav() {
               justifyContent: 'space-between',
               marginVertical: 7,
             }}>
-            <View style={styles.bgCard}>
-              <Image
-                source={require('../../../../assets/add.png')}
-                style={{
-                  width: 24,
-                  height: 24,
-                  marginLeft: '14%',
-                  marginTop: '14%',
-                }}
-              />
+            <View>
+              <TouchableOpacity style={styles.bgCard} onPress={() => navigation.navigate("FormTambahTransaksi")}>
+                <Image
+                  source={require('../../../../assets/add.png')}
+                  style={{
+                    width: 24,
+                    height: 24,
+                    marginLeft: '14%',
+                    marginTop: '14%',
+                  }}
+                />
+              </TouchableOpacity>
             </View>
             <View>
               <TouchableOpacity

@@ -9,6 +9,7 @@ import SplashScreen from './src/pages/auth/splashscreen/SplashScreen';
 import Home from './src/pages/home/home/Home';
 import SecScreen from './src/pages/auth/secScreen/SecScreen';
 import ThirdScreen from './src/pages/auth/thirdScreen/ThirdScreen';
+import FormTambah from './src/pages/home/home/screen/FormTambah';
 
 import {
   GoogleSignin,
@@ -103,6 +104,7 @@ function Logic() {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="SecScreen" component={SecScreen} />
       <Stack.Screen name="ThirdScreen" component={ThirdScreen} />
+      <Stack.Screen name="FormTambahTransaksi" component={FormTambah} />
     </Stack.Navigator>
   );
 }
