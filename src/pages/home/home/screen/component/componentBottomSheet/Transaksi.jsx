@@ -1,11 +1,14 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-function Transaksi({onClickCancel}) {
+function Transaksi({onClickCancel, onChangeState}) {
+  const handleClick = () => {
+    onClickCancel();
+  };
 
-    const handleClick = () =>{
-        onClickCancel()
-    }
+  const handleChangeState = e => {
+    onChangeState(e);
+  };
 
   return (
     <View style={{padding: 14}}>
@@ -18,46 +21,56 @@ function Transaksi({onClickCancel}) {
       <View style={{marginTop: 10}}>
         <Text style={styles.text2}>Transaksi</Text>
       </View>
-      <View style={{borderColor: '#FFD16C', borderBottomWidth: 1}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingVertical: 10,
-          }}>
-          <View style={{flexDirection: 'row'}}>
-            <View
-              style={[
-                styles.bgIcon,
-                {backgroundColor: 'rgba(49, 206, 93, 0.4)'},
-              ]}>
-              <Image source={require('../../assets/income.png')} />
+      <TouchableOpacity
+        onPress={() => {
+          handleChangeState('pemasukan');
+        }}>
+        <View style={{borderColor: '#FFD16C', borderBottomWidth: 1}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingVertical: 10,
+            }}>
+            <View style={{flexDirection: 'row'}}>
+              <View
+                style={[
+                  styles.bgIcon,
+                  {backgroundColor: 'rgba(49, 206, 93, 0.4)'},
+                ]}>
+                <Image source={require('../../assets/income.png')} />
+              </View>
+              <Text style={styles.text3}>Pemasukan</Text>
             </View>
-            <Text style={styles.text3}>Pemasukan</Text>
+            <Image source={require('../../assets/arrow_right.png')} />
           </View>
-          <Image source={require('../../assets/arrow_right.png')} />
         </View>
-      </View>
-      <View style={{borderColor: '#FFD16C', borderBottomWidth: 1}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingVertical: 10,
-          }}>
-          <View style={{flexDirection: 'row'}}>
-            <View
-              style={[
-                styles.bgIcon,
-                {backgroundColor: 'rgba(255, 89, 66, 0.4)'},
-              ]}>
-              <Image source={require('../../assets/outcome.png')} />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          handleChangeState('pengeluaran');
+        }}>
+        <View style={{borderColor: '#FFD16C', borderBottomWidth: 1}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingVertical: 10,
+            }}>
+            <View style={{flexDirection: 'row'}}>
+              <View
+                style={[
+                  styles.bgIcon,
+                  {backgroundColor: 'rgba(255, 89, 66, 0.4)'},
+                ]}>
+                <Image source={require('../../assets/outcome.png')} />
+              </View>
+              <Text style={styles.text3}>Pengeluaran</Text>
             </View>
-            <Text style={styles.text3}>Pengeluaran</Text>
+            <Image source={require('../../assets/arrow_right.png')} />
           </View>
-          <Image source={require('../../assets/arrow_right.png')} />
         </View>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }

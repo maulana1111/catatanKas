@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  ToastAndroid
 } from 'react-native';
 import MyStatusBar from '../../../auth/component/StatusBar';
 import {TextInput} from 'react-native-paper';
@@ -21,6 +22,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import Transaksi from './component/componentBottomSheet/Transaksi';
+import JenisTransaksi from './component/componentBottomSheet/JenisTransaksi';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 60;
@@ -28,6 +30,8 @@ const SEC_MAX_TRANSLATE_Y = -SCREEN_HEIGHT;
 
 function FormTambah() {
   const [stateScreen, setStateScreen] = useState('transaksi');
+  const [transaksi, setTransaksi] = useState('');
+  const [kategori, setKategori] = useState('');
   const translateY = useSharedValue(0);
   const translateDropShadow = useSharedValue(0);
   const rBottomSheetStyle = useAnimatedStyle(() => {
@@ -46,17 +50,57 @@ function FormTambah() {
     translateDropShadow.value = withSpring(SEC_MAX_TRANSLATE_Y, {
       damping: 50,
     });
-    translateY.value = withSpring(-SCREEN_HEIGHT / 3, {damping: 50});
+    translateY.value = withSpring(-SCREEN_HEIGHT / 4, {damping: 50});
   };
 
-  const handleCancelTransaksiClick = () => {
+  const handleChangeSetStateTransaksi = e => {
     translateDropShadow.value = withSpring(0, {
       damping: 50,
     });
     translateY.value = withSpring(0, {damping: 50});
+    setStateScreen('jenis');
+    setTransaksi(e);
   };
 
-  const handleJenisClick = () => {};
+  const handleJenisClick = () => {
+    if (transaksi === '') {
+      return ToastAndroid.showWithGravityAndOffset(
+        'Anda Harus Memilih Transaksi!',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+      );
+    }
+    translateDropShadow.value = withSpring(SEC_MAX_TRANSLATE_Y, {
+      damping: 50,
+    });
+    translateY.value = withSpring(-SCREEN_HEIGHT / 1.8, {damping: 50});
+  };
+  
+  const handleKategoirClick = () => {
+    if (transaksi === '') {
+      return ToastAndroid.showWithGravityAndOffset(
+        'Anda Harus Memilih Jenis Transaksi!',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+      );
+    }
+    translateDropShadow.value = withSpring(SEC_MAX_TRANSLATE_Y, {
+      damping: 50,
+    });
+    translateY.value = withSpring(-SCREEN_HEIGHT / 1.8, {damping: 50});
+  };
+
+  const handleCancelClick = () => {
+    translateDropShadow.value = withSpring(0, {
+      damping: 50,
+    });
+    translateY.value = withSpring(0, {damping: 50});
+    // setStateScreen('jenis');
+  };
 
   const handleKategoriClick = () => {};
 
@@ -67,7 +111,7 @@ function FormTambah() {
         backgroundColor: '#fff',
       }}>
       <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
-      <KeyboardAwareScrollView> 
+      <KeyboardAwareScrollView extraHeight={0}>
         <View style={{padding: 14}}>
           <View
             style={{
@@ -86,7 +130,7 @@ function FormTambah() {
           <View>
             <View style={{marginVertical: 15}} />
             <TouchableOpacity onPress={() => handleTransaksiClick()}>
-              <Dropdown title={'Transaksi'} />
+              <Dropdown title={transaksi === '' ? 'Transaksi' : transaksi} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => handleJenisClick()}>
               <Dropdown title={'Jenis Transaksi'} />
@@ -113,19 +157,25 @@ function FormTambah() {
             </View>
           </View>
         </View>
-        <Animated.View
-          style={[
-            styles.container,
-            {backgroundColor: 'rgba(0, 0,0,0.6)', borderRadius: 0},
-            BottomDropShadow,
-          ]}>
-          <Animated.View style={[styles.container, rBottomSheetStyle]}>
-            {stateScreen === 'transaksi' && (
-              <Transaksi onClickCancel={() => handleCancelTransaksiClick()} />
-            )}
-          </Animated.View>
-        </Animated.View>
       </KeyboardAwareScrollView>
+      <Animated.View
+        style={[
+          styles.container,
+          {backgroundColor: 'rgba(0, 0,0,0.6)', borderRadius: 0},
+          BottomDropShadow,
+        ]}>
+        <Animated.View style={[styles.container, rBottomSheetStyle]}>
+          {stateScreen === 'transaksi' && (
+            <Transaksi
+              onClickCancel={() => handleCancelClick()}
+              onChangeState={value => handleChangeSetStateTransaksi(value)}
+            />
+          )}
+          {stateScreen === 'jenis' && (
+            <JenisTransaksi onClickCancel={() => handleCancelClick()} />
+          )}
+        </Animated.View>
+      </Animated.View>
     </View>
   );
 }
