@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 
-function Dropdown({title}) {
+function Dropdown({title, text}) {
   return (
     <View>
       <View
@@ -27,7 +27,11 @@ function Dropdown({title}) {
           {title}
         </Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={styles.text1}>{title}</Text>
+          <Text style={styles.text1}>
+            {text === 'gaya_hidup' && 'Gaya Hidup'}
+            {text === 'makanan&minuman' && 'Makanan & Minuman'}
+            {text !== 'gaya_hidup' && text !== 'makanan&minuman' && text}
+          </Text>
           <Image
             source={require('../assets/arrow_drop_down.png')}
             style={{marginRight: 10}}

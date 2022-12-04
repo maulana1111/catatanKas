@@ -1,17 +1,17 @@
 import React from 'react';
 import {StyleSheet, View, Image, Text} from 'react-native';
 
-function ComponentItem({image1, text, image2, bgColor}) {
+function ComponentItem({image1, text, image2, bgColor, tintColor}) {
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
         <View style={[styles.bgColor, {backgroundColor: bgColor}]}>
-          <Image source={require('../../../assets/income.png')} />
+          <Image source={image1} style={{tintColor: tintColor}} />
         </View>
         <Text style={styles.text}>{text}</Text>
       </View>
       <View>
-        <Image source={require('../../../assets/arrow_right.png')} />
+        <Image source={image2} />
       </View>
     </View>
   );
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#FFD16C',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 10
+    marginVertical: 10,
   },
   bgColor: {
     width: 24,
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     color: '#232E31',
     fontFamily: 'BalooBhaijaan2-SemiBold',
     marginLeft: 10,
-    marginTop: 3
+    marginTop: 3,
   },
 });
 

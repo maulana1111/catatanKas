@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Image,
   SafeAreaView,
@@ -7,14 +7,19 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
-  ToastAndroid
+  ToastAndroid,
 } from 'react-native';
 import MyStatusBar from '../../../auth/component/StatusBar';
 import {TextInput} from 'react-native-paper';
 import Dropdown from './component/dropdown';
 import FormInput from './component/formInput';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {
+  GestureDetector,
+  GestureHandlerRootView,
+  Gesture,
+  ScrollView,
+} from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -23,17 +28,29 @@ import Animated, {
 } from 'react-native-reanimated';
 import Transaksi from './component/componentBottomSheet/Transaksi';
 import JenisTransaksi from './component/componentBottomSheet/JenisTransaksi';
+import KategoriTransfer from './component/componentBottomSheet/KategoriTransfer';
+import KategoriInstant from './component/componentBottomSheet/KategoriInstant';
+import KategoriHiburan from './component/componentBottomSheet/KategoriHiburan';
+import KategoriGayaHidup from './component/componentBottomSheet/KategoriGayaHidup';
+import KategoriMakanan from './component/componentBottomSheet/KategoriMakanan';
+import KategoriTunai from './component/componentBottomSheet/KategoriTunai';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 60;
 const SEC_MAX_TRANSLATE_Y = -SCREEN_HEIGHT;
+import {useNavigation} from '@react-navigation/native';
 
 function FormTambah() {
   const [stateScreen, setStateScreen] = useState('transaksi');
   const [transaksi, setTransaksi] = useState('');
+  const [jenisTransaksi, setJenisTransaksi] = useState('');
   const [kategori, setKategori] = useState('');
+  const [nominal, setNominal] = useState();
+  const [deskripsi, setDeskripsi] = useState('');
+  const [txtNominal, setTxtNominal] = useState('');
   const translateY = useSharedValue(0);
   const translateDropShadow = useSharedValue(0);
+  const navigation = useNavigation();
   const rBottomSheetStyle = useAnimatedStyle(() => {
     return {
       transform: [{translateY: translateY.value}],
@@ -46,40 +63,36 @@ function FormTambah() {
     };
   });
 
-  const handleTransaksiClick = () => {
+  const handleOpenBottomSheetTransaksi = () => {
+    setStateScreen('transaksi');
     translateDropShadow.value = withSpring(SEC_MAX_TRANSLATE_Y, {
       damping: 50,
     });
     translateY.value = withSpring(-SCREEN_HEIGHT / 4, {damping: 50});
   };
-
-  const handleChangeSetStateTransaksi = e => {
-    translateDropShadow.value = withSpring(0, {
-      damping: 50,
-    });
-    translateY.value = withSpring(0, {damping: 50});
-    setStateScreen('jenis');
-    setTransaksi(e);
-  };
-
-  const handleJenisClick = () => {
+  const handleOpenBottomSheetJenis = () => {
     if (transaksi === '') {
-      return ToastAndroid.showWithGravityAndOffset(
-        'Anda Harus Memilih Transaksi!',
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM,
-        25,
-        50,
+      // return ToastAndroid.showWithGravityAndOffset(
+      //   'Anda Harus Memilih Transaksi!',
+      //   ToastAndroid.LONG,
+      //   ToastAndroid.BOTTOM,
+      //   25,
+      //   50,
+      // );
+      return ToastAndroid.show(
+        'A pikachu appeared nearby !',
+        ToastAndroid.SHORT,
       );
     }
+
+    setStateScreen('jenis');
     translateDropShadow.value = withSpring(SEC_MAX_TRANSLATE_Y, {
       damping: 50,
     });
-    translateY.value = withSpring(-SCREEN_HEIGHT / 1.8, {damping: 50});
+    translateY.value = withSpring(-SCREEN_HEIGHT / 1.7, {damping: 50});
   };
-  
-  const handleKategoirClick = () => {
-    if (transaksi === '') {
+  const handleOpenBottomSheetKategori = () => {
+    if (jenisTransaksi === '') {
       return ToastAndroid.showWithGravityAndOffset(
         'Anda Harus Memilih Jenis Transaksi!',
         ToastAndroid.LONG,
@@ -88,10 +101,28 @@ function FormTambah() {
         50,
       );
     }
+    setStateScreen(jenisTransaksi);
     translateDropShadow.value = withSpring(SEC_MAX_TRANSLATE_Y, {
       damping: 50,
     });
-    translateY.value = withSpring(-SCREEN_HEIGHT / 1.8, {damping: 50});
+    if (jenisTransaksi === 'transfer') {
+      translateY.value = withSpring(-SCREEN_HEIGHT / 1.7, {damping: 50});
+    }
+    if (jenisTransaksi === 'instant') {
+      translateY.value = withSpring(-SCREEN_HEIGHT / 2.2, {damping: 50});
+    }
+    if (jenisTransaksi === 'tunai') {
+      translateY.value = withSpring(-SCREEN_HEIGHT / 1.1, {damping: 50});
+    }
+    if (jenisTransaksi === 'hiburan') {
+      translateY.value = withSpring(-SCREEN_HEIGHT / 1.5, {damping: 50});
+    }
+    if (jenisTransaksi === 'gaya_hidup') {
+      translateY.value = withSpring(-SCREEN_HEIGHT / 1.3, {damping: 50});
+    }
+    if (jenisTransaksi === 'makanan&minuman') {
+      translateY.value = withSpring(-SCREEN_HEIGHT / 1.1, {damping: 50});
+    }
   };
 
   const handleCancelClick = () => {
@@ -102,7 +133,44 @@ function FormTambah() {
     // setStateScreen('jenis');
   };
 
-  const handleKategoriClick = () => {};
+  const handleChangeSetStateTransaksi = e => {
+    translateDropShadow.value = withSpring(0, {
+      damping: 50,
+    });
+    translateY.value = withSpring(0, {damping: 50});
+    setTransaksi(e);
+  };
+
+  const handleChangeKategoriClick = e => {
+    translateDropShadow.value = withSpring(0, {
+      damping: 50,
+    });
+    translateY.value = withSpring(0, {damping: 50});
+    setJenisTransaksi(e);
+  };
+
+  const handleChangeNominal = e => {
+    setNominal(e);
+    console.log('nominal = ' + e);
+  };
+
+  const handleChangeDeskripsi = e => {
+    setDeskripsi(e);
+  };
+
+  const ChangeRupiah = number => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+    }).format(number);
+  };
+
+  // useEffect(() => {
+  //   if (nominal) {
+  //     return setTxtNominal(ChangeRupiah(nominal));
+  //   }
+  //   // setTxtNominal('');
+  // }, [nominal]);
 
   return (
     <View
@@ -111,38 +179,64 @@ function FormTambah() {
         backgroundColor: '#fff',
       }}>
       <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
+      {/* <GestureHandlerRootView> */}
       <KeyboardAwareScrollView extraHeight={0}>
         <View style={{padding: 14}}>
           <View
             style={{
               flexDirection: 'row',
             }}>
-            <View style={styles.back}>
-              <Image
-                source={require('../../../../assets/arrow_left.png')}
-                style={styles.imageBack}
-              />
-            </View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Home');
+              }}>
+              <View style={styles.back}>
+                <Image
+                  source={require('../../../../assets/arrow_left.png')}
+                  style={styles.imageBack}
+                />
+              </View>
+            </TouchableOpacity>
             <View style={{marginLeft: '20%'}}>
               <Text style={styles.title}>Tambah Transaksi</Text>
             </View>
           </View>
           <View>
             <View style={{marginVertical: 15}} />
-            <TouchableOpacity onPress={() => handleTransaksiClick()}>
-              <Dropdown title={transaksi === '' ? 'Transaksi' : transaksi} />
+            <TouchableOpacity onPress={() => handleOpenBottomSheetTransaksi()}>
+              <Dropdown
+                title={'Transaksi'}
+                text={transaksi === '' ? 'Pilih Transaksi' : transaksi}
+              />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleJenisClick()}>
-              <Dropdown title={'Jenis Transaksi'} />
+            <TouchableOpacity onPress={() => handleOpenBottomSheetJenis()}>
+              <Dropdown
+                title={'Jenis Transaksi'}
+                text={
+                  jenisTransaksi === ''
+                    ? 'Pilih Jenis Transaksi'
+                    : jenisTransaksi
+                }
+              />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleKategoriClick()}>
-              <Dropdown title={'Bank/Perorang/Perusahaan/Tokok'} />
+            <TouchableOpacity onPress={() => handleOpenBottomSheetKategori()}>
+              <Dropdown
+                title={'Bank/Perorang/Perusahaan/Tokok'}
+                text={kategori === '' ? 'Pilih Jenis Transaksi' : kategori}
+              />
             </TouchableOpacity>
             <FormInput
               title={'Nominal Transaksi'}
               val={'Masukan Nominal Transaksi'}
+              type={'numeric'}
+              onChange={e => handleChangeNominal(e)}
             />
-            <FormInput title={'Deskripsi'} val={'Masukan Deskripsi'} />
+            <FormInput
+              title={'Deskripsi'}
+              val={'Masukan Deskripsi'}
+              type={'text'}
+              onChange={e => handleChangeDeskripsi(e)}
+            />
             <View style={{marginTop: 30}}>
               <TouchableOpacity style={styles.btn}>
                 <Text
@@ -158,6 +252,7 @@ function FormTambah() {
           </View>
         </View>
       </KeyboardAwareScrollView>
+      {/* <GestureDetector> */}
       <Animated.View
         style={[
           styles.container,
@@ -172,10 +267,54 @@ function FormTambah() {
             />
           )}
           {stateScreen === 'jenis' && (
-            <JenisTransaksi onClickCancel={() => handleCancelClick()} />
+            <JenisTransaksi
+              onClickCancel={() => handleCancelClick()}
+              onChangeState={value => handleChangeKategoriClick(value)}
+            />
+          )}
+          {stateScreen === 'transfer' && (
+            <KategoriTransfer
+              onClickCancel={() => handleCancelClick()}
+              onChangeState={value => handleChangeKategoriClick(value)}
+            />
+          )}
+          {stateScreen === 'instant' && (
+            <KategoriInstant
+              onClickCancel={() => handleCancelClick()}
+              onChangeState={value => handleChangeKategoriClick(value)}
+            />
+          )}
+          {stateScreen === 'tunai' && (
+            <KategoriTunai
+              onClickCancel={() => handleCancelClick()}
+              onChangeState={value => handleChangeKategoriClick(value)}
+            />
+          )}
+
+          {stateScreen === 'hiburan' && (
+            <KategoriHiburan
+              onClickCancel={() => handleCancelClick()}
+              onChangeState={value => handleChangeKategoriClick(value)}
+            />
+          )}
+          {stateScreen === 'gaya_hidup' && (
+            <KategoriGayaHidup
+              onClickCancel={() => handleCancelClick()}
+              onChangeState={value => handleChangeKategoriClick(value)}
+            />
+          )}
+          {stateScreen === 'makanan&minuman' && (
+            <ScrollView>
+              <KategoriMakanan
+                onClickCancel={() => handleCancelClick()}
+                onChangeState={value => handleChangeKategoriClick(value)}
+              />
+            </ScrollView>
           )}
         </Animated.View>
       </Animated.View>
+      {/* </GestureDetector> */}
+      {/* </GestureHandlerRootView> */}
     </View>
   );
 }

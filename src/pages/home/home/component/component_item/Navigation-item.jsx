@@ -1,21 +1,26 @@
 import React, {useState} from 'react';
 import {Image, View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import DropShadow from 'react-native-drop-shadow';
+import {useNavigation} from '@react-navigation/native';
 
 function NavigationItem(props) {
   const {state, stateItem, text, image, onChange} = props;
   //   const img = require(image)
+  const navigation = useNavigation();
 
   return (
     <View style={{marginHorizontal: 15}}>
-      <TouchableOpacity>
-          <View style={style.card}>
-            <Image
-              source={image}
-              style={{width: 36, height: 32, marginBottom: 8}}
-            />
-            <Text style={style.txt}>{text}</Text>
-          </View>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate(text);
+        }}>
+        <View style={style.card}>
+          <Image
+            source={image}
+            style={{width: 36, height: 32, marginBottom: 8}}
+          />
+          <Text style={style.txt}>{text}</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );

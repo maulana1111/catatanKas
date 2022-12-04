@@ -2,9 +2,12 @@ import React from 'react';
 import {Text, View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import ComponentItem from './component-item/Component-item';
 
-function JenisTransaksi({onClickCancel}) {
+function JenisTransaksi({onClickCancel, onChangeState}) {
   const handleClick = () => {
     onClickCancel();
+  };
+  const handleChange = e => {
+    onChangeState(e);
   };
   return (
     <View style={{padding: 14}}>
@@ -18,42 +21,60 @@ function JenisTransaksi({onClickCancel}) {
         <Text style={styles.text2}>Jenis</Text>
       </View>
       <View>
-        <ComponentItem
-          image1={''}
-          text={'Transfer'}
-          image2={''}
-          bgColor={'#B4B4B4'}
-        />
-        <ComponentItem
-          image1={''}
-          text={'Instan'}
-          image2={''}
-          bgColor={'#3532E0'}
-        />
-        <ComponentItem
-          image1={''}
-          text={'Tunai'}
-          image2={''}
-          bgColor={'#31CE5D'}
-        />
-        <ComponentItem
-          image1={''}
-          text={'Hiburan'}
-          image2={''}
-          bgColor={'#D39BFF'}
-        />
-        <ComponentItem
-          image1={''}
-          text={'Gaya Hidup'}
-          image2={''}
-          bgColor={'#82FFF0'}
-        />
-        <ComponentItem
-          image1={''}
-          text={'Makanan & Minuman'}
-          image2={''}
-          bgColor={'#ED6E13'}
-        />
+        <TouchableOpacity onPress={() => handleChange('transfer')}>
+          <ComponentItem
+            image1={require('../../../../../../assets/filter/transfer.png')}
+            text={'Transfer'}
+            image2={require('../../assets/arrow_right.png')}
+            bgColor={'#B4B4B4'}
+            tintColor={'#000000'}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleChange('instant')}>
+          <ComponentItem
+            image1={require('../../../../../../assets/filter/instant.png')}
+            text={'Instan'}
+            image2={require('../../assets/arrow_right.png')}
+            bgColor={'rgba(53, 50, 224, 0.4)'}
+            tintColor={'#3F32E0'}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleChange('tunai')}>
+          <ComponentItem
+            image1={require('../../../../../../assets/filter/coin.png')}
+            text={'Tunai'}
+            image2={require('../../assets/arrow_right.png')}
+            bgColor={'rgba(49, 206, 93, 0.4)'}
+            tintColor={'#31CE5D'}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleChange('hiburan')}>
+          <ComponentItem
+            image1={require('../../../../../../assets/filter/entertainment.png')}
+            text={'Hiburan'}
+            image2={require('../../assets/arrow_right.png')}
+            bgColor={'#D39BFF'}
+            tintColor={'#8015D3'}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleChange('gaya_hidup')}>
+          <ComponentItem
+            image1={require('../../../../../../assets/filter/lifestyle.png')}
+            text={'Gaya Hidup'}
+            image2={require('../../assets/arrow_right.png')}
+            bgColor={'rgba(130, 255, 240, 0.4)'}
+            tintColor={'#07BBA5'}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleChange('makanan&minuman')}>
+          <ComponentItem
+            image1={require('../../../../../../assets/filter/food.png')}
+            text={'Makanan & Minuman'}
+            image2={require('../../assets/arrow_right.png')}
+            bgColor={'rgba(237, 110, 19, 0.4)'}
+            tintColor={'#ED6E13'}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );

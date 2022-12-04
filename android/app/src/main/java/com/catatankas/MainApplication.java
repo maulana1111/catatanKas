@@ -12,11 +12,19 @@ import com.facebook.soloader.SoLoader;
 import com.catatankas.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+// import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {
+
+        // @Override
+        // protected List<ReactPackage> getPackages() {
+        //   return Arrays.<ReactPackage>asList(
+        //           new MainReactPackage(),
+        //           new ReactNativeContacts()); // <------ add this
+        // }
         @Override
         public boolean getUseDeveloperSupport() {
           return BuildConfig.DEBUG;

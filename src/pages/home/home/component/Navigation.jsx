@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import {View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import NavigationItem from './component_item/Navigation-item';
 
 function Navigation() {
-  const chart = require('../../../../assets/Chart.png')
-  const bill = require('../../../../assets/Bill.png')
+  const chart = require('../../../../assets/Chart.png');
+  const bill = require('../../../../assets/Bill.png');
   return (
     <View>
       <View
@@ -13,14 +13,8 @@ function Navigation() {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <NavigationItem
-          text={'Statistic'}
-          image={chart}
-        />
-        <NavigationItem
-          text={'Bill'}
-          image={bill}
-        />
+        <NavigationItem text={'Statistic'} image={chart} />
+        <NavigationItem text={'Bill'} image={bill} />
       </View>
     </View>
   );

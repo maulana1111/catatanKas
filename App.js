@@ -10,6 +10,7 @@ import Home from './src/pages/home/home/Home';
 import SecScreen from './src/pages/auth/secScreen/SecScreen';
 import ThirdScreen from './src/pages/auth/thirdScreen/ThirdScreen';
 import FormTambah from './src/pages/home/home/screen/FormTambah';
+import Statistik from './src/pages/home/home/screenStatistik/Statistik';
 
 import {
   GoogleSignin,
@@ -17,6 +18,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import { Text } from 'react-native';
+import Bill from './src/pages/home/home/screenBill/Bill';
 
 const db = new Database();
 const Stack = createNativeStackNavigator();
@@ -105,6 +107,8 @@ function Logic() {
       <Stack.Screen name="SecScreen" component={SecScreen} />
       <Stack.Screen name="ThirdScreen" component={ThirdScreen} />
       <Stack.Screen name="FormTambahTransaksi" component={FormTambah} />
+      <Stack.Screen name="Statistic" component={Statistik} />
+      <Stack.Screen name="Bill" component={Bill} />
     </Stack.Navigator>
   );
 }
