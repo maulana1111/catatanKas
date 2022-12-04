@@ -49,7 +49,6 @@ function ScreenBottomSheetFilter() {
   );
   const translateY = useSharedValue(0);
   const translateDropShadow = useSharedValue(0);
-  const secTranslateDropShadow = useSharedValue(0);
 
   const dispatch = useDispatch();
 
@@ -99,11 +98,6 @@ function ScreenBottomSheetFilter() {
     };
   });
 
-  const SecBottomDropShadow = useAnimatedStyle(() => {
-    return {
-      transform: [{translateY: secTranslateDropShadow.value}],
-    };
-  });
 
   const BottomSheetChild = useAnimatedStyle(() => {
     return {
