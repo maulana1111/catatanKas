@@ -87,7 +87,7 @@ function KategoriTunai({onClickCancel, onChangeState}) {
           data={dataKontak}
           renderItem={({item}) => {
             return (
-              <TouchableOpacity onPress={() => handleChange('dana')}>
+              <TouchableOpacity onPress={() => handleChange(item.displayName)}>
                 <ComponentSecItem
                   image1={require('../../assets/kontak/pria.png')}
                   text={item.displayName}

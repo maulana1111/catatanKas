@@ -14,11 +14,6 @@ function Bill() {
   const dispatch = useDispatch();
 
   const handleFilter = async () => {
-    // if (conditionChildSheet !== true) {
-    //   translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50});
-    // } else {
-    //   translateY.value = withSpring(-SCREEN_HEIGHT / 2, {damping: 50});
-    // }
     dispatch(storeGlobalChildSheet({condition: !conditionChildSheet}));
   };
 
@@ -63,7 +58,7 @@ function Bill() {
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View style={styles.bg}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => {navigation.navigate('FormTambahTagihan')}}>
                   <Image source={require('./assets/capture_bill.png')} />
                 </TouchableOpacity>
               </View>

@@ -34,11 +34,13 @@ import KategoriHiburan from './component/componentBottomSheet/KategoriHiburan';
 import KategoriGayaHidup from './component/componentBottomSheet/KategoriGayaHidup';
 import KategoriMakanan from './component/componentBottomSheet/KategoriMakanan';
 import KategoriTunai from './component/componentBottomSheet/KategoriTunai';
+import Database from '../../../../utilSqlite/database';
+import {useNavigation} from '@react-navigation/native';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 60;
 const SEC_MAX_TRANSLATE_Y = -SCREEN_HEIGHT;
-import {useNavigation} from '@react-navigation/native';
+const db = new Database();
 
 function FormTambah() {
   const [stateScreen, setStateScreen] = useState('transaksi');
@@ -72,16 +74,12 @@ function FormTambah() {
   };
   const handleOpenBottomSheetJenis = () => {
     if (transaksi === '') {
-      // return ToastAndroid.showWithGravityAndOffset(
-      //   'Anda Harus Memilih Transaksi!',
-      //   ToastAndroid.LONG,
-      //   ToastAndroid.BOTTOM,
-      //   25,
-      //   50,
-      // );
-      return ToastAndroid.show(
-        'A pikachu appeared nearby !',
-        ToastAndroid.SHORT,
+      return ToastAndroid.showWithGravityAndOffset(
+        'Anda Harus Memilih Transaksi!',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
       );
     }
 
@@ -130,7 +128,6 @@ function FormTambah() {
       damping: 50,
     });
     translateY.value = withSpring(0, {damping: 50});
-    // setStateScreen('jenis');
   };
 
   const handleChangeSetStateTransaksi = e => {
@@ -141,17 +138,24 @@ function FormTambah() {
     setTransaksi(e);
   };
 
-  const handleChangeKategoriClick = e => {
+  const handleChangeJenisTransaksiClick = e => {
     translateDropShadow.value = withSpring(0, {
       damping: 50,
     });
     translateY.value = withSpring(0, {damping: 50});
     setJenisTransaksi(e);
   };
+  const handleChangeKategoriClick = e => {
+    translateDropShadow.value = withSpring(0, {
+      damping: 50,
+    });
+    translateY.value = withSpring(0, {damping: 50});
+    setKategori(e);
+  };
 
   const handleChangeNominal = e => {
     setNominal(e);
-    console.log('nominal = ' + e);
+    // console.log('nominal = ' + e);
   };
 
   const handleChangeDeskripsi = e => {
@@ -163,6 +167,20 @@ function FormTambah() {
       style: 'currency',
       currency: 'IDR',
     }).format(number);
+  };
+
+  const handleSubmit = () => {
+    data = {
+      id_user: 'id001',
+      transaksi: transaksi,
+      jenisTransaksi: jenisTransaksi,
+      kategori: kategori,
+      nominal: nominal,
+      deskripsi: deskripsi,
+    };
+    db.insertDataTransaksi(data)
+      .then(data => console.log(data))
+      .catch(err => console.log(err));
   };
 
   // useEffect(() => {
@@ -222,7 +240,11 @@ function FormTambah() {
             <TouchableOpacity onPress={() => handleOpenBottomSheetKategori()}>
               <Dropdown
                 title={'Bank/Perorang/Perusahaan/Tokok'}
-                text={kategori === '' ? 'Pilih Jenis Transaksi' : kategori}
+                text={
+                  kategori === ''
+                    ? 'Pilih Bank/Perorang/Perusahaan/Tokok'
+                    : kategori
+                }
               />
             </TouchableOpacity>
             <FormInput
@@ -238,7 +260,9 @@ function FormTambah() {
               onChange={e => handleChangeDeskripsi(e)}
             />
             <View style={{marginTop: 30}}>
-              <TouchableOpacity style={styles.btn}>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() => handleSubmit()}>
                 <Text
                   style={{
                     fontSize: 16,
@@ -269,7 +293,7 @@ function FormTambah() {
           {stateScreen === 'jenis' && (
             <JenisTransaksi
               onClickCancel={() => handleCancelClick()}
-              onChangeState={value => handleChangeKategoriClick(value)}
+              onChangeState={value => handleChangeJenisTransaksiClick(value)}
             />
           )}
           {stateScreen === 'transfer' && (

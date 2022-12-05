@@ -1,8 +1,15 @@
 import React from 'react';
 import {View, Text, StyleSheet, ImageBackground, Image} from 'react-native';
 import DropShadow from 'react-native-drop-shadow';
+import {CircleFade} from 'react-native-animated-spinkit';
 
-function Card() {
+function Card({nominal, state}) {
+  const ChangeRupiah = number => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+    }).format(number);
+  };
   return (
     <View
       style={{
@@ -42,7 +49,11 @@ function Card() {
                 <Image source={require('../../../../assets/vector.png')} />
               </View>
               <View>
-                <Text style={style.txt4}>Rp. 100.000</Text>
+                {state === true ? (
+                  <CircleFade size={20} color="#FFF" />
+                ) : (
+                  <Text style={style.txt4}>{ChangeRupiah(nominal)}</Text>
+                )}
               </View>
             </View>
           </ImageBackground>
@@ -65,7 +76,7 @@ const style = StyleSheet.create({
   txt3: {
     fontSize: 18,
     fontFamily: 'BalooBhaijaan2-SemiBold',
-    color: '#FCBC31'
+    color: '#FCBC31',
   },
 });
 

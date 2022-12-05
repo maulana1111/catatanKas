@@ -28,7 +28,7 @@ const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 60;
 import {useNavigation} from '@react-navigation/native';
 
-function BottomSheetNav() {
+function BottomSheetNav({dataPemasukan, dataPengeluaran}) {
   const navigation = useNavigation();
   const [condition, setCondition] = useState(false);
   const {conditionChildSheet} = useSelector(state => state.globalStm);
@@ -89,7 +89,9 @@ function BottomSheetNav() {
               marginVertical: 7,
             }}>
             <View>
-              <TouchableOpacity style={styles.bgCard} onPress={() => navigation.navigate("FormTambahTransaksi")}>
+              <TouchableOpacity
+                style={styles.bgCard}
+                onPress={() => navigation.navigate('FormTambahTransaksi')}>
                 <Image
                   source={require('../../../../assets/add.png')}
                   style={{
@@ -120,7 +122,10 @@ function BottomSheetNav() {
         </View>
         <SafeAreaView>
           <ScrollView>
-            <ScreenBottomSheet />
+            <ScreenBottomSheet
+              dataPengeluaran={dataPengeluaran}
+              dataPemasukan={dataPemasukan}
+            />
           </ScrollView>
         </SafeAreaView>
         {/* <ScreenBottomSheetFilter /> */}

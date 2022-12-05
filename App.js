@@ -11,6 +11,7 @@ import SecScreen from './src/pages/auth/secScreen/SecScreen';
 import ThirdScreen from './src/pages/auth/thirdScreen/ThirdScreen';
 import FormTambah from './src/pages/home/home/screen/FormTambah';
 import Statistik from './src/pages/home/home/screenStatistik/Statistik';
+import FormTambahBill from './src/pages/home/home/screenBill/FormTambahBill';
 
 import {
   GoogleSignin,
@@ -109,6 +110,7 @@ function Logic() {
       <Stack.Screen name="FormTambahTransaksi" component={FormTambah} />
       <Stack.Screen name="Statistic" component={Statistik} />
       <Stack.Screen name="Bill" component={Bill} />
+      <Stack.Screen name="FormTambahTagihan" component={FormTambahBill} />
     </Stack.Navigator>
   );
 }

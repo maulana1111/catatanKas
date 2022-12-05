@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {color} from 'react-native-reanimated';
 
-function ItemScreen({jenis}) {
+function ItemScreen({jenis, kategori}) {
   return (
     <View>
       <Text style={styles.txt1}>Tranfer</Text>
@@ -15,7 +15,7 @@ function ItemScreen({jenis}) {
             />
           </View>
           <View>
-            <Text style={styles.txt2}>BCA</Text>
+            <Text style={styles.txt2}>{kategori}</Text>
             <Text style={styles.txt3}>05:34 Andrian Toko</Text>
           </View>
         </View>

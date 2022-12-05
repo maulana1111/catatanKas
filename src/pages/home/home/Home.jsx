@@ -1,4 +1,4 @@
-import React, {useMemo, useRef, useCallback} from 'react';
+import React, {useMemo, useRef, useCallback, useEffect} from 'react';
 import {
   Image,
   SafeAreaView,
@@ -15,10 +15,57 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import BottomSheetNav from './component/BottomSheetNav';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ScreenBottomSheetFilter from './component/BottomSheetFilter';
-
+import Database from '../../../utilSqlite/database';
+import {useState} from 'react';
+const db = new Database();
 
 function Home() {
-  
+  const [data, setData] = useState(null);
+  const [dataPemasukan, setDataPemasukan] = useState([]);
+  const [dataPengeluaran, setDataPengeluaran] = useState([]);
+  const [totalPemasukan, setTotalPemasukan] = useState(0);
+  const [totalPengeluaran, setTotalPengeluaran] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
+  useEffect(() => {
+    const getData = async () => {
+      setLoading(true);
+      await db
+        .getDataTransaksi('id001', 'pemasukan')
+        .then(data => {
+          // console.log('data get = ' + JSON.stringify(data));
+          setDataPemasukan(JSON.parse(JSON.stringify(data)));
+        })
+        .catch(err => {
+          console.log('error home = ' + err);
+        });
+
+      await db
+        .getDataTransaksi('id001', 'pengeluaran')
+        .then(data => {
+          // console.log("data = "+JSON.stringify(data));
+          setDataPengeluaran(JSON.parse(JSON.stringify(data)));
+        })
+        .catch(err => {
+          console.log('error home = ' + err);
+        });
+      const dtPem = JSON.parse(JSON.stringify(dataPemasukan));
+      const dtPen = JSON.parse(JSON.stringify(dataPengeluaran));
+      dtPem.map(item => {
+        setTotalPemasukan(totalPemasukan + item.nominal);
+      });
+      dtPen.map(item => {
+        setTotalPengeluaran(totalPengeluaran + item.nominal);
+      });
+
+      setTotal(totalPemasukan - totalPengeluaran);
+      console.log("data_nominal = "+setTotal);
+      setLoading(false);
+    };
+    getData();
+  }, []);
+  // console.log("data pemas = "+totalPemasukan);
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaView>
@@ -46,7 +93,7 @@ function Home() {
           </View>
         </View>
         <View>
-          <Card />
+          <Card nominal={total} state={loading} />
         </View>
         <View
           style={{
@@ -54,7 +101,10 @@ function Home() {
           }}>
           <Navigation />
         </View>
-        <BottomSheetNav />
+        <BottomSheetNav
+          dataPengeluaran={dataPengeluaran}
+          dataPemasukan={dataPemasukan}
+        />
         <ScreenBottomSheetFilter />
       </SafeAreaView>
     </GestureHandlerRootView>

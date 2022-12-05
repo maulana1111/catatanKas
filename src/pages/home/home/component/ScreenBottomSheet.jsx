@@ -1,10 +1,10 @@
 import React, {Fragment} from 'react';
-import {View, Text, Image, StyleSheet, FlatList} from 'react-native';
+import {View, Text, Image, StyleSheet} from 'react-native';
 import ItemScreen from './component_item/item-screen';
 
-import {ScrollView} from 'react-native-gesture-handler';
+import {ScrollView, FlatList} from 'react-native-gesture-handler';
 
-function ScreenBottomSheet() {
+function ScreenBottomSheet({dataPemasukan, dataPengeluaran}) {
   const data = [
     {key: '1'},
     {key: '2'},
@@ -17,25 +17,22 @@ function ScreenBottomSheet() {
     {key: '9'},
   ];
   return (
-    <Fragment>
+    <View>
       <View
         style={{
           paddingHorizontal: 24,
-          width: '100%',
+          // width: '100%',
+          justifyContent: 'flex-start'
         }}>
         <View>
           <View style={styles.container}>
             <Text style={styles.txt1}>Pemasukan</Text>
             <Image source={require('../../../../assets/Share.png')} />
           </View>
-          {/* <FlatList
-            data={data}
-            renderItem={({item}) => <ItemScreen jenis={'in'} />}
-          /> */}
-          <ItemScreen jenis={'in'} />
-          <ItemScreen jenis={'in'} />
-          <ItemScreen jenis={'in'} />
-          <ItemScreen jenis={'in'} />
+          {dataPemasukan.map((item, index) => {
+            console.log(item);
+            return <ItemScreen jenis={'in'} key={index} />;
+          })}
         </View>
       </View>
       <View style={{marginVertical: 10}}>
@@ -45,6 +42,7 @@ function ScreenBottomSheet() {
         style={{
           paddingHorizontal: 24,
           width: '100%',
+          marginBottom: 200
         }}>
         <View>
           <View style={styles.container}>
@@ -56,10 +54,9 @@ function ScreenBottomSheet() {
           <ItemScreen jenis={'out'} />
           <ItemScreen jenis={'out'} />
           <ItemScreen jenis={'out'} />
-          <ItemScreen jenis={'out'} />
         </View>
       </View>
-    </Fragment>
+    </View>
   );
 }
 
