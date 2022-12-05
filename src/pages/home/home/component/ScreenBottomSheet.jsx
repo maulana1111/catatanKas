@@ -22,17 +22,19 @@ function ScreenBottomSheet({dataPemasukan, dataPengeluaran}) {
         style={{
           paddingHorizontal: 24,
           // width: '100%',
-          justifyContent: 'flex-start'
+          justifyContent: 'flex-start',
         }}>
         <View>
           <View style={styles.container}>
             <Text style={styles.txt1}>Pemasukan</Text>
             <Image source={require('../../../../assets/Share.png')} />
           </View>
-          {dataPemasukan.map((item, index) => {
-            console.log(item);
-            return <ItemScreen jenis={'in'} key={index} />;
-          })}
+
+          {dataPemasukan !== null &&
+            dataPemasukan.map((item, index) => {
+              console.log(item);
+              return <ItemScreen jenis={'in'} key={index} />;
+            })}
         </View>
       </View>
       <View style={{marginVertical: 10}}>
@@ -42,7 +44,7 @@ function ScreenBottomSheet({dataPemasukan, dataPengeluaran}) {
         style={{
           paddingHorizontal: 24,
           width: '100%',
-          marginBottom: 200
+          marginBottom: 200,
         }}>
         <View>
           <View style={styles.container}>
@@ -50,10 +52,11 @@ function ScreenBottomSheet({dataPemasukan, dataPengeluaran}) {
             <Image source={require('../../../../assets/Share.png')} />
           </View>
 
-          <ItemScreen jenis={'out'} />
-          <ItemScreen jenis={'out'} />
-          <ItemScreen jenis={'out'} />
-          <ItemScreen jenis={'out'} />
+          {dataPengeluaran !== null &&
+            dataPengeluaran.map((item, index) => {
+              console.log(item);
+              return <ItemScreen jenis={'in'} key={index} />;
+            })}
         </View>
       </View>
     </View>

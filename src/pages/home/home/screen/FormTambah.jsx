@@ -36,6 +36,8 @@ import KategoriMakanan from './component/componentBottomSheet/KategoriMakanan';
 import KategoriTunai from './component/componentBottomSheet/KategoriTunai';
 import Database from '../../../../utilSqlite/database';
 import {useNavigation} from '@react-navigation/native';
+import moment from 'moment';
+import 'moment/locale/id';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 60;
@@ -177,6 +179,8 @@ function FormTambah() {
       kategori: kategori,
       nominal: nominal,
       deskripsi: deskripsi,
+      date: moment(new Date).format('ll'),
+      time: moment(new Date).format('LT')
     };
     db.insertDataTransaksi(data)
       .then(data => console.log(data))

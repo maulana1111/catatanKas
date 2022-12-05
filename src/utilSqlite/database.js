@@ -47,20 +47,22 @@ export default class Database {
     kategori,
     nominal,
     deskripsi,
+    date,
+    time
   }) {
     return new Promise((resolve, reject) => {
       this.initDb()
         .then(db => {
           db.transaction(async tx => {
             await tx.executeSql(
-              'CREATE TABLE IF NOT EXISTS transaksi (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), transaksi VARCHAR(15), jenis_transaksi VARCHAR(20), kategori VARCHAR(50), nominal INTEGER(100), description TEXT)',
+              'CREATE TABLE IF NOT EXISTS transaksi (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), transaksi VARCHAR(15), jenis_transaksi VARCHAR(20), kategori VARCHAR(50), nominal INTEGER(100), description TEXT, tanggal_transaksi DATE, waktu_transaksi TIME)',
             );
           }).then(async () => {
             db.transaction(async tx => {
               await tx
                 .executeSql(
-                  'INSERT INTO transaksi(id_user, transaksi, jenis_transaksi, kategori, nominal, description) VALUES(?,?,?,?,?,?)',
-                  [id_user, transaksi, jenisTransaksi, kategori, nominal, deskripsi],
+                  'INSERT INTO transaksi(id_user, transaksi, jenis_transaksi, kategori, nominal, description, tanggal_transaksi, waktu_transaksi) VALUES(?,?,?,?,?,?,?,?)',
+                  [id_user, transaksi, jenisTransaksi, kategori, nominal, deskripsi, date, time],
                 )
                 .then(([tx, res]) => {
                   if (res) {
@@ -88,7 +90,7 @@ export default class Database {
         .then(db => {
           db.transaction(async tx => {
             await tx.executeSql(
-              'CREATE TABLE IF NOT EXISTS transaksi (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), transaksi VARCHAR(15), jenis_transaksi VARCHAR(20), kategori VARCHAR(50), nominal INTEGER(100), description TEXT)',
+              'CREATE TABLE IF NOT EXISTS transaksi (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), transaksi VARCHAR(15), jenis_transaksi VARCHAR(20), kategori VARCHAR(50), nominal INTEGER(100), description TEXT, tanggal_transaksi DATE, waktu_transaksi TIME)',
             );
           }).then(async () => {
             db.transaction(async tx => {

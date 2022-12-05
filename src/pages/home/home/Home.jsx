@@ -33,11 +33,12 @@ function Home() {
       await db
         .getDataTransaksi('id001', 'pemasukan')
         .then(data => {
-          // console.log('data get = ' + JSON.stringify(data));
-          setDataPemasukan(JSON.parse(JSON.stringify(data)));
+          let dt = JSON.parse(JSON.stringify(data))
+          console.log('data get = ' + dt.nominal);
+          setDataPemasukan(data);
         })
         .catch(err => {
-          console.log('error home = ' + err);
+          console.log('error home1 = ' + err);
         });
 
       await db
@@ -47,19 +48,23 @@ function Home() {
           setDataPengeluaran(JSON.parse(JSON.stringify(data)));
         })
         .catch(err => {
-          console.log('error home = ' + err);
+          console.log('error home2 = ' + err);
         });
       const dtPem = JSON.parse(JSON.stringify(dataPemasukan));
       const dtPen = JSON.parse(JSON.stringify(dataPengeluaran));
-      dtPem.map(item => {
-        setTotalPemasukan(totalPemasukan + item.nominal);
-      });
-      dtPen.map(item => {
-        setTotalPengeluaran(totalPengeluaran + item.nominal);
-      });
+
+      dtPem !== null &&
+        dtPem.map(item => {
+          setTotalPemasukan(totalPemasukan + item.nominal);
+        });
+      dtPen !== null &&
+        dtPen.map(item => {
+          setTotalPengeluaran(totalPengeluaran + item.nominal);
+        });
 
       setTotal(totalPemasukan - totalPengeluaran);
-      console.log("data_nominal = "+setTotal);
+      // console.log('data_dtPem = ' + dtPem);
+      console.log('data_nominal = ' + totalPemasukan);
       setLoading(false);
     };
     getData();
