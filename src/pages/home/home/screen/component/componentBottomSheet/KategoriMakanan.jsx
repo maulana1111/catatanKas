@@ -133,7 +133,7 @@ function KategoriMakanan({onClickCancel, onChangeState}) {
               image2={require('../../assets/arrow_right.png')}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleChange('shoope')}>
+          <TouchableOpacity onPress={() => handleChange('shoopeFood')}>
             <ComponentSecItem
               image1={require('../../assets/makan/shoope.png')}
               text={'Shopee Food'}

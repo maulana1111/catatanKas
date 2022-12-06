@@ -43,7 +43,7 @@ function KategoriInstant({onClickCancel, onChangeState}) {
             image2={require('../../assets/arrow_right.png')}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleChange('shopee')}>
+        <TouchableOpacity onPress={() => handleChange('shopeePay')}>
           <ComponentSecItem
             image1={require('../../assets/instant/shoope.png')}
             text={'ShopeePay'}

@@ -31,6 +31,7 @@ const SEC_MAX_TRANSLATE_Y = -SCREEN_HEIGHT;
 import {
   storeGlobalChildSheet,
   storeGlobalSecChildSheet,
+  storeDataFilter,
 } from '../../../../redux/features/globalSlice';
 import FilterJenisItem from './component_item/filter-jenis-item';
 
@@ -80,6 +81,21 @@ function ScreenBottomSheetFilter() {
         {text: 'Oke'},
       ]);
     }
+
+    dispatch(
+      storeDataFilter({
+        urutan_pengeluaran: stateIn,
+        urutan_pemasukan: stateOut,
+        tanggal_dari: dateFromCom,
+        tanggal_sampai: dateToCom,
+        jenis_transaksi: stateJenis,
+      }),
+    );
+    dispatch(
+      storeGlobalChildSheet({
+        condition: false,
+      }),
+    );
   };
 
   const handleSubmitReset = () => {
@@ -97,7 +113,6 @@ function ScreenBottomSheetFilter() {
       transform: [{translateY: translateDropShadow.value}],
     };
   });
-
 
   const BottomSheetChild = useAnimatedStyle(() => {
     return {
@@ -188,36 +203,42 @@ function ScreenBottomSheetFilter() {
               <FilterJenisItem
                 images={require('../../../../assets/filter/transfer.png')}
                 text={'Transfer'}
+                value={'transfer'}
                 state={stateJenis}
                 onChange={value => handleChangeStateJenis(value)}
               />
               <FilterJenisItem
                 images={require('../../../../assets/filter/instant.png')}
                 text={'Instan'}
+                value={'instan'}
                 state={stateJenis}
                 onChange={value => handleChangeStateJenis(value)}
               />
               <FilterJenisItem
                 images={require('../../../../assets/filter/coin.png')}
                 text={'Tunai'}
+                value={'tunai'}
                 state={stateJenis}
                 onChange={value => handleChangeStateJenis(value)}
               />
               <FilterJenisItem
                 images={require('../../../../assets/filter/entertainment.png')}
                 text={'Hiburan'}
+                value={'hiburan'}
                 state={stateJenis}
                 onChange={value => handleChangeStateJenis(value)}
               />
               <FilterJenisItem
                 images={require('../../../../assets/filter/lifestyle.png')}
                 text={'Gaya Hidup'}
+                value={'gaya_hidup'}
                 state={stateJenis}
                 onChange={value => handleChangeStateJenis(value)}
               />
               <FilterJenisItem
                 images={require('../../../../assets/filter/food.png')}
                 text={'Makanan & Minuman'}
+                value={'makanan&minuman'}
                 state={stateJenis}
                 onChange={value => handleChangeStateJenis(value)}
               />

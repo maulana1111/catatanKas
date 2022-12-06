@@ -20,18 +20,25 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import ScreenBottomSheet from './ScreenBottomSheet';
-import {storeGlobalChildSheet} from '../../../../redux/features/globalSlice';
+import {
+  storeGlobalChildSheet,
+  storeDataFilter,
+} from '../../../../redux/features/globalSlice';
 import ScreenBottomSheetFilter from './BottomSheetFilter';
 import {useDispatch, useSelector} from 'react-redux';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 60;
 import {useNavigation} from '@react-navigation/native';
+import moment from 'moment';
+import 'moment/locale/id';
 
-function BottomSheetNav({dataPemasukan, dataPengeluaran}) {
+function BottomSheetNav() {
   const navigation = useNavigation();
   const [condition, setCondition] = useState(false);
-  const {conditionChildSheet} = useSelector(state => state.globalStm);
+  const {conditionChildSheet, dataFilter} = useSelector(
+    state => state.globalStm,
+  );
   const dispatch = useDispatch();
   const translateY = useSharedValue(0);
   const context = useSharedValue({y: 0});
@@ -80,8 +87,15 @@ function BottomSheetNav({dataPemasukan, dataPengeluaran}) {
         <View style={{paddingHorizontal: 24}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={styles.txt1}>Transaksi Hari Ini</Text>
-            <Text style={styles.txt2}>28 Maret 2022</Text>
+            <Text style={styles.txt2}>
+              {dataFilter.status === true
+                ? moment(dataFilter.data.tanggal_dari).format('ll') +
+                  ' - ' +
+                  moment(dataFilter.data.tanggal_sampai).format('ll')
+                : moment(new Date()).format('ll')}
+            </Text>
           </View>
+          {/* {moment(new Date).format('ll')} */}
           <View
             style={{
               flexDirection: 'row',
@@ -122,10 +136,7 @@ function BottomSheetNav({dataPemasukan, dataPengeluaran}) {
         </View>
         <SafeAreaView>
           <ScrollView>
-            <ScreenBottomSheet
-              dataPengeluaran={dataPengeluaran}
-              dataPemasukan={dataPemasukan}
-            />
+            <ScreenBottomSheet />
           </ScrollView>
         </SafeAreaView>
         {/* <ScreenBottomSheetFilter /> */}

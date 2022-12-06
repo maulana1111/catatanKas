@@ -17,9 +17,18 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ScreenBottomSheetFilter from './component/BottomSheetFilter';
 import Database from '../../../utilSqlite/database';
 import {useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  storeDataTransaksiIn,
+  storeDataTransaksiOut,
+} from '../../../redux/features/globalSlice';
 const db = new Database();
+import {useIsFocused} from '@react-navigation/native';
 
 function Home() {
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+  const {dataFilter} = useSelector(state => state.globalStm);
   const [data, setData] = useState(null);
   const [dataPemasukan, setDataPemasukan] = useState([]);
   const [dataPengeluaran, setDataPengeluaran] = useState([]);
@@ -27,49 +36,107 @@ function Home() {
   const [totalPengeluaran, setTotalPengeluaran] = useState(0);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
+
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
-      await db
-        .getDataTransaksi('id001', 'pemasukan')
-        .then(data => {
-          let dt = JSON.parse(JSON.stringify(data))
-          console.log('data get = ' + dt.nominal);
-          setDataPemasukan(data);
-        })
-        .catch(err => {
-          console.log('error home1 = ' + err);
-        });
+      if (dataFilter.status !== true) {
+        await db
+          .getDataTransaksi('id001', 'pemasukan')
+          .then(data1 => {
+            if (data1 !== null) {
+              let total = 0;
+              for (const row of data1) {
+                total = total + row.nominal;
+              }
+              setTotalPemasukan(total);
+            }
+            setDataPemasukan(data1);
+            dispatch(
+              storeDataTransaksiIn({
+                data: data1,
+              }),
+            );
+          })
+          .catch(err => {
+            console.log('error home1 = ' + err);
+          });
 
-      await db
-        .getDataTransaksi('id001', 'pengeluaran')
-        .then(data => {
-          // console.log("data = "+JSON.stringify(data));
-          setDataPengeluaran(JSON.parse(JSON.stringify(data)));
-        })
-        .catch(err => {
-          console.log('error home2 = ' + err);
-        });
-      const dtPem = JSON.parse(JSON.stringify(dataPemasukan));
-      const dtPen = JSON.parse(JSON.stringify(dataPengeluaran));
+        await db
+          .getDataTransaksi('id001', 'pengeluaran')
+          .then(data2 => {
+            if (data2 !== null) {
+              let total = 0;
+              for (const row of data2) {
+                total = total + row.nominal;
+              }
+              setTotalPengeluaran(total);
+            }
+            setDataPengeluaran(data2);
+            dispatch(storeDataTransaksiOut({data: data2}));
+          })
+          .catch(err => {
+            console.log('error home2 = ' + err);
+          });
+      } else {
+        console.log("data from redux = "+JSON.stringify(dataFilter));
+        await db
+          .getDataTransaksiWhere(
+            'id001',
+            'pemasukan',
+            dataFilter.urutan_pemasukan,
+            dataFilter.urutan_pengeluaran,
+            dataFilter.tanggal_dari,
+            dataFilter.tanggal_sampai,
+            dataFilter.jenis_transaksi,
+          )
+          .then(data1 => {
+            if (data1 !== null) {
+              let total = 0;
+              for (const row of data1) {
+                total = total + row.nominal;
+              }
+              setTotalPemasukan(total);
+            }
+            setDataPemasukan(data1);
+            dispatch(
+              storeDataTransaksiIn({
+                data: data1,
+              }),
+            );
+          })
+          .catch(err => {
+            console.log('error home1 = ' + err);
+          });
 
-      dtPem !== null &&
-        dtPem.map(item => {
-          setTotalPemasukan(totalPemasukan + item.nominal);
-        });
-      dtPen !== null &&
-        dtPen.map(item => {
-          setTotalPengeluaran(totalPengeluaran + item.nominal);
-        });
-
-      setTotal(totalPemasukan - totalPengeluaran);
-      // console.log('data_dtPem = ' + dtPem);
-      console.log('data_nominal = ' + totalPemasukan);
+        await db
+          .getDataTransaksiWhere('id001', 'pengeluaran')
+          .then(data2 => {
+            if (data2 !== null) {
+              let total = 0;
+              for (const row of data2) {
+                total = total + row.nominal;
+              }
+              setTotalPengeluaran(total);
+            }
+            setDataPengeluaran(data2);
+            dispatch(storeDataTransaksiOut({data: data2}));
+          })
+          .catch(err => {
+            console.log('error home2 = ' + err);
+          });
+      }
       setLoading(false);
     };
-    getData();
-  }, []);
-  // console.log("data pemas = "+totalPemasukan);
+    isFocused && getData();
+  }, [isFocused, dataFilter]);
+
+  useEffect(() => {
+    if (dataPemasukan && dataPengeluaran) {
+      // console.log('data pemasukan = ' + totalPemasukan);
+      setTotal(totalPemasukan - totalPengeluaran);
+    }
+  }, [totalPemasukan, totalPengeluaran]);
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -106,10 +173,7 @@ function Home() {
           }}>
           <Navigation />
         </View>
-        <BottomSheetNav
-          dataPengeluaran={dataPengeluaran}
-          dataPemasukan={dataPemasukan}
-        />
+        <BottomSheetNav />
         <ScreenBottomSheetFilter />
       </SafeAreaView>
     </GestureHandlerRootView>
@@ -120,10 +184,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#40300F',
   },
-  // contentContainer: {
-  //   flex: 1,
-  //   alignItems: 'center',
-  // },
 });
 
 export default Home;

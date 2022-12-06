@@ -48,7 +48,7 @@ export default class Database {
     nominal,
     deskripsi,
     date,
-    time
+    time,
   }) {
     return new Promise((resolve, reject) => {
       this.initDb()
@@ -62,7 +62,16 @@ export default class Database {
               await tx
                 .executeSql(
                   'INSERT INTO transaksi(id_user, transaksi, jenis_transaksi, kategori, nominal, description, tanggal_transaksi, waktu_transaksi) VALUES(?,?,?,?,?,?,?,?)',
-                  [id_user, transaksi, jenisTransaksi, kategori, nominal, deskripsi, date, time],
+                  [
+                    id_user,
+                    transaksi,
+                    jenisTransaksi,
+                    kategori,
+                    nominal,
+                    deskripsi,
+                    date,
+                    time,
+                  ],
                 )
                 .then(([tx, res]) => {
                   if (res) {
@@ -104,8 +113,7 @@ export default class Database {
                     // const data = JSON.parse(JSON.stringify(res.rows.item(0)));
                     // console.log("data data = "+JSON.stringify(res.rows.item()));
                     const data = new Array();
-                    for(let i = 0; i < res.rows.length; i++)
-                    {
+                    for (let i = 0; i < res.rows.length; i++) {
                       data.push(JSON.parse(JSON.stringify(res.rows.item(i))));
                     }
                     resolve(data);
@@ -114,6 +122,81 @@ export default class Database {
                     // console.log("data data err");
                   }
                 });
+            }).then(() => {
+              this.closeDatabase(db);
+            });
+          });
+        })
+        .catch(er => {
+          console.log(er);
+          // reject(er);
+        });
+    });
+  }
+
+  async getDataTransaksiWhere(
+    id_user,
+    transaksi,
+    urutan_pemasukan,
+    urutan_pengeluaran,
+    tanggal_dari,
+    tanggal_sampai,
+    jenis,
+  ) {
+    return new Promise((resolve, reject) => {
+      this.initDb()
+        .then(db => {
+          db.transaction(async tx => {
+            await tx.executeSql(
+              'CREATE TABLE IF NOT EXISTS transaksi (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), transaksi VARCHAR(15), jenis_transaksi VARCHAR(20), kategori VARCHAR(50), nominal INTEGER(100), description TEXT, tanggal_transaksi DATE, waktu_transaksi TIME)',
+            );
+          }).then(async () => {
+            db.transaction(async tx => {
+              let qry_urutan = '';
+              let qry_jenis = '';
+              if (transaksi === 'pemasukan') {
+                qry_urutan = ' ORDER BY nominal ' + urutan_pemasukan;
+              } else {
+                qry_urutan = ' ORDER BY nominal ' + urutan_pengeluaran;
+              }
+
+              let qry_tanggal =
+                ' AND tanggal_transaksi >= ' +
+                tanggal_dari +
+                ' AND tanggal_transaksi <= ' +
+                tanggal_sampai;
+
+              if (jenis !== null) {
+                qry_jenis = ' AND jenis_transaksi = ' + jenis;
+              }
+
+              let query =
+                'SELECT * FROM transaksi WHERE id_user = ? AND transaksi = ?' +
+                qry_jenis +
+                '' +
+                qry_tanggal +
+                '' +
+                qry_urutan;
+              console.log("query = "+query);
+              // await tx
+              //   .executeSql(
+              //     'SELECT * FROM transaksi WHERE id_user = ? AND transaksi = ? ORDER BY jenis_transaksi ASC',
+              //     [id_user, transaksi],
+              //   )
+              //   .then(([tx, res]) => {
+              //     if (res.rows.length !== 0) {
+              //       // const data = JSON.parse(JSON.stringify(res.rows.item(0)));
+              //       // console.log("data data = "+JSON.stringify(res.rows.item()));
+              //       const data = new Array();
+              //       for (let i = 0; i < res.rows.length; i++) {
+              //         data.push(JSON.parse(JSON.stringify(res.rows.item(i))));
+              //       }
+              //       resolve(data);
+              //     } else {
+              //       resolve(null);
+              //       // console.log("data data err");
+              //     }
+              //   });
             }).then(() => {
               this.closeDatabase(db);
             });

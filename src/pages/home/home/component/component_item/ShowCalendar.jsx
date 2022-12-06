@@ -13,7 +13,7 @@ function ShowCalendar({date, title, onChangeDate}) {
   const dispatch = useDispatch();
 
   const handleChangeDate = value => {
-    onChangeDate(moment(value).format('ll'), value);
+    onChangeDate(moment(value).format('L'), value);
     // console.log(moment(value).format('ll'));
     dispatch(
       storeGlobalSecChildSheet({

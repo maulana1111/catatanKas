@@ -1,27 +1,25 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-function FilterJenisItem({images, text, state, onChange}) {
-  //   const txt = '../../../../../assets/filter' + image;
-  //   const image = require(images);
-
-  const handle = value => {
-    onChange(value);
+function FilterJenisItem({images, text, value, state, onChange}) {
+  
+  const handle = val => {
+    onChange(val);
   };
 
   return (
     <View>
-      <TouchableOpacity onPress={() => handle(text)}>
+      <TouchableOpacity onPress={() => handle(value)}>
         <View
           style={[
             styles.card,
-            state !== text && {backgroundColor: '#fff', borderColor: '#D8D8D8'},
+            state !== value && {backgroundColor: '#fff', borderColor: '#D8D8D8'},
           ]}>
           <Image
             source={images}
-            style={[styles.img, state !== text && {tintColor: '#9A9A9A'}]}
+            style={[styles.img, state !== value ? {tintColor: '#9A9A9A'} : {tintColor: '#DBA42D'}]}
           />
-          <Text>{text}</Text>
+          <Text style={state !== value ? {color: '#9A9A9A'} : {color: '#DBA42D'}}>{text}</Text>
         </View>
       </TouchableOpacity>
     </View>

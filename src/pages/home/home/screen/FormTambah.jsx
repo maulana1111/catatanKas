@@ -179,20 +179,13 @@ function FormTambah() {
       kategori: kategori,
       nominal: nominal,
       deskripsi: deskripsi,
-      date: moment(new Date).format('ll'),
+      date: moment(new Date).format('L'),
       time: moment(new Date).format('LT')
     };
     db.insertDataTransaksi(data)
-      .then(data => console.log(data))
+      .then(data => navigation.navigate('Home'))
       .catch(err => console.log(err));
   };
-
-  // useEffect(() => {
-  //   if (nominal) {
-  //     return setTxtNominal(ChangeRupiah(nominal));
-  //   }
-  //   // setTxtNominal('');
-  // }, [nominal]);
 
   return (
     <View

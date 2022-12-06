@@ -10,8 +10,8 @@ function FilterComponent({title, text1, text2, state, onChangeState}) {
     <View style={{marginVertical: 5}}>
       <Text style={styles.text}>{title}</Text>
       <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-        <TouchableOpacity onPress={() => handleSetState('des')}>
-          {state === 'des' ? (
+        <TouchableOpacity onPress={() => handleSetState('desc')}>
+          {state === 'desc' ? (
             <View
               style={[
                 styles.toogleBtn,

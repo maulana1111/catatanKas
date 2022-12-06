@@ -2,20 +2,18 @@ import React, {Fragment} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import ItemScreen from './component_item/item-screen';
 
+import {useSelector} from 'react-redux';
 import {ScrollView, FlatList} from 'react-native-gesture-handler';
+import {useState} from 'react';
 
-function ScreenBottomSheet({dataPemasukan, dataPengeluaran}) {
-  const data = [
-    {key: '1'},
-    {key: '2'},
-    {key: '3'},
-    {key: '4'},
-    {key: '5'},
-    {key: '6'},
-    {key: '7'},
-    {key: '8'},
-    {key: '9'},
-  ];
+function ScreenBottomSheet() {
+  const {dataTransaksiIn, dataTransaksiOut} = useSelector(
+    state => state.globalStm,
+  );
+
+  const [stateTitle, setStateTitle] = useState('');
+  const [stateTemp, setStateTemp] = useState('');
+
   return (
     <View>
       <View
@@ -30,10 +28,22 @@ function ScreenBottomSheet({dataPemasukan, dataPengeluaran}) {
             <Image source={require('../../../../assets/Share.png')} />
           </View>
 
-          {dataPemasukan !== null &&
-            dataPemasukan.map((item, index) => {
-              console.log(item);
-              return <ItemScreen jenis={'in'} key={index} />;
+          {dataTransaksiIn !== null &&
+            dataTransaksiIn.map((item, index) => {
+              return (
+                <View key={index}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontFamily: 'BalooBhaijaan2-Regular',
+                      color: '#9A9A9A',
+                      marginVertical: 5
+                    }}>
+                    {item.jenis_transaksi}
+                  </Text>
+                  <ItemScreen jenis={item.transaksi} item={item} />
+                </View>
+              );
             })}
         </View>
       </View>
@@ -52,10 +62,22 @@ function ScreenBottomSheet({dataPemasukan, dataPengeluaran}) {
             <Image source={require('../../../../assets/Share.png')} />
           </View>
 
-          {dataPengeluaran !== null &&
-            dataPengeluaran.map((item, index) => {
-              console.log(item);
-              return <ItemScreen jenis={'in'} key={index} />;
+          {dataTransaksiOut !== null &&
+            dataTransaksiOut.map((item, index) => {
+              return (
+                <View key={index}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontFamily: 'BalooBhaijaan2-Regular',
+                      color: '#9A9A9A',
+                      marginVertical: 5
+                    }}>
+                    {item.jenis_transaksi}
+                  </Text>
+                  <ItemScreen jenis={item.transaksi} item={item} />
+                </View>
+              );
             })}
         </View>
       </View>

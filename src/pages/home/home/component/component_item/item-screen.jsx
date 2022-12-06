@@ -1,22 +1,26 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {color} from 'react-native-reanimated';
+import ItemImage from './item-Image';
 
-function ItemScreen({jenis, kategori}) {
+function ItemScreen({jenis, item}) {
+  const ChangeRupiah = number => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+    }).format(number);
+  };
   return (
     <View>
-      <Text style={styles.txt1}>Tranfer</Text>
+      
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={{flexDirection: 'row'}}>
+          <ItemImage state={item.kategori} />
           <View>
-            <Image
-              source={require('../../../../../assets/BCA_icon.png')}
-              style={{width: 50, height: 50}}
-            />
-          </View>
-          <View>
-            <Text style={styles.txt2}>{kategori}</Text>
-            <Text style={styles.txt3}>05:34 Andrian Toko</Text>
+            <Text style={styles.txt2}>{item.kategori}</Text>
+            <Text style={styles.txt3}>
+              {item.waktu_transaksi} {item.description}
+            </Text>
           </View>
         </View>
         <View>
@@ -27,9 +31,11 @@ function ItemScreen({jenis, kategori}) {
           <Text
             style={[
               styles.txt4,
-              jenis === 'in' ? {color: '#31CE5D'} : {color: '#FF5942'},
+              jenis === 'pemasukan' ? {color: '#31CE5D'} : {color: '#FF5942'},
             ]}>
-            +Rp 500,000.00
+            {jenis === 'pemasukan'
+              ? '+' + ChangeRupiah(item.nominal)
+              : '-' + ChangeRupiah(item.nominal)}
           </Text>
         </View>
       </View>
