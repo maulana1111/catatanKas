@@ -45,11 +45,11 @@ function Home() {
           .getDataTransaksi('id001', 'pemasukan')
           .then(data1 => {
             if (data1 !== null) {
-              let total = 0;
+              let totall = 0;
               for (const row of data1) {
-                total = total + row.nominal;
+                totall = totall + row.nominal;
               }
-              setTotalPemasukan(total);
+              setTotalPemasukan(totall);
             }
             setDataPemasukan(data1);
             dispatch(
@@ -79,16 +79,16 @@ function Home() {
             console.log('error home2 = ' + err);
           });
       } else {
-        console.log("data from redux = "+JSON.stringify(dataFilter));
+        console.log('data from redux = ' + JSON.stringify(dataFilter));
         await db
           .getDataTransaksiWhere(
             'id001',
             'pemasukan',
-            dataFilter.urutan_pemasukan,
-            dataFilter.urutan_pengeluaran,
-            dataFilter.tanggal_dari,
-            dataFilter.tanggal_sampai,
-            dataFilter.jenis_transaksi,
+            dataFilter.data.urutan_pemasukan,
+            dataFilter.data.urutan_pengeluaran,
+            dataFilter.data.tanggal_dari,
+            dataFilter.data.tanggal_sampai,
+            dataFilter.data.jenis_transaksi,
           )
           .then(data1 => {
             if (data1 !== null) {
@@ -129,10 +129,10 @@ function Home() {
       setLoading(false);
     };
     isFocused && getData();
-  }, [isFocused, dataFilter]);
+  }, [isFocused, dataFilter.status]);
 
   useEffect(() => {
-    if (dataPemasukan && dataPengeluaran) {
+    if (dataPemasukan !== 0 && dataPengeluaran !== 0) {
       // console.log('data pemasukan = ' + totalPemasukan);
       setTotal(totalPemasukan - totalPengeluaran);
     }

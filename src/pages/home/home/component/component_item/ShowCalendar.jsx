@@ -7,13 +7,13 @@ import {useSelector, useDispatch} from 'react-redux';
 import {storeGlobalSecChildSheet} from '../../../../../redux/features/globalSlice';
 // import
 
-function ShowCalendar({date, title, onChangeDate}) {
+function ShowCalendar({date, title, onChangeDate, selectedStartDate}) {
   const [open, setOpen] = useState(false);
   const {secondConditionChildSheet} = useSelector(state => state.globalStm);
   const dispatch = useDispatch();
 
   const handleChangeDate = value => {
-    onChangeDate(moment(value).format('L'), value);
+    onChangeDate(moment(value).format('L'), moment(value).format('ll'), value);
     // console.log(moment(value).format('ll'));
     dispatch(
       storeGlobalSecChildSheet({
@@ -58,10 +58,21 @@ function ShowCalendar({date, title, onChangeDate}) {
                   }
                 : {right: -45},
             ]}>
-            <CalendarPicker
-              textStyle={{color: 'black'}}
-              onDateChange={e => handleChangeDate(e)}
-            />
+            {selectedStartDate !== null ? (
+              <CalendarPicker
+                textStyle={{color: 'black'}}
+                // selectedEndDate={selectedStartDate}
+                // disabledDates=
+                selectedStartDate={selectedStartDate}
+                minDate={selectedStartDate}
+                onDateChange={e => handleChangeDate(e)}
+              />
+            ) : (
+              <CalendarPicker
+                textStyle={{color: 'black'}}
+                onDateChange={e => handleChangeDate(e)}
+              />
+            )}
           </View>
         )}
       </View>

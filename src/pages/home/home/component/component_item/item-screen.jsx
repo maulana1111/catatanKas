@@ -12,18 +12,27 @@ function ItemScreen({jenis, item}) {
   };
   return (
     <View>
-      
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={{flexDirection: 'row'}}>
-          <ItemImage state={item.kategori} />
+          <View style={{marginTop: 10}}>
+            <ItemImage state={item.kategori} />
+          </View>
           <View>
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: 'BalooBhaijaan2-Regular',
+                color: '#9A9A9A',
+              }}>
+              {item.jenis_transaksi}
+            </Text>
             <Text style={styles.txt2}>{item.kategori}</Text>
             <Text style={styles.txt3}>
               {item.waktu_transaksi} {item.description}
             </Text>
           </View>
         </View>
-        <View>
+        <View style={{marginTop: 10}}>
           <Image
             source={require('../../../../../assets/trash_icon.png')}
             style={{width: 28, height: 28, alignSelf: 'flex-end'}}

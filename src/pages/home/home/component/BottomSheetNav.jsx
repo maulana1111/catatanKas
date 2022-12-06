@@ -89,9 +89,9 @@ function BottomSheetNav() {
             <Text style={styles.txt1}>Transaksi Hari Ini</Text>
             <Text style={styles.txt2}>
               {dataFilter.status === true
-                ? moment(dataFilter.data.tanggal_dari).format('ll') +
+                ? moment(new Date(dataFilter.data.tanggal_dari)).format('ll') +
                   ' - ' +
-                  moment(dataFilter.data.tanggal_sampai).format('ll')
+                  moment(new Date(dataFilter.data.tanggal_sampai)).format('ll')
                 : moment(new Date()).format('ll')}
             </Text>
           </View>

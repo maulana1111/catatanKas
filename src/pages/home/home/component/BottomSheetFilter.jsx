@@ -86,8 +86,8 @@ function ScreenBottomSheetFilter() {
       storeDataFilter({
         urutan_pengeluaran: stateIn,
         urutan_pemasukan: stateOut,
-        tanggal_dari: dateFromCom,
-        tanggal_sampai: dateToCom,
+        tanggal_dari: dateFrom,
+        tanggal_sampai: dateTo,
         jenis_transaksi: stateJenis,
       }),
     );
@@ -191,6 +191,7 @@ function ScreenBottomSheetFilter() {
               <ShowCalendar
                 date={dateTo === '' ? moment(date).format('ll') : dateTo}
                 title={'Sampai Tanggal'}
+                selectedStartDate={dateFromCom}
                 onChangeDate={(value1, value2) =>
                   handleChangeDateTo(value1, value2)
                 }

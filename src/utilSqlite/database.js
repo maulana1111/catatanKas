@@ -110,8 +110,6 @@ export default class Database {
                 )
                 .then(([tx, res]) => {
                   if (res.rows.length !== 0) {
-                    // const data = JSON.parse(JSON.stringify(res.rows.item(0)));
-                    // console.log("data data = "+JSON.stringify(res.rows.item()));
                     const data = new Array();
                     for (let i = 0; i < res.rows.length; i++) {
                       data.push(JSON.parse(JSON.stringify(res.rows.item(i))));
@@ -119,7 +117,6 @@ export default class Database {
                     resolve(data);
                   } else {
                     resolve(null);
-                    // console.log("data data err");
                   }
                 });
             }).then(() => {
@@ -152,51 +149,27 @@ export default class Database {
             );
           }).then(async () => {
             db.transaction(async tx => {
-              let qry_urutan = '';
-              let qry_jenis = '';
-              if (transaksi === 'pemasukan') {
-                qry_urutan = ' ORDER BY nominal ' + urutan_pemasukan;
-              } else {
-                qry_urutan = ' ORDER BY nominal ' + urutan_pengeluaran;
-              }
-
-              let qry_tanggal =
-                ' AND tanggal_transaksi >= ' +
-                tanggal_dari +
-                ' AND tanggal_transaksi <= ' +
-                tanggal_sampai;
-
-              if (jenis !== null) {
-                qry_jenis = ' AND jenis_transaksi = ' + jenis;
-              }
-
-              let query =
-                'SELECT * FROM transaksi WHERE id_user = ? AND transaksi = ?' +
-                qry_jenis +
-                '' +
-                qry_tanggal +
-                '' +
-                qry_urutan;
-              console.log("query = "+query);
-              // await tx
-              //   .executeSql(
-              //     'SELECT * FROM transaksi WHERE id_user = ? AND transaksi = ? ORDER BY jenis_transaksi ASC',
-              //     [id_user, transaksi],
-              //   )
-              //   .then(([tx, res]) => {
-              //     if (res.rows.length !== 0) {
-              //       // const data = JSON.parse(JSON.stringify(res.rows.item(0)));
-              //       // console.log("data data = "+JSON.stringify(res.rows.item()));
-              //       const data = new Array();
-              //       for (let i = 0; i < res.rows.length; i++) {
-              //         data.push(JSON.parse(JSON.stringify(res.rows.item(i))));
-              //       }
-              //       resolve(data);
-              //     } else {
-              //       resolve(null);
-              //       // console.log("data data err");
-              //     }
-              //   });
+              await tx
+                .executeSql(
+                  `SELECT * FROM transaksi WHERE id_user = ? AND transaksi = ? AND tanggal_transaksi >= ? AND tanggal_transaksi <= ? ${jenis !== null && 'AND jenis_transaksi = '+jenis} ORDER BY nominal ${
+                    transaksi === 'pemasukan'
+                      ? urutan_pemasukan.toUpperCase()
+                      : urutan_pengeluaran.toUpperCase()
+                  }`,
+                  [id_user, transaksi, tanggal_dari, tanggal_sampai],
+                )
+                .then(([tx, res]) => {
+                  if (res.rows.length !== 0) {
+                    const data = new Array();
+                    for (let i = 0; i < res.rows.length; i++) {
+                      data.push(JSON.parse(JSON.stringify(res.rows.item(i))));
+                    }
+                    resolve(data);
+                  } else {
+                    resolve(null);
+                    // console.log("data data err");
+                  }
+                });
             }).then(() => {
               this.closeDatabase(db);
             });
