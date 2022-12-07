@@ -73,12 +73,18 @@ function ComponentTransaksi({dataIn, dataOut}) {
                   styles.text4,
                   {fontSize: 12, color: 'rgba(49, 206, 93, 1)'},
                 ]}>
-                +Rp 500.000
+                +{dataIn !== null ? dataIn : 'Rp.0'}
               </Text>
             </View>
             <View style={styles.bg1}>
               <View
-                style={[styles.bg2, {backgroundColor: '#31CE5D', width: `${dataRes}%`}]}
+                style={[
+                  styles.bg2,
+                  {
+                    backgroundColor: '#31CE5D',
+                    width: `${dataIn !== null ? dataRes : '0'}%`,
+                  },
+                ]}
               />
             </View>
             <View
@@ -89,12 +95,18 @@ function ComponentTransaksi({dataIn, dataOut}) {
               }}>
               <Text style={[styles.text4, {fontSize: 14}]}>Pengeluaran</Text>
               <Text style={[styles.text4, {fontSize: 12, color: '#FF5942'}]}>
-                -Rp 500.000
+                -{dataOut !== null ? dataIn : 'Rp.0'}
               </Text>
             </View>
             <View style={styles.bg1}>
               <View
-                style={[styles.bg2, {backgroundColor: '#FF5942', width: `${dtCount}%`}]}
+                style={[
+                  styles.bg2,
+                  {
+                    backgroundColor: '#FF5942',
+                    width: `${dataOut !== null ? dtCount : '0'}%`,
+                  },
+                ]}
               />
             </View>
           </View>

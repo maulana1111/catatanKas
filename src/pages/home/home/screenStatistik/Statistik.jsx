@@ -31,20 +31,20 @@ function Statistik() {
       await db
         .getDataTransaksiThisWeek('id001', 'pemasukan')
         .then(data1 => {
-          // console.log('data statistik pemasukan = ' + JSON.stringify(data1));
+          console.log('data statistik pemasukan = ' + JSON.stringify(data1));
           if (data1 !== null) {
             let totall = 0;
             for (const row of data1) {
               totall = totall + row.nominal;
             }
             setTotalPemasukan(totall);
+            setDataPemasukan(data1);
+            dispatch(
+              storeDataTransaksiIn({
+                data: data1,
+              }),
+            );
           }
-          setDataPemasukan(data1);
-          dispatch(
-            storeDataTransaksiIn({
-              data: data1,
-            }),
-          );
         })
         .catch(err => {
           console.log('error home1 = ' + err);
@@ -53,7 +53,7 @@ function Statistik() {
       await db
         .getDataTransaksiThisWeek('id001', 'pengeluaran')
         .then(data2 => {
-          // console.log('data statistik pengeluaran = ' + JSON.stringify(data2));
+          console.log('data statistik pengeluaran = ' + JSON.stringify(data2));
           if (data2 !== null) {
             let total = 0;
             for (const row of data2) {
@@ -136,7 +136,10 @@ function Statistik() {
           </View>
         </View>
         {stateScreen === 'transaksi' ? (
-          <ComponentTransaksi dataIn={totalPemasukan} dataOut={totalPengeluaran} />
+          <ComponentTransaksi
+            dataIn={totalPemasukan}
+            dataOut={totalPengeluaran}
+          />
         ) : (
           <ComponentLaporan />
         )}

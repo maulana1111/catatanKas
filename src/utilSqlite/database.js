@@ -208,7 +208,7 @@ export default class Database {
             db.transaction(async tx => {
               await tx
                 .executeSql(
-                  `SELECT * FROM transaksi WHERE id_user = '${id_user}' AND transaksi = '${transaksi}' AND  (strftime('%W', tanggal_transaksi) = strftime('%W', 'now') )`,
+                  `SELECT * FROM transaksi WHERE id_user = '${id_user}' AND transaksi = '${transaksi}' AND (strftime('%W', tanggal_transaksi) = strftime('%W', 'now'))`,
                   [],
                 )
                 .then(([tx, res]) => {

@@ -7,7 +7,9 @@ const globalSlice = createSlice({
     secondConditionChildSheet: false,
     dataTransaksiIn: [],
     dataTransaksiOut: [],
-    dataFilter:{
+    dataStatistikIn: [],
+    dataStatistikOut: [],
+    dataFilter: {
       status: false,
       data: {
         urutan_pemasukan: '',
@@ -16,9 +18,9 @@ const globalSlice = createSlice({
         tanggal_sampai: '',
         jenis_transaksi: '',
         real_tanggal_dari: '',
-        real_tanggal_sampai: ''
-      }
-    }
+        real_tanggal_sampai: '',
+      },
+    },
   },
   reducers: {
     storeGlobalChildSheet: (state, action) => {
@@ -33,16 +35,25 @@ const globalSlice = createSlice({
     storeDataTransaksiOut: (state, action) => {
       state.dataTransaksiOut = action.payload.data;
     },
+    storeDataStatistikIn: (state, action) => {
+      state.dataStatistikIn = action.payload.data;
+    },
+    storeDataStatistikOut: (state, action) => {
+      state.dataStatistikOut = action.payload.data;
+    },
     storeDataFilter: (state, action) => {
       state.dataFilter.status = true;
-      state.dataFilter.data.urutan_pengeluaran = action.payload.urutan_pengeluaran;
+      state.dataFilter.data.urutan_pengeluaran =
+        action.payload.urutan_pengeluaran;
       state.dataFilter.data.urutan_pemasukan = action.payload.urutan_pemasukan;
       state.dataFilter.data.tanggal_dari = action.payload.tanggal_dari;
       state.dataFilter.data.tanggal_sampai = action.payload.tanggal_sampai;
       state.dataFilter.data.jenis_transaksi = action.payload.jenis_transaksi;
-      state.dataFilter.data.real_tanggal_dari = action.payload.real_tanggal_dari;
-      state.dataFilter.data.real_tanggal_sampai = action.payload.real_tanggal_sampai;
-    }
+      state.dataFilter.data.real_tanggal_dari =
+        action.payload.real_tanggal_dari;
+      state.dataFilter.data.real_tanggal_sampai =
+        action.payload.real_tanggal_sampai;
+    },
   },
 });
 
@@ -51,6 +62,8 @@ export const {
   storeGlobalSecChildSheet,
   storeDataTransaksiIn,
   storeDataTransaksiOut,
-  storeDataFilter
+  storeDataFilter,
+  storeDataStatistikIn,
+  storeDataStatistikOut,
 } = globalSlice.actions;
 export default globalSlice.reducer;

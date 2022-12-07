@@ -193,8 +193,9 @@ function FormTambah() {
       kategori: kategori,
       nominal: nominal,
       deskripsi: deskripsi,
-      date: '2022-11-25',
-      time: moment(new Date()).format('LT')
+      date: tanggal,
+      // date: '2022-11-25',
+      time: moment(new Date()).format('LT'),
     };
     db.insertDataTransaksi(data)
       .then(data => navigation.navigate('Home'))
