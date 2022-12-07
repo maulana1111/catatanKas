@@ -3,11 +3,21 @@ import {View, Dimensions} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import LinearGradient from 'react-native-linear-gradient';
 
-function GrafikScreenPemasukan({state}) {
+function GrafikScreenPemasukan({dataIn}) {
+  const label = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+  const dataPemasukan = {
+    labels: label,
+    datasets: [
+      {
+        data: dataIn,
+        color: (opacity = 1) => `rgba(49, 206, 93, 0.2)`,
+      },
+    ],
+  };
   return (
     <View style={{flex: 1}}>
       <LineChart
-        data={state}
+        data={dataPemasukan}
         width={Dimensions.get('screen').width} // from react-native
         height={220}
         withHorizontalLabels={false}
@@ -17,9 +27,9 @@ function GrafikScreenPemasukan({state}) {
           strokeWidth: 3,
           withShadow: false,
           withOuterLines: false,
-          backgroundColor: 'rgba(255, 230, 175, 0.0)',
-          backgroundGradientFrom: 'rgba(255, 230, 175, 0.0)',
-          backgroundGradientTo: 'rgba(255, 230, 175, 0.0)',
+          backgroundColor: 'rgba(255,255,255, 1)',
+          backgroundGradientFrom: 'rgba(255,255,255, 1)',
+          backgroundGradientTo: 'rgba(255,255,255, 1)',
           decimalPlaces: 2, // optional, defaults to 2dp
           color: (opacity = 1) => `rgba(2,2,2, ${opacity})`,
           style: {

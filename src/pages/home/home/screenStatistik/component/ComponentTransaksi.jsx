@@ -13,74 +13,29 @@ import {
   ToastAndroid,
   ScrollView,
 } from 'react-native';
+import {useSelector} from 'react-redux';
+import Database from '../../../../../utilSqlite/database';
+const db = new Database();
 
-function ComponentTransaksi() {
+function ComponentTransaksi({dataIn, dataOut}) {
   const [stateMetode, setStateMetode] = useState('transaksi');
   const [dataGrafik, setDataGrafik] = useState({});
-  const label = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
-  const dataTransaksi = {
-    labels: label,
-    datasets: [
-      {
-        data: [
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-        ],
-        color: (opacity = 1) => `rgba(49, 206, 93, 0.2)`,
-      },
-      {
-        data: [
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-        ],
-        color: (opacity = 1) => `rgba(255, 89, 66, 0.3)`,
-      },
-    ],
-  };
-  const dataPemasukan = {
-    labels: label,
-    datasets: [
-      {
-        data: [
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-        ],
-        color: (opacity = 1) => `rgba(49, 206, 93, 0.2)`,
-      },
-    ],
-  };
-  const dataPengeluaran = {
-    labels: label,
-    datasets: [
-      {
-        data: [
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-        ],
-        color: (opacity = 1) => `rgba(255, 89, 66, 0.3)`,
-      },
-    ],
-  };
+  const [loading, setLoading] = useState(false);
+  const [dataPemasukanTransaksi, setDataPemasukanTransaksi] = useState([]);
+  const [dataPengeluaranTransaksi, setDataPengeluaranTransaksi] = useState([]);
+
+  // console.log("data = "+JSON.stringify(dataTransaksiIn));
+
+  // for (let data of dataTransaksiIn) {
+  //   dataIn.push(data.nominal);
+  // }
+  // for (let data of dataTransaksiOut) {
+  //   dataOut.push(data.nominal);
+  // }
+
+  const dtCount = Math.round((dataOut / dataIn) * 100);
+  console.log('dt = ' + dtCount);
+  const dataRes = 100 - dtCount;
 
   const HandleChangeState = e => {
     setStateMetode(e);
@@ -123,7 +78,7 @@ function ComponentTransaksi() {
             </View>
             <View style={styles.bg1}>
               <View
-                style={[styles.bg2, {backgroundColor: '#31CE5D', width: '80%'}]}
+                style={[styles.bg2, {backgroundColor: '#31CE5D', width: `${dataRes}%`}]}
               />
             </View>
             <View
@@ -139,7 +94,7 @@ function ComponentTransaksi() {
             </View>
             <View style={styles.bg1}>
               <View
-                style={[styles.bg2, {backgroundColor: '#FF5942', width: '80%'}]}
+                style={[styles.bg2, {backgroundColor: '#FF5942', width: `${dtCount}%`}]}
               />
             </View>
           </View>
@@ -220,15 +175,15 @@ function ComponentTransaksi() {
               </TouchableOpacity>
             </View>
             <View style={{flex: 1}}>
-              {stateMetode === 'transaksi' && (
-                <GrafikScreenTransaksi state={dataTransaksi} />
+              {/* {stateMetode === 'transaksi' && (
+                <GrafikScreenTransaksi dataIn={dataIn} dataOut={dataOut} />
               )}
               {stateMetode === 'pemasukan' && (
-                <GrafikScreenPemasukan state={dataPemasukan} />
+                <GrafikScreenPemasukan dataIn={dataIn} />
               )}
               {stateMetode === 'pengeluaran' && (
-                <GrafikScreenPengeluaran state={dataPengeluaran} />
-              )}
+                <GrafikScreenPengeluaran dataOut={dataOut} />
+              )} */}
             </View>
           </View>
           <View style={{marginVertical: 70}} />

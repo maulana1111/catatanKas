@@ -57,15 +57,6 @@ function ScreenBottomSheet() {
             dataTransaksiOut.map((item, index) => {
               return (
                 <View key={index}>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontFamily: 'BalooBhaijaan2-Regular',
-                      color: '#9A9A9A',
-                      marginVertical: 5
-                    }}>
-                    {item.jenis_transaksi}
-                  </Text>
                   <ItemScreen jenis={item.transaksi} item={item} />
                 </View>
               );

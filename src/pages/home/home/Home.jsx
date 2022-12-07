@@ -24,6 +24,8 @@ import {
 } from '../../../redux/features/globalSlice';
 const db = new Database();
 import {useIsFocused} from '@react-navigation/native';
+import {Bounce} from 'react-native-animated-spinkit';
+import Modal from 'react-native-modal';
 
 function Home() {
   const isFocused = useIsFocused();
@@ -79,15 +81,14 @@ function Home() {
             console.log('error home2 = ' + err);
           });
       } else {
-        console.log('data from redux = ' + JSON.stringify(dataFilter));
         await db
           .getDataTransaksiWhere(
             'id001',
             'pemasukan',
             dataFilter.data.urutan_pemasukan,
             dataFilter.data.urutan_pengeluaran,
-            dataFilter.data.tanggal_dari,
-            dataFilter.data.tanggal_sampai,
+            dataFilter.data.real_tanggal_dari,
+            dataFilter.data.real_tanggal_sampai,
             dataFilter.data.jenis_transaksi,
           )
           .then(data1 => {
@@ -97,20 +98,34 @@ function Home() {
                 total = total + row.nominal;
               }
               setTotalPemasukan(total);
+              setDataPemasukan(data1);
+              dispatch(
+                storeDataTransaksiIn({
+                  data: data1,
+                }),
+              );
             }
-            setDataPemasukan(data1);
-            dispatch(
-              storeDataTransaksiIn({
-                data: data1,
-              }),
-            );
           })
           .catch(err => {
             console.log('error home1 = ' + err);
+            setTotalPemasukan(0);
+            setDataPemasukan(null);
+            dispatch(
+              storeDataTransaksiIn({
+                data: null,
+              }),
+            );
           });
-
         await db
-          .getDataTransaksiWhere('id001', 'pengeluaran')
+          .getDataTransaksiWhere(
+            'id001',
+            'pengeluaran',
+            dataFilter.data.urutan_pemasukan,
+            dataFilter.data.urutan_pengeluaran,
+            dataFilter.data.real_tanggal_dari,
+            dataFilter.data.real_tanggal_sampai,
+            dataFilter.data.jenis_transaksi,
+          )
           .then(data2 => {
             if (data2 !== null) {
               let total = 0;
@@ -118,12 +133,15 @@ function Home() {
                 total = total + row.nominal;
               }
               setTotalPengeluaran(total);
+              setDataPengeluaran(data2);
+              dispatch(storeDataTransaksiOut({data: data2}));
             }
-            setDataPengeluaran(data2);
-            dispatch(storeDataTransaksiOut({data: data2}));
           })
           .catch(err => {
             console.log('error home2 = ' + err);
+            setTotalPengeluaran(0);
+            setDataPengeluaran(null);
+            dispatch(storeDataTransaksiOut({data: null}));
           });
       }
       setLoading(false);
@@ -132,16 +150,27 @@ function Home() {
   }, [isFocused, dataFilter.status]);
 
   useEffect(() => {
-    if (dataPemasukan !== 0 && dataPengeluaran !== 0) {
+    // if (dataPemasukan !== null && dataPengeluaran !== null) {
       // console.log('data pemasukan = ' + totalPemasukan);
+      // console.log("hit");
       setTotal(totalPemasukan - totalPengeluaran);
-    }
+    // }
   }, [totalPemasukan, totalPengeluaran]);
 
   return (
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaView>
         <MyStatusBar backgroundColor="#40300F" barStyle="light-content" />
+        <Modal isVisible={loading}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignSelf: 'center'
+            }}>
+            <Bounce size={48} color="#FFF" />
+          </View>
+        </Modal>
         <View
           style={{
             flexDirection: 'row',

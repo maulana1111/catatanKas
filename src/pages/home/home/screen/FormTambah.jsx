@@ -42,7 +42,19 @@ import 'moment/locale/id';
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 60;
 const SEC_MAX_TRANSLATE_Y = -SCREEN_HEIGHT;
-const db = new Database();
+const today = new Date();
+const tanggal =
+  today.getFullYear() +
+  '-' +
+  (today.getMonth() + 1) +
+  '-' +
+  (String(today.getDate()).length === 1
+    ? '0' + today.getDate()
+    : today.getDate());
+const time =
+  today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+// var dt = new Date(tanggal);
+// console.log('tanggal = ' + dt);
 
 function FormTambah() {
   const [stateScreen, setStateScreen] = useState('transaksi');
@@ -55,6 +67,7 @@ function FormTambah() {
   const translateY = useSharedValue(0);
   const translateDropShadow = useSharedValue(0);
   const navigation = useNavigation();
+  // console.log("date = "+time);
   const rBottomSheetStyle = useAnimatedStyle(() => {
     return {
       transform: [{translateY: translateY.value}],
@@ -172,6 +185,7 @@ function FormTambah() {
   };
 
   const handleSubmit = () => {
+    const db = new Database();
     data = {
       id_user: 'id001',
       transaksi: transaksi,
@@ -179,12 +193,12 @@ function FormTambah() {
       kategori: kategori,
       nominal: nominal,
       deskripsi: deskripsi,
-      date: moment(new Date).format('L'),
-      time: moment(new Date).format('LT')
+      date: '2022-11-25',
+      time: moment(new Date()).format('LT')
     };
     db.insertDataTransaksi(data)
       .then(data => navigation.navigate('Home'))
-      .catch(err => console.log(err));
+      .catch(err => console.log("err "+err));
   };
 
   return (

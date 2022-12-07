@@ -34,6 +34,7 @@ import {
   storeDataFilter,
 } from '../../../../redux/features/globalSlice';
 import FilterJenisItem from './component_item/filter-jenis-item';
+import {current} from '@reduxjs/toolkit';
 
 function ScreenBottomSheetFilter() {
   const [stateIn, setStateIn] = useState('');
@@ -43,7 +44,7 @@ function ScreenBottomSheetFilter() {
   const [date, setDate] = useState(new Date());
   const [dateFromCom, setDateFromCom] = useState(new Date());
   const [dateToCom, setDateToCom] = useState(new Date());
-  const [stateJenis, setStateJenis] = useState('');
+  const [stateJenis, setStateJenis] = useState([]);
 
   const {conditionChildSheet, secondConditionChildSheet} = useSelector(
     state => state.globalStm,
@@ -64,15 +65,22 @@ function ScreenBottomSheetFilter() {
   const handleChangeDateFrom = (value1, value2) => {
     setDateFrom(value1);
     setDateFromCom(value2);
+    // console.log("setDateFromCom = "+moment(value2).format('ll'));
   };
 
   const handleChangeDateTo = (value1, value2) => {
     setDateTo(value1);
     setDateToCom(value2);
+    // console.log("setDateToCom = "+value2);
   };
 
   const handleChangeStateJenis = value => {
-    setStateJenis(value);
+    // setStateJenis([...stateJenis, value]);
+    if (stateJenis.includes(value)) {
+      setStateJenis(current => current.filter(name => name !== value));
+    } else {
+      setStateJenis([...stateJenis, value]);
+    }
   };
 
   const handleSubmitSetting = () => {
@@ -89,6 +97,8 @@ function ScreenBottomSheetFilter() {
         tanggal_dari: dateFrom,
         tanggal_sampai: dateTo,
         jenis_transaksi: stateJenis,
+        real_tanggal_dari: moment(dateFromCom).format('L'),
+        real_tanggal_sampai: moment(dateToCom).format('L'),
       }),
     );
     dispatch(

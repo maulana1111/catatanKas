@@ -13,7 +13,7 @@ function ShowCalendar({date, title, onChangeDate, selectedStartDate}) {
   const dispatch = useDispatch();
 
   const handleChangeDate = value => {
-    onChangeDate(moment(value).format('L'), moment(value).format('ll'), value);
+    onChangeDate(moment(value).format('ll'), value);
     // console.log(moment(value).format('ll'));
     dispatch(
       storeGlobalSecChildSheet({
@@ -70,6 +70,7 @@ function ShowCalendar({date, title, onChangeDate, selectedStartDate}) {
             ) : (
               <CalendarPicker
                 textStyle={{color: 'black'}}
+                selectedStartDate={date}
                 onDateChange={e => handleChangeDate(e)}
               />
             )}

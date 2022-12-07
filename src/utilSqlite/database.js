@@ -51,45 +51,34 @@ export default class Database {
     time,
   }) {
     return new Promise((resolve, reject) => {
-      this.initDb()
-        .then(db => {
-          db.transaction(async tx => {
-            await tx.executeSql(
-              'CREATE TABLE IF NOT EXISTS transaksi (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), transaksi VARCHAR(15), jenis_transaksi VARCHAR(20), kategori VARCHAR(50), nominal INTEGER(100), description TEXT, tanggal_transaksi DATE, waktu_transaksi TIME)',
-            );
-          }).then(async () => {
-            db.transaction(async tx => {
-              await tx
-                .executeSql(
-                  'INSERT INTO transaksi(id_user, transaksi, jenis_transaksi, kategori, nominal, description, tanggal_transaksi, waktu_transaksi) VALUES(?,?,?,?,?,?,?,?)',
-                  [
-                    id_user,
-                    transaksi,
-                    jenisTransaksi,
-                    kategori,
-                    nominal,
-                    deskripsi,
-                    date,
-                    time,
-                  ],
-                )
-                .then(([tx, res]) => {
-                  if (res) {
-                    console.log('Success Inserted = ' + res);
-                    resolve(res);
-                  } else {
-                    resolve(null);
-                  }
-                });
-            }).then(() => {
-              this.closeDatabase(db);
+      this.initDb().then(db => {
+        db.transaction(async tx => {
+          await tx
+            .executeSql(
+              'INSERT INTO transaksi(id_user, transaksi, jenis_transaksi, kategori, nominal, description, tanggal_transaksi, waktu_transaksi) VALUES(?,?,?,?,?,?,?,?)',
+              [
+                id_user,
+                transaksi,
+                jenisTransaksi,
+                kategori,
+                nominal,
+                deskripsi,
+                date,
+                time,
+              ],
+            )
+            .then(([tx, res]) => {
+              if (res) {
+                console.log('Success Inserted = ' + res);
+                resolve(res);
+              } else {
+                resolve(null);
+              }
             });
-          });
-        })
-        .catch(er => {
-          console.log(er);
-          // reject(er);
+        }).then(() => {
+          this.closeDatabase(db);
         });
+      });
     });
   }
 
@@ -114,6 +103,7 @@ export default class Database {
                     for (let i = 0; i < res.rows.length; i++) {
                       data.push(JSON.parse(JSON.stringify(res.rows.item(i))));
                     }
+                    console.log('data = ' + JSON.stringify(data));
                     resolve(data);
                   } else {
                     resolve(null);
@@ -140,6 +130,22 @@ export default class Database {
     tanggal_sampai,
     jenis,
   ) {
+    var date_dari = tanggal_dari.split('/');
+    var date_sampai = tanggal_sampai.split('/');
+    var tgl_dari = date_dari[2] + '-' + date_dari[1] + '-' + date_dari[0];
+    var tgl_sampai =
+      date_sampai[2] + '-' + date_sampai[1] + '-' + date_sampai[0];
+    let qry_jenis = '';
+    let operator = 'OR';
+    // let temp = "";
+    jenis.map((item, index) => {
+      qry = ` jenis_transaksi = '${item}' `;
+      if (jenis.length - 1 !== index) {
+        qry = qry.concat(operator);
+      }
+      qry_jenis = qry_jenis.concat(qry);
+    });
+    console.log('jenis = ' + qry_jenis);
     return new Promise((resolve, reject) => {
       this.initDb()
         .then(db => {
@@ -151,12 +157,12 @@ export default class Database {
             db.transaction(async tx => {
               await tx
                 .executeSql(
-                  `SELECT * FROM transaksi WHERE id_user = ? AND transaksi = ? AND tanggal_transaksi >= ? AND tanggal_transaksi <= ? ${jenis !== null && 'AND jenis_transaksi = '+jenis} ORDER BY nominal ${
+                  `SELECT * FROM transaksi WHERE id_user = '${id_user}' AND transaksi = '${transaksi}' AND (${qry_jenis}) AND tanggal_transaksi >= '${tgl_dari}' AND tanggal_transaksi <= '${tgl_sampai}' ORDER BY nominal ${
                     transaksi === 'pemasukan'
                       ? urutan_pemasukan.toUpperCase()
                       : urutan_pengeluaran.toUpperCase()
                   }`,
-                  [id_user, transaksi, tanggal_dari, tanggal_sampai],
+                  [],
                 )
                 .then(([tx, res]) => {
                   if (res.rows.length !== 0) {
@@ -166,8 +172,54 @@ export default class Database {
                     }
                     resolve(data);
                   } else {
-                    resolve(null);
-                    // console.log("data data err");
+                    reject(null);
+                  }
+                });
+            }).then(() => {
+              this.closeDatabase(db);
+            });
+          });
+        })
+        .catch(er => {
+          console.log(er);
+          // reject(er);
+        });
+    });
+  }
+
+  async getDataTransaksiThisWeek(id_user, transaksi) {
+    const today = new Date();
+    const tanggal =
+      today.getFullYear() +
+      '-' +
+      (today.getMonth() + 1) +
+      '-' +
+      (String(today.getDate()).length === 1
+        ? '0' + today.getDate()
+        : today.getDate());
+    return new Promise((resolve, reject) => {
+      this.initDb()
+        .then(db => {
+          db.transaction(async tx => {
+            await tx.executeSql(
+              'CREATE TABLE IF NOT EXISTS transaksi (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), transaksi VARCHAR(15), jenis_transaksi VARCHAR(20), kategori VARCHAR(50), nominal INTEGER(100), description TEXT, tanggal_transaksi DATE, waktu_transaksi TIME)',
+            );
+          }).then(async () => {
+            db.transaction(async tx => {
+              await tx
+                .executeSql(
+                  `SELECT * FROM transaksi WHERE id_user = '${id_user}' AND transaksi = '${transaksi}' AND  (strftime('%W', tanggal_transaksi) = strftime('%W', 'now') )`,
+                  [],
+                )
+                .then(([tx, res]) => {
+                  if (res.rows.length !== 0) {
+                    const data = new Array();
+                    for (let i = 0; i < res.rows.length; i++) {
+                      data.push(JSON.parse(JSON.stringify(res.rows.item(i))));
+                    }
+                    resolve(data);
+                  } else {
+                    reject(null);
                   }
                 });
             }).then(() => {

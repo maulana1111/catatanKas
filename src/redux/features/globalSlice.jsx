@@ -14,7 +14,9 @@ const globalSlice = createSlice({
         urutan_pengeluaran: '',
         tanggal_dari: '',
         tanggal_sampai: '',
-        jenis_transaksi: ''
+        jenis_transaksi: '',
+        real_tanggal_dari: '',
+        real_tanggal_sampai: ''
       }
     }
   },
@@ -38,6 +40,8 @@ const globalSlice = createSlice({
       state.dataFilter.data.tanggal_dari = action.payload.tanggal_dari;
       state.dataFilter.data.tanggal_sampai = action.payload.tanggal_sampai;
       state.dataFilter.data.jenis_transaksi = action.payload.jenis_transaksi;
+      state.dataFilter.data.real_tanggal_dari = action.payload.real_tanggal_dari;
+      state.dataFilter.data.real_tanggal_sampai = action.payload.real_tanggal_sampai;
     }
   },
 });

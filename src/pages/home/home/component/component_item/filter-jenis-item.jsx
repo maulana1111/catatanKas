@@ -2,9 +2,13 @@ import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 function FilterJenisItem({images, text, value, state, onChange}) {
-  
   const handle = val => {
     onChange(val);
+  };
+
+  const check = (value1, value2) => {
+    // console.log(value1.includes(value2))
+    return value1.includes(value2);
   };
 
   return (
@@ -13,13 +17,28 @@ function FilterJenisItem({images, text, value, state, onChange}) {
         <View
           style={[
             styles.card,
-            state !== value && {backgroundColor: '#fff', borderColor: '#D8D8D8'},
+            check(state, value) === false && {
+              backgroundColor: '#fff',
+              borderColor: '#D8D8D8',
+            },
           ]}>
           <Image
             source={images}
-            style={[styles.img, state !== value ? {tintColor: '#9A9A9A'} : {tintColor: '#DBA42D'}]}
+            style={[
+              styles.img,
+              check(state, value) === false
+                ? {tintColor: '#9A9A9A'}
+                : {tintColor: '#DBA42D'},
+            ]}
           />
-          <Text style={state !== value ? {color: '#9A9A9A'} : {color: '#DBA42D'}}>{text}</Text>
+          <Text
+            style={
+              check(state, value) === false
+                ? {color: '#9A9A9A'}
+                : {color: '#DBA42D'}
+            }>
+            {text}
+          </Text>
         </View>
       </TouchableOpacity>
     </View>

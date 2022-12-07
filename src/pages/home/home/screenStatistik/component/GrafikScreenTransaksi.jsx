@@ -3,12 +3,26 @@ import {View, Dimensions} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import LinearGradient from 'react-native-linear-gradient';
 
-function GrafikScreenTransaksi({state}) {
+function GrafikScreenTransaksi({dataIn, dataOut}) {
+  const label = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+  const dataTransaksi = {
+    labels: label,
+    datasets: [
+      {
+        data: dataIn,
+        color: (opacity = 1) => `rgba(49, 206, 93, 0.2)`,
+      },
+      {
+        data: dataOut,
+        color: (opacity = 1) => `rgba(255, 89, 66, 0.3)`,
+      },
+    ],
+  };
   return (
     <View style={{flex: 1}}>
       <View style={{marginVertical: 10}} />
       <LineChart
-        data={state}
+        data={dataTransaksi}
         width={Dimensions.get('screen').width} // from react-native
         height={220}
         withHorizontalLabels={false}

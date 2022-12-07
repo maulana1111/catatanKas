@@ -10,20 +10,68 @@ import {
   ToastAndroid,
   ScrollView,
 } from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import MyStatusBar from '../../../auth/component/StatusBar';
 import {useNavigation} from '@react-navigation/native';
-import {color} from 'react-native-reanimated';
-import {LineChart} from 'react-native-chart-kit';
-import GrafikScreenTransaksi from './component/GrafikScreenTransaksi';
-import GrafikScreenPemasukan from './component/GrafikScreenPemasukan';
-import GrafikScreenPengeluaran from './component/GrafikScreenPengeluaran';
 import ComponentTransaksi from './component/ComponentTransaksi';
 import ComponentLaporan from './component/ComponentLaporan';
+import Database from '../../../../utilSqlite/database';
+const db = new Database();
 
 function Statistik() {
   const navigation = useNavigation();
   const [stateScreen, setStateScreen] = useState('transaksi');
+  const [totalPemasukan, setTotalPemasukan] = useState(0);
+  const [totalPengeluaran, setTotalPengeluaran] = useState(0);
+  const [dataPemasukan, setDataPemasukan] = useState([]);
+  const [dataPengeluaran, setDataPengeluaran] = useState([]);
+  // console.log(data);
+
+  useEffect(() => {
+    const getData = async () => {
+      await db
+        .getDataTransaksiThisWeek('id001', 'pemasukan')
+        .then(data1 => {
+          // console.log('data statistik pemasukan = ' + JSON.stringify(data1));
+          if (data1 !== null) {
+            let totall = 0;
+            for (const row of data1) {
+              totall = totall + row.nominal;
+            }
+            setTotalPemasukan(totall);
+          }
+          setDataPemasukan(data1);
+          dispatch(
+            storeDataTransaksiIn({
+              data: data1,
+            }),
+          );
+        })
+        .catch(err => {
+          console.log('error home1 = ' + err);
+        });
+
+      await db
+        .getDataTransaksiThisWeek('id001', 'pengeluaran')
+        .then(data2 => {
+          // console.log('data statistik pengeluaran = ' + JSON.stringify(data2));
+          if (data2 !== null) {
+            let total = 0;
+            for (const row of data2) {
+              total = total + row.nominal;
+            }
+            setTotalPengeluaran(total);
+          }
+          setDataPengeluaran(data2);
+          dispatch(storeDataTransaksiOut({data: data2}));
+        })
+        .catch(err => {
+          console.log('error home2 = ' + err);
+        });
+    };
+    getData();
+  }, []);
+
+  // console.log("dt = "+totalPemasukan);
 
   return (
     <View
@@ -87,7 +135,11 @@ function Statistik() {
             </TouchableOpacity>
           </View>
         </View>
-        {stateScreen === 'transaksi' ? <ComponentTransaksi /> : <ComponentLaporan />}
+        {stateScreen === 'transaksi' ? (
+          <ComponentTransaksi dataIn={totalPemasukan} dataOut={totalPengeluaran} />
+        ) : (
+          <ComponentLaporan />
+        )}
       </View>
     </View>
   );
