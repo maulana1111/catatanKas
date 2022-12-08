@@ -1,8 +1,19 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import TransaksiItem from './TransaksiItem.component';
+import {useSelector} from 'react-redux';
+import {FlatList} from 'react-native';
 
-function ComponentLaporan() {
+function ComponentLaporan({dataIn, dataOut}) {
+  const {dataStatistikIn, dataStatistikOut} = useSelector(
+    state => state.globalStm,
+  );
+  const ChangeRupiah = number => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+    }).format(number);
+  };
   return (
     <View style={{padding: 16}}>
       <View style={styles.container}>
@@ -15,7 +26,7 @@ function ComponentLaporan() {
           }}>
           <View>
             <Text style={styles.text2}>Minggu ini</Text>
-            <Text style={styles.text3}>Rp. 1.000.000</Text>
+            <Text style={styles.text3}>{ChangeRupiah(dataIn - dataOut)}</Text>
           </View>
           <View>
             <Image source={require('./assets/Share.png')} />
@@ -23,46 +34,34 @@ function ComponentLaporan() {
         </View>
         <View style={styles.SecCon}>
           <Text style={styles.text4}>Pemasukan</Text>
-          <Text style={styles.text5}>+Rp. 550.000</Text>
+          <Text style={styles.text5}>+{ChangeRupiah(dataIn)}</Text>
         </View>
         <View>
-          <TransaksiItem
-            image1={require('./assets/filter/transfer.png')}
-            text={'Transfer'}
-            text2={'Rp. 100.000'}
-            bgColor={'#B4B4B4'}
-            tintColor={'#000000'}
-            state={'pemasukan'}
-          />
-          <TransaksiItem
-            image1={require('./assets/filter/instant.png')}
-            text={'Instan'}
-            text2={'Rp. 100.000'}
-            bgColor={'rgba(53, 50, 224, 0.4)'}
-            tintColor={'#3F32E0'}
-            state={'pemasukan'}
+          <FlatList
+            data={dataStatistikIn}
+            renderItem={({item}) => (
+              <TransaksiItem
+                text={item.jenis_transaksi}
+                text2={item.nominal}
+                state={item.transaksi}
+              />
+            )}
           />
         </View>
         <View style={styles.SecCon}>
           <Text style={styles.text4}>Pengeluaran</Text>
-          <Text style={styles.text5}>-Rp. 550.000</Text>
+          <Text style={styles.text5}>-{ChangeRupiah(dataOut)}</Text>
         </View>
         <View>
-          <TransaksiItem
-            image1={require('./assets/filter/transfer.png')}
-            text={'Transfer'}
-            text2={'Rp. 100.000'}
-            bgColor={'#B4B4B4'}
-            tintColor={'#000000'}
-            state={'pengeluaran'}
-          />
-          <TransaksiItem
-            image1={require('./assets/filter/instant.png')}
-            text={'Instan'}
-            text2={'Rp. 100.000'}
-            bgColor={'rgba(53, 50, 224, 0.4)'}
-            tintColor={'#3F32E0'}
-            state={'pengeluaran'}
+          <FlatList
+            data={dataStatistikOut}
+            renderItem={({item}) => (
+              <TransaksiItem
+                text={item.jenis_transaksi}
+                text2={item.nominal}
+                state={item.transaksi}
+              />
+            )}
           />
         </View>
       </View>

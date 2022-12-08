@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  PermissionsAndroid,
   ToastAndroid,
 } from 'react-native';
 import MyStatusBar from '../../../auth/component/StatusBar';
@@ -28,17 +29,23 @@ const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 60;
 const SEC_MAX_TRANSLATE_Y = -SCREEN_HEIGHT;
 import {useNavigation} from '@react-navigation/native';
-import {PermissionsAndroid} from 'react-native';
+import Database from '../../../../utilSqlite/database';
+const db = new Database();
+import ModalItem from './component/Modal';
+import Modal from 'react-native-modal';
+import ModalItemSuccess from './component/ModalSuccess';
 
 function FormTambahBill() {
-  const [stateScreen, setStateScreen] = useState('transaksi');
-  const [transaksi, setTransaksi] = useState('');
-  const [jenisTransaksi, setJenisTransaksi] = useState('');
+  const [stateScreen, setStateScreen] = useState('tagihan');
+  const [tagihan, setTagihan] = useState('');
+  const [jenisTagihan, setJenisTagihan] = useState('');
   const [kategori, setKategori] = useState('');
   const [nominal, setNominal] = useState();
   const [deskripsi, setDeskripsi] = useState('');
   const [gambar, setGambar] = useState(null);
   const [txtNominal, setTxtNominal] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [visibleSuccess, setVisibleSuccess] = useState(false);
   const translateY = useSharedValue(0);
   const translateDropShadow = useSharedValue(0);
   const navigation = useNavigation();
@@ -55,16 +62,17 @@ function FormTambahBill() {
   });
 
   const handleOpenBottomSheetTransaksi = () => {
-    setStateScreen('transaksi');
+    setStateScreen('tagihan');
     translateDropShadow.value = withSpring(SEC_MAX_TRANSLATE_Y, {
       damping: 50,
     });
     translateY.value = withSpring(-SCREEN_HEIGHT / 4, {damping: 50});
   };
+
   const handleOpenBottomSheetJenis = () => {
-    if (transaksi === '') {
+    if (tagihan === '') {
       return ToastAndroid.showWithGravityAndOffset(
-        'Anda Harus Memilih Transaksi!',
+        'Anda Harus Memilih Tagihan!',
         ToastAndroid.LONG,
         ToastAndroid.BOTTOM,
         25,
@@ -92,15 +100,19 @@ function FormTambahBill() {
       damping: 50,
     });
     translateY.value = withSpring(0, {damping: 50});
-    setTransaksi(e);
+    setTagihan(e);
   };
 
-  const handleChangeKategoriClick = e => {
+  const handleChangeJenisTagihanClick = e => {
     translateDropShadow.value = withSpring(0, {
       damping: 50,
     });
     translateY.value = withSpring(0, {damping: 50});
-    setJenisTransaksi(e);
+    setJenisTagihan(e);
+  };
+
+  const handleChangeKategori = e => {
+    setKategori(e);
   };
 
   const handleChangeNominal = e => {
@@ -149,9 +161,9 @@ function FormTambahBill() {
           console.log('User tapped custom button: ', res.customButton);
           alert(res.customButton);
         } else {
-          const source = {uri: res.uri};
-          //   console.log('response', JSON.stringify(res.assets[0]));
-          setGambar(res.assets[0]);
+          // const source = {uri: res.uri};
+          // console.log('response', JSON.stringify(res.assets[0].uri));
+          setGambar(res.assets[0].uri);
           // this.setState({
           //   filePath: res,
           //   fileData: res.data,
@@ -164,6 +176,118 @@ function FormTambahBill() {
     }
   };
 
+  const doSubmit = async () => {
+    const today = new Date();
+    const tanggal =
+      today.getFullYear() +
+      '-' +
+      (today.getMonth() + 1) +
+      '-' +
+      (String(today.getDate()).length === 1
+        ? '0' + today.getDate()
+        : today.getDate());
+    const time =
+      today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+    const data = {
+      id_user: 'id001',
+      tagihan: tagihan,
+      jenisTagihan: jenisTagihan,
+      kategori: kategori,
+      nominal: nominal,
+      deskripsi: deskripsi,
+      foto: gambar,
+      date: tanggal,
+      time: time,
+    };
+    await db
+      .insertDataTagihan(data)
+      .then(async () => {
+        await _doDownloadImage;
+        setVisibleSuccess(true);
+        setTimeout(() => {
+          navigation.navigate('Bill');
+        }, 3000);
+      })
+      .catch(err => console.log('err ' + err));
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+  };
+
+  const getPermissionAndroid = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Image Download Permission',
+          message: 'Your permission is required to save images to your device',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      }
+      Alert.alert(
+        'Save remote Image',
+        'Grant Me Permission to save Image',
+        [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+        {cancelable: false},
+      );
+    } catch (err) {
+      Alert.alert(
+        'Save remote Image',
+        'Failed to save Image: ' + err.message,
+        [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+        {cancelable: false},
+      );
+    }
+  };
+
+  async function _doDownloadImage() {
+    if (Platform.OS === 'android') {
+      const granted = await getPermissionAndroid();
+      if (!granted) {
+        return;
+      }
+    }
+    RNFetchBlob.config({
+      fileCache: true,
+      appendExt: 'png',
+    })
+      .fetch('GET', gambar)
+      .then(res => {
+        CameraRoll.saveToCameraRoll(res.data, 'photo')
+          .then(() => {
+            Alert.alert(
+              'Save remote Image',
+              'Image Saved Successfully',
+              [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+              {cancelable: false},
+            );
+          })
+          .catch(err => {
+            Alert.alert(
+              'Save remote Image',
+              'Failed to save Image: ' + err.message,
+              [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+              {cancelable: false},
+            );
+          })
+          .finally(() => this.setState({saving: false}));
+      })
+      .catch(error => {
+        this.setState({saving: false});
+        Alert.alert(
+          'Save remote Image',
+          'Failed to save Image: ' + error.message,
+          [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+          {cancelable: false},
+        );
+      });
+  }
+
   return (
     <View
       style={{
@@ -172,6 +296,17 @@ function FormTambahBill() {
       }}>
       <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
       {/* <GestureHandlerRootView> */}
+
+      <ModalItem
+        visible={loading}
+        onChange={() => {
+          setLoading(false);
+        }}
+        onSubmit={() => doSubmit()}
+      />
+
+      <ModalItemSuccess visible={visibleSuccess} />
+
       <KeyboardAwareScrollView extraHeight={0}>
         <View style={{padding: 14}}>
           <View
@@ -200,7 +335,10 @@ function FormTambahBill() {
                 cameraLaunch();
               }}>
               {gambar !== null ? (
-                <TouchableOpacity onPress={() => {setGambar(null)}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setGambar(null);
+                  }}>
                   <View style={styles.ThirdContainer}>
                     <View>
                       <View
@@ -248,17 +386,15 @@ function FormTambahBill() {
             <View style={{marginVertical: 10}} />
             <TouchableOpacity onPress={() => handleOpenBottomSheetTransaksi()}>
               <Dropdown
-                title={'Transaksi'}
-                text={transaksi === '' ? 'Pilih Transaksi' : transaksi}
+                title={'Tagihan'}
+                text={tagihan === '' ? 'Pilih Tagihan' : tagihan}
               />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => handleOpenBottomSheetJenis()}>
               <Dropdown
-                title={'Jenis Transaksi'}
+                title={'Jenis Tagihan'}
                 text={
-                  jenisTransaksi === ''
-                    ? 'Pilih Jenis Transaksi'
-                    : jenisTransaksi
+                  jenisTagihan === '' ? 'Pilih Jenis Tagihan' : jenisTagihan
                 }
               />
             </TouchableOpacity>
@@ -266,7 +402,7 @@ function FormTambahBill() {
               title={'Bank/Perorang/Perusahaan/Tokok'}
               val={'Masukan Bank/Perorang/Perusahaan/Tokok'}
               type={'text'}
-              onChange={e => handleChangeNominal(e)}
+              onChange={e => handleChangeKategori(e)}
             />
             <FormInput
               title={'Nominal Transaksi'}
@@ -281,7 +417,9 @@ function FormTambahBill() {
               onChange={e => handleChangeDeskripsi(e)}
             />
             <View style={{marginTop: 30}}>
-              <TouchableOpacity style={styles.btn}>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() => handleSubmit()}>
                 <Text
                   style={{
                     fontSize: 16,
@@ -303,7 +441,7 @@ function FormTambahBill() {
           BottomDropShadow,
         ]}>
         <Animated.View style={[styles.container, rBottomSheetStyle]}>
-          {stateScreen === 'transaksi' && (
+          {stateScreen === 'tagihan' && (
             <Transaksi
               onClickCancel={() => handleCancelClick()}
               onChangeState={value => handleChangeSetStateTransaksi(value)}
@@ -312,7 +450,7 @@ function FormTambahBill() {
           {stateScreen === 'jenis' && (
             <JenisTransaksi
               onClickCancel={() => handleCancelClick()}
-              onChangeState={value => handleChangeKategoriClick(value)}
+              onChangeState={value => handleChangeJenisTagihanClick(value)}
             />
           )}
         </Animated.View>

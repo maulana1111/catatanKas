@@ -94,7 +94,96 @@ export default class Database {
             db.transaction(async tx => {
               await tx
                 .executeSql(
-                  'SELECT * FROM transaksi WHERE id_user = ? AND transaksi = ? ORDER BY jenis_transaksi ASC',
+                  'SELECT * FROM transaksi WHERE id_user = ? AND transaksi = ? ORDER BY id DESC',
+                  [id_user, transaksi],
+                )
+                .then(([tx, res]) => {
+                  if (res.rows.length !== 0) {
+                    const data = new Array();
+                    for (let i = 0; i < res.rows.length; i++) {
+                      data.push(JSON.parse(JSON.stringify(res.rows.item(i))));
+                    }
+                    console.log('data = ' + JSON.stringify(data));
+                    resolve(data);
+                  } else {
+                    resolve(null);
+                  }
+                });
+            }).then(() => {
+              this.closeDatabase(db);
+            });
+          });
+        })
+        .catch(er => {
+          console.log(er);
+          // reject(er);
+        });
+    });
+  }
+
+  async insertDataTagihan({
+    id_user,
+    tagihan,
+    jenisTagihan,
+    kategori,
+    nominal,
+    deskripsi,
+    foto,
+    date,
+    time,
+  }) {
+    return new Promise((resolve, reject) => {
+      this.initDb().then(db => {
+        db.transaction(async tx => {
+          await tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS tagihan (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), tagihan VARCHAR(15), jenis_tagihan VARCHAR(20), kategori VARCHAR(50), nominal INTEGER(100), description TEXT, foto TEXT, tanggal_transaksi DATE, waktu_transaksi TIME)',
+          );
+        }).then(async () => {
+          db.transaction(async tx => {
+            await tx
+              .executeSql(
+                'INSERT INTO tagihan(id_user, tagihan, jenis_tagihan, kategori, nominal, description, foto, tanggal_transaksi, waktu_transaksi) VALUES(?,?,?,?,?,?,?,?,?)',
+                [
+                  id_user,
+                  tagihan,
+                  jenisTagihan,
+                  kategori,
+                  nominal,
+                  deskripsi,
+                  foto,
+                  date,
+                  time,
+                ],
+              )
+              .then(([tx, res]) => {
+                if (res) {
+                  console.log('Success Inserted = ' + res);
+                  resolve(res);
+                } else {
+                  resolve(null);
+                }
+              });
+          }).then(() => {
+            this.closeDatabase(db);
+          });
+        });
+      });
+    });
+  }
+
+  async getDataTagihan(id_user, transaksi) {
+    return new Promise((resolve, reject) => {
+      this.initDb()
+        .then(db => {
+          db.transaction(async tx => {
+            await tx.executeSql(
+              'CREATE TABLE IF NOT EXISTS tagihan (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), tagihan VARCHAR(15), jenis_tagihan VARCHAR(20), kategori VARCHAR(50), nominal INTEGER(100), description TEXT, foto TEXT, tanggal_transaksi DATE, waktu_transaksi TIME)',
+            );
+          }).then(async () => {
+            db.transaction(async tx => {
+              await tx
+                .executeSql(
+                  'SELECT * FROM tagihan WHERE id_user = ? AND tagihan = ? ORDER BY id DESC',
                   [id_user, transaksi],
                 )
                 .then(([tx, res]) => {
@@ -208,7 +297,7 @@ export default class Database {
             db.transaction(async tx => {
               await tx
                 .executeSql(
-                  `SELECT * FROM transaksi WHERE id_user = '${id_user}' AND transaksi = '${transaksi}' AND (strftime('%W', tanggal_transaksi) = strftime('%W', 'now'))`,
+                  `SELECT * FROM transaksi WHERE id_user = '${id_user}' AND transaksi = '${transaksi}' AND (strftime('%W', tanggal_transaksi) = strftime('%W', 'now')) ORDER BY tanggal_transaksi ASC`,
                   [],
                 )
                 .then(([tx, res]) => {

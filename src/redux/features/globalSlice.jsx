@@ -9,6 +9,10 @@ const globalSlice = createSlice({
     dataTransaksiOut: [],
     dataStatistikIn: [],
     dataStatistikOut: [],
+    dataTagihanIn: [],
+    dataTagihanOut: [],
+    jumlahDataStatistikIn: 0,
+    jumlahDataStatistikOut: 0,
     dataFilter: {
       status: false,
       data: {
@@ -41,6 +45,18 @@ const globalSlice = createSlice({
     storeDataStatistikOut: (state, action) => {
       state.dataStatistikOut = action.payload.data;
     },
+    storeDataTagihanIn: (state, action) => {
+      state.dataTagihanIn = action.payload.data;
+    },
+    storeDataTagihanOut: (state, action) => {
+      state.dataTagihanOut = action.payload.data;
+    },
+    storeJumlahDataStatistikIn: (state, action) => {
+      state.jumlahDataStatistikIn = action.payload.data;
+    },
+    storeJumlahDataStatistikOut: (state, action) => {
+      state.jumlahDataStatistikOut = action.payload.data;
+    },
     storeDataFilter: (state, action) => {
       state.dataFilter.status = true;
       state.dataFilter.data.urutan_pengeluaran =
@@ -65,5 +81,9 @@ export const {
   storeDataFilter,
   storeDataStatistikIn,
   storeDataStatistikOut,
+  storeJumlahDataStatistikIn,
+  storeJumlahDataStatistikOut,
+  storeDataTagihanIn,
+  storeDataTagihanOut,
 } = globalSlice.actions;
 export default globalSlice.reducer;

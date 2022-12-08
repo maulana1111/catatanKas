@@ -13,32 +13,25 @@ import {
   ToastAndroid,
   ScrollView,
 } from 'react-native';
-import {useSelector} from 'react-redux';
 import Database from '../../../../../utilSqlite/database';
 const db = new Database();
+import {useSelector} from 'react-redux';
 
 function ComponentTransaksi({dataIn, dataOut}) {
   const [stateMetode, setStateMetode] = useState('transaksi');
-  const [dataGrafik, setDataGrafik] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [dataPemasukanTransaksi, setDataPemasukanTransaksi] = useState([]);
-  const [dataPengeluaranTransaksi, setDataPengeluaranTransaksi] = useState([]);
-
-  // console.log("data = "+JSON.stringify(dataTransaksiIn));
-
-  // for (let data of dataTransaksiIn) {
-  //   dataIn.push(data.nominal);
-  // }
-  // for (let data of dataTransaksiOut) {
-  //   dataOut.push(data.nominal);
-  // }
 
   const dtCount = Math.round((dataOut / dataIn) * 100);
-  console.log('dt = ' + dtCount);
   const dataRes = 100 - dtCount;
+  
 
   const HandleChangeState = e => {
     setStateMetode(e);
+  };
+  const ChangeRupiah = number => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+    }).format(number);
   };
   return (
     <View>
@@ -55,7 +48,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
               }}>
               <View>
                 <Text style={styles.text3}>Minggu ini</Text>
-                <Text style={styles.text4}>Rp. 1.000.000</Text>
+                <Text style={styles.text4}>{ChangeRupiah(dataIn - dataOut)}</Text>
               </View>
               <View>
                 <Image source={require('./assets/Share.png')} />
@@ -73,7 +66,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
                   styles.text4,
                   {fontSize: 12, color: 'rgba(49, 206, 93, 1)'},
                 ]}>
-                +{dataIn !== null ? dataIn : 'Rp.0'}
+                +{dataIn !== null ? ChangeRupiah(dataIn) : 'Rp.0'}
               </Text>
             </View>
             <View style={styles.bg1}>
@@ -82,7 +75,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
                   styles.bg2,
                   {
                     backgroundColor: '#31CE5D',
-                    width: `${dataIn !== null ? dataRes : '0'}%`,
+                    width: `${dataIn !== null ? dataRes + '%' : '0%'}`,
                   },
                 ]}
               />
@@ -95,7 +88,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
               }}>
               <Text style={[styles.text4, {fontSize: 14}]}>Pengeluaran</Text>
               <Text style={[styles.text4, {fontSize: 12, color: '#FF5942'}]}>
-                -{dataOut !== null ? dataIn : 'Rp.0'}
+                -{dataOut !== null ? ChangeRupiah(dataOut) : 'Rp.0'}
               </Text>
             </View>
             <View style={styles.bg1}>
@@ -104,7 +97,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
                   styles.bg2,
                   {
                     backgroundColor: '#FF5942',
-                    width: `${dataOut !== null ? dtCount : '0'}%`,
+                    width: `${dataOut !== null ? dtCount + '%' : '0%'}`,
                   },
                 ]}
               />
@@ -122,7 +115,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
               }}>
               <View>
                 <Text style={styles.text3}>Minggu ini</Text>
-                <Text style={styles.text4}>Rp. 1.000.000</Text>
+                <Text style={styles.text4}>{ChangeRupiah(dataIn - dataOut)}</Text>
               </View>
               <View>
                 <Image source={require('./assets/Share.png')} />
@@ -187,7 +180,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
               </TouchableOpacity>
             </View>
             <View style={{flex: 1}}>
-              {/* {stateMetode === 'transaksi' && (
+              {stateMetode === 'transaksi' && (
                 <GrafikScreenTransaksi dataIn={dataIn} dataOut={dataOut} />
               )}
               {stateMetode === 'pemasukan' && (
@@ -195,7 +188,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
               )}
               {stateMetode === 'pengeluaran' && (
                 <GrafikScreenPengeluaran dataOut={dataOut} />
-              )} */}
+              )}
             </View>
           </View>
           <View style={{marginVertical: 70}} />

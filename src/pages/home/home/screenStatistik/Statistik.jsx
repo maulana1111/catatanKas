@@ -15,9 +15,17 @@ import {useNavigation} from '@react-navigation/native';
 import ComponentTransaksi from './component/ComponentTransaksi';
 import ComponentLaporan from './component/ComponentLaporan';
 import Database from '../../../../utilSqlite/database';
+import {useDispatch} from 'react-redux';
+import {
+  storeDataStatistikIn,
+  storeDataStatistikOut,
+  storeJumlahDataStatistikIn,
+  storeJumlahDataStatistikOut,
+} from '../../../../redux/features/globalSlice';
 const db = new Database();
 
 function Statistik() {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const [stateScreen, setStateScreen] = useState('transaksi');
   const [totalPemasukan, setTotalPemasukan] = useState(0);
@@ -31,7 +39,6 @@ function Statistik() {
       await db
         .getDataTransaksiThisWeek('id001', 'pemasukan')
         .then(data1 => {
-          console.log('data statistik pemasukan = ' + JSON.stringify(data1));
           if (data1 !== null) {
             let totall = 0;
             for (const row of data1) {
@@ -40,7 +47,7 @@ function Statistik() {
             setTotalPemasukan(totall);
             setDataPemasukan(data1);
             dispatch(
-              storeDataTransaksiIn({
+              storeDataStatistikIn({
                 data: data1,
               }),
             );
@@ -53,7 +60,6 @@ function Statistik() {
       await db
         .getDataTransaksiThisWeek('id001', 'pengeluaran')
         .then(data2 => {
-          console.log('data statistik pengeluaran = ' + JSON.stringify(data2));
           if (data2 !== null) {
             let total = 0;
             for (const row of data2) {
@@ -62,7 +68,7 @@ function Statistik() {
             setTotalPengeluaran(total);
           }
           setDataPengeluaran(data2);
-          dispatch(storeDataTransaksiOut({data: data2}));
+          dispatch(storeDataStatistikOut({data: data2}));
         })
         .catch(err => {
           console.log('error home2 = ' + err);
@@ -141,7 +147,10 @@ function Statistik() {
             dataOut={totalPengeluaran}
           />
         ) : (
-          <ComponentLaporan />
+          <ComponentLaporan
+            dataIn={totalPemasukan}
+            dataOut={totalPengeluaran}
+          />
         )}
       </View>
     </View>

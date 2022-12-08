@@ -38,6 +38,7 @@ import Database from '../../../../utilSqlite/database';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import 'moment/locale/id';
+import Modal from 'react-native-modal';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 60;
@@ -193,8 +194,8 @@ function FormTambah() {
       kategori: kategori,
       nominal: nominal,
       deskripsi: deskripsi,
-      date: tanggal,
-      // date: '2022-11-25',
+      // date: tanggal,
+      date: '2022-12-01',
       time: moment(new Date()).format('LT'),
     };
     db.insertDataTransaksi(data)

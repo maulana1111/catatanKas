@@ -6,12 +6,24 @@ import ListItemBill from './component/ListItemBill.component';
 import {useNavigation} from '@react-navigation/native';
 import ScreenBottomSheetFilter from '../component/BottomSheetFilter';
 import {useDispatch, useSelector} from 'react-redux';
-import {storeGlobalChildSheet} from '../../../../redux/features/globalSlice';
+import {storeGlobalChildSheet, storeDataTagihanIn, storeDataTagihanOut} from '../../../../redux/features/globalSlice';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import Database from '../../../../utilSqlite/database';
+const db = new Database();
+import {useIsFocused} from '@react-navigation/native';
 
 function Bill() {
+  const isFocused = useIsFocused();
   const navigation = useNavigation();
   const {conditionChildSheet} = useSelector(state => state.globalStm);
   const dispatch = useDispatch();
+  const [dataTagihanIn, setDataTagihanIn] = useState([]);
+  const [dataTagihanOut, setDataTagihanOut] = useState([]);
+
+  useEffect(() => {
+    
+  }, [isFocused]);
 
   const handleFilter = async () => {
     dispatch(storeGlobalChildSheet({condition: !conditionChildSheet}));

@@ -1,13 +1,18 @@
 import React from 'react';
 import {StyleSheet, View, Image, Text} from 'react-native';
+import ItemImage from './item-Image';
 
-function TransaksiItem({image1, text, text2, bgColor, tintColor, state}) {
+function TransaksiItem({text, text2, state}) {
+  const ChangeRupiah = number => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+    }).format(number);
+  };
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
-        <View style={[styles.bgColor, {backgroundColor: bgColor}]}>
-          <Image source={image1} style={{tintColor: tintColor}} />
-        </View>
+        <ItemImage state={text} />
         <Text style={styles.text}>{text}</Text>
       </View>
       <View>
@@ -16,7 +21,7 @@ function TransaksiItem({image1, text, text2, bgColor, tintColor, state}) {
             styles.text2,
             state === 'pemasukan' ? {color: '#31CE5D'} : {color: '#FF5942'},
           ]}>
-          {text2}
+          {ChangeRupiah(text2)}
         </Text>
       </View>
     </View>
