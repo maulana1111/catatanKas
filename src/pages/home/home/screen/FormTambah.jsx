@@ -195,7 +195,7 @@ function FormTambah() {
       nominal: nominal,
       deskripsi: deskripsi,
       // date: tanggal,
-      date: '2022-12-01',
+      date: '2022-12-04',
       time: moment(new Date()).format('LT'),
     };
     db.insertDataTransaksi(data)
