@@ -1,13 +1,10 @@
 import React from 'react';
 import {View, TouchableOpacity, Image, Text, StyleSheet} from 'react-native';
-import {TransferImage, InstantImage} from './component-item/ImageComponent';
+import {TransferImage, InstantImage, TunaiImage, HiburanImage, GayaImage, MakananImage,} from './component-item/ImageComponent';
 
-function ListItemBill({state, jenis, title, text1, text2, uang}) {
+function ListItemBill({state, jenis, title, text1, desc, waktu, uang}) {
   return (
     <View>
-      <View>
-        <Text style={[styles.text2, {color: '#9A9A9A'}]}>{title}</Text>
-      </View>
       <View
         style={{
           flexDirection: 'row',
@@ -15,13 +12,18 @@ function ListItemBill({state, jenis, title, text1, text2, uang}) {
         }}>
         {state === 'instant' && <InstantImage />}
         {state === 'transfer' && <TransferImage />}
+        {state === 'tunai' && <TunaiImage />}
+        {state === 'hiburan' && <HiburanImage />}
+        {state === 'gaya_hidup' && <GayaImage />}
+        {state === 'makanan&minuman' && <MakananImage />}
         <View style={{width: '82%'}}>
+          <Text style={[styles.text2, {color: '#9A9A9A'}]}>{title}</Text>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Text style={[styles.text3, {marginTop: 10}]}>{text1}</Text>
+            <Text style={[styles.text3, { marginTop: 10 }]}>{text1} - {waktu}</Text>
             <Image
               source={require('../assets/delete.png')}
               style={{width: 42, height: 42}}
@@ -32,7 +34,7 @@ function ListItemBill({state, jenis, title, text1, text2, uang}) {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Text style={styles.text4}>{text2}</Text>
+            <Text style={styles.text4}>{desc}</Text>
             <Text
               style={[
                 styles.text3,

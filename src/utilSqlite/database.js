@@ -136,13 +136,13 @@ export default class Database {
       this.initDb().then(db => {
         db.transaction(async tx => {
           await tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS tagihan (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), tagihan VARCHAR(15), jenis_tagihan VARCHAR(20), kategori VARCHAR(50), nominal INTEGER(100), description TEXT, foto TEXT, tanggal_transaksi DATE, waktu_transaksi TIME)',
+            'CREATE TABLE IF NOT EXISTS tagihan (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), tagihan VARCHAR(15), jenis_tagihan VARCHAR(20), kategori VARCHAR(50), nominal INTEGER(100), description TEXT, foto TEXT, tanggal_tagihan DATE, waktu_tagihan TIME)',
           );
         }).then(async () => {
           db.transaction(async tx => {
             await tx
               .executeSql(
-                'INSERT INTO tagihan(id_user, tagihan, jenis_tagihan, kategori, nominal, description, foto, tanggal_transaksi, waktu_transaksi) VALUES(?,?,?,?,?,?,?,?,?)',
+                'INSERT INTO tagihan(id_user, tagihan, jenis_tagihan, kategori, nominal, description, foto, tanggal_tagihan, waktu_tagihan) VALUES(?,?,?,?,?,?,?,?,?)',
                 [
                   id_user,
                   tagihan,
@@ -177,7 +177,7 @@ export default class Database {
         .then(db => {
           db.transaction(async tx => {
             await tx.executeSql(
-              'CREATE TABLE IF NOT EXISTS tagihan (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), tagihan VARCHAR(15), jenis_tagihan VARCHAR(20), kategori VARCHAR(50), nominal INTEGER(100), description TEXT, foto TEXT, tanggal_transaksi DATE, waktu_transaksi TIME)',
+              'CREATE TABLE IF NOT EXISTS tagihan (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), tagihan VARCHAR(15), jenis_tagihan VARCHAR(20), kategori VARCHAR(50), nominal INTEGER(100), description TEXT, foto TEXT, tanggal_tagihan DATE, waktu_tagihan TIME)',
             );
           }).then(async () => {
             db.transaction(async tx => {

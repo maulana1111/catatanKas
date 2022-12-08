@@ -6,12 +6,17 @@ import ListItemBill from './component/ListItemBill.component';
 import {useNavigation} from '@react-navigation/native';
 import ScreenBottomSheetFilter from '../component/BottomSheetFilter';
 import {useDispatch, useSelector} from 'react-redux';
-import {storeGlobalChildSheet, storeDataTagihanIn, storeDataTagihanOut} from '../../../../redux/features/globalSlice';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import {
+  storeGlobalChildSheet,
+  storeDataTagihanIn,
+  storeDataTagihanOut,
+} from '../../../../redux/features/globalSlice';
+import {useState} from 'react';
+import {useEffect} from 'react';
 import Database from '../../../../utilSqlite/database';
 const db = new Database();
 import {useIsFocused} from '@react-navigation/native';
+import {FlatList} from 'react-native';
 
 function Bill() {
   const isFocused = useIsFocused();
@@ -20,10 +25,34 @@ function Bill() {
   const dispatch = useDispatch();
   const [dataTagihanIn, setDataTagihanIn] = useState([]);
   const [dataTagihanOut, setDataTagihanOut] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    
+    const getData = async () => {
+      setLoading(true);
+      await db
+        .getDataTagihan('id001', 'pemasukan')
+        .then(data1 => {
+          data1 && setDataTagihanIn(data1);
+        })
+        .catch(err => {
+          console.log('error bill1 = ' + err);
+        });
+
+      await db
+        .getDataTagihan('id001', 'pengeluaran')
+        .then(data2 => {
+          data2 && setDataTagihanOut(data2);
+        })
+        .catch(err => {
+          console.log('error bill2 = ' + err);
+        });
+
+      setLoading(false);
+    };
+    getData();
   }, [isFocused]);
+  console.log('data = ' + JSON.stringify(dataTagihanIn));
 
   const handleFilter = async () => {
     dispatch(storeGlobalChildSheet({condition: !conditionChildSheet}));
@@ -70,7 +99,10 @@ function Bill() {
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View style={styles.bg}>
-                <TouchableOpacity onPress={() => {navigation.navigate('FormTambahTagihan')}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('FormTambahTagihan');
+                  }}>
                   <Image source={require('./assets/capture_bill.png')} />
                 </TouchableOpacity>
               </View>
@@ -87,21 +119,19 @@ function Bill() {
                 <Text style={[styles.text1, {color: '#000'}]}>Pemasukan</Text>
                 <Image source={require('./assets/Share.png')} />
               </View>
-              <ListItemBill
-                state={'transfer'}
-                jenis="pemasukan"
-                title={'Transfer'}
-                text1={'Ferran David'}
-                text2={'05:34 - Adrian (Toko)'}
-                uang={'Rp. 500.000'}
-              />
-              <ListItemBill
-                state={'transfer'}
-                jenis="pemasukan"
-                title={'Transfer'}
-                text1={'Ferran David'}
-                text2={'05:34 - Adrian (Toko)'}
-                uang={'Rp. 500.000'}
+              <FlatList
+                data={dataTagihanIn}
+                renderItem={({item}) => (
+                  <ListItemBill
+                    state={item.jenis_tagihan}
+                    jenis={item.tagihan}
+                    title={item.jenis_tagihan}
+                    text1={item.kategori}
+                    desc={item.description}
+                    waktu={item.waktu_tagihan}
+                    uang={item.nominal}
+                  />
+                )}
               />
             </View>
 
@@ -112,21 +142,19 @@ function Bill() {
                 <Text style={[styles.text1, {color: '#000'}]}>Pengeluaran</Text>
                 <Image source={require('./assets/Share.png')} />
               </View>
-              <ListItemBill
-                state={'instant'}
-                jenis="pengeluaran"
-                title={'Transfer'}
-                text1={'Ferran David'}
-                text2={'05:34 - Adrian (Toko)'}
-                uang={'Rp. 500.000'}
-              />
-              <ListItemBill
-                state={'instant'}
-                jenis="pengeluaran"
-                title={'Instant'}
-                text1={'Ferran David'}
-                text2={'05:34 - Adrian (Toko)'}
-                uang={'Rp. 500.000'}
+
+              <FlatList
+                data={dataTagihanOut}
+                renderItem={({item}) => (
+                  <ListItemBill
+                    state={'transfer'}
+                    jenis="pengeluaran"
+                    title={'Transfer'}
+                    text1={'Ferran David'}
+                    text2={'05:34 - Adrian (Toko)'}
+                    uang={'Rp. 500.000'}
+                  />
+                )}
               />
             </View>
           </View>
