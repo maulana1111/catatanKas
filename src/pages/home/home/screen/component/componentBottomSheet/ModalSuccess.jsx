@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 
-function ModalItemSuccess({visible, text}) {
+function ModalItemSuccess({visible}) {
   return (
     <View>
       <Modal isVisible={visible}>
@@ -25,7 +25,7 @@ function ModalItemSuccess({visible, text}) {
             <View>
               <View>
                 <Image
-                  source={require('../assets/success.png')}
+                  source={require('../../assets/success.png')}
                   style={{justifyContent: 'center', alignSelf: 'center'}}
                 />
               </View>
@@ -52,7 +52,7 @@ function ModalItemSuccess({visible, text}) {
                     textAlign: 'center',
                     marginTop: 10,
                   }}>
-                  {text}
+                  Anda telah berhasil membuat transaksi
                 </Text>
               </View>
             </View>

@@ -11,47 +11,43 @@ function GrafikScreenPemasukan() {
   // const [dataIn
   const label = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
   // console.log('date trans = ' + JSON.stringify(dataStatistikIn));
-   if (dataStatistikIn !== null) {
-     let temp = 0;
-     let state =
-       dataStatistikIn !== null
-         ? new Date(dataStatistikIn[0].tanggal_transaksi).getDay()
-         : '';
-     let count = 0;
-     let i = 0;
-     console.log('state = ' + state);
-     let stt = state;
-     if (state !== 1) {
-       for (let z = 0; z < stt; z++) {
-         dataIn.push(0);
-       }
-     }
+  if (dataStatistikIn.length !== 0) {
+    let temp = 0;
+    let state = new Date(dataStatistikIn[0].tanggal_transaksi).getDay();
+    let count = 0;
+    let i = 0;
 
-     for (const row of dataStatistikIn) {
-       temp = new Date(row.tanggal_transaksi).getDay();
-       count = count + row.nominal;
-       if (temp !== state) {
-         state = new Date(row.tanggal_transaksi).getDay();
-         i++;
-       }
-       let tmpDt = dataIn[i];
-       if (tmpDt === null || tmpDt === undefined) {
-         dataIn.push(count);
-         console.log('data push');
-       } else {
-         dataIn[i] = tmpDt + row.nominal;
-       }
-       count = 0;
-     }
+    for (const row of dataStatistikIn) {
+      temp = new Date(row.tanggal_transaksi).getDay();
+      count = count + row.nominal;
+      if (temp !== state) {
+        state = new Date(row.tanggal_transaksi).getDay();
+        if (state - i > 1) {
+          // console.log('masuk');
+          for (let j = i + 1; j < state; j++) {
+            dataIn.push(0);
+            i++;
+            // console.log('data saat ini = ' + dataIn);
+          }
+        }
+        i++;
+      }
+      let tmpDt = dataIn[i];
+      if (tmpDt === null || tmpDt === undefined) {
+        dataIn.push(count);
+      } else {
+        dataIn[i] = tmpDt + row.nominal;
+      }
+      count = 0;
+    }
 
-     let coundArr = 7 - dataIn.length;
-     console.log('hit in ' + coundArr);
-     for (let k = 0; k < coundArr; k++) {
-       dataIn.push(null);
-     }
-   } else {
-     dataIn.push([0, 0, 0, 0, 0, 0, 0]);
-   }
+    let coundArr = 7 - dataIn.length;
+    for (let k = 0; k < coundArr; k++) {
+      dataIn.push(0);
+    }
+  } else {
+    dataIn.push(0, 0, 0, 0, 0, 0, 0);
+  }
   const dataPemasukan = {
     labels: label,
     datasets: [

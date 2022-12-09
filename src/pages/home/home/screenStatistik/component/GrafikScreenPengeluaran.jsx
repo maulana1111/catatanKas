@@ -9,35 +9,40 @@ function GrafikScreenPengeluaran() {
   const dataOut = new Array();
   const label = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
   // console.log('date trans = ' + JSON.stringify(dataStatistikOut));
-  if (dataStatistikOut !== null) {
+  if (dataStatistikOut.length !== 0) {
     let temp = 0;
-    let state =
-      dataStatistikOut !== null &&
-      new Date(dataStatistikOut[0].tanggal_transaksi).getDay();
+    let state = new Date(dataStatistikOut[0].tanggal_transaksi).getDay();
     let count = 0;
     let i = 0;
+    // console.log('state out = ' + state);
+    let stt = state - 1;
+    if (state !== 1) {
+      for (let z = 0; z < stt; z++) {
+        dataOut.push(0);
+      }
+    }
 
     for (const row of dataStatistikOut) {
       temp = new Date(row.tanggal_transaksi).getDay();
-      // console.log('state = ' + state + ', temp = ' + temp);
-      // console.log('couting = ' + i);
       count = count + row.nominal;
-      // console.log('row = ' + JSON.stringify(temp));
       if (temp !== state) {
-        // console.log('hit self');
         state = new Date(row.tanggal_transaksi).getDay();
+        if (state - i > 1) {
+          console.log('masuk');
+          for (let j = i + 1; j < state; j++) {
+            dataOut.push(0);
+            i++;
+            // console.log('data saat ini = ' + dataIn);
+          }
+        }
         i++;
+        stt++;
       }
-      let tmpDt = dataOut[i];
-      // console.log('log tmpdt = ' + tmpDt);
+      let tmpDt = dataOut[stt];
       if (tmpDt === null || tmpDt === undefined) {
         dataOut.push(count);
-        // console.log('hit push ');
-        // console.log('data count = ' + count);
       } else {
-        // console.log('hit else = ' + tmpDt);
-        // console.log('data count else = ' + count);
-        dataOut[i] = tmpDt + row.nominal;
+        dataOut[stt] = tmpDt + row.nominal;
       }
       count = 0;
     }
@@ -47,7 +52,7 @@ function GrafikScreenPengeluaran() {
       dataOut.push(0);
     }
   } else {
-    dataOut.push([0, 0, 0, 0, 0, 0, 0]);
+    dataOut.push(0, 0, 0, 0, 0, 0, 0);
   }
   const dataPengeluaran = {
     labels: label,

@@ -8,7 +8,8 @@ const InstantImage = () => {
         borderRadius: 16,
         padding: 5,
         marginRight: 10,
-        height: '85%',
+        justifyContent: 'flex-start',
+        height: 50,
       }}>
       <Image
         source={require('../../assets/instant.png')}
@@ -26,7 +27,8 @@ const TransferImage = () => {
         borderRadius: 16,
         padding: 5,
         marginRight: 10,
-        height: '85%',
+        marginTop: 15,
+        height: 50,
       }}>
       <Image
         source={require('../../assets/transfer.png')}
@@ -44,7 +46,8 @@ const TunaiImage = () => {
         borderRadius: 16,
         padding: 5,
         marginRight: 10,
-        height: '85%',
+        marginTop: 15,
+        height: 50,
       }}>
       <Image
         source={require('../../assets/transfer.png')}
@@ -62,7 +65,8 @@ const HiburanImage = () => {
         borderRadius: 16,
         padding: 5,
         marginRight: 10,
-        height: '85%',
+        marginTop: 15,
+        height: 50,
       }}>
       <Image
         source={require('../../assets/transfer.png')}
@@ -80,7 +84,8 @@ const GayaImage = () => {
         borderRadius: 16,
         padding: 5,
         marginRight: 10,
-        height: '85%',
+        marginTop: 15,
+        height: 50,
       }}>
       <Image
         source={require('../../assets/transfer.png')}
@@ -98,7 +103,8 @@ const MakananImage = () => {
         borderRadius: 16,
         padding: 5,
         marginRight: 10,
-        height: '85%',
+        marginTop: 15,
+        height: 50,
       }}>
       <Image
         source={require('../../assets/transfer.png')}
@@ -107,4 +113,11 @@ const MakananImage = () => {
     </View>
   );
 };
-export {InstantImage, TransferImage};
+export {
+  InstantImage,
+  TransferImage,
+  TunaiImage,
+  HiburanImage,
+  GayaImage,
+  MakananImage,
+};

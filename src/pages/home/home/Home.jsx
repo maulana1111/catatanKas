@@ -40,9 +40,10 @@ function Home() {
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
+    console.log("hit useEffect");
     const getData = async () => {
       setLoading(true);
-      if (dataFilter.status !== true) {
+      if (dataFilter.status === false) {
         await db
           .getDataTransaksi('id001', 'pemasukan')
           .then(data1 => {
@@ -80,7 +81,8 @@ function Home() {
           .catch(err => {
             console.log('error home2 = ' + err);
           });
-      } else {
+      }
+      if (dataFilter.status === true) {
         await db
           .getDataTransaksiWhere(
             'id001',
@@ -107,7 +109,7 @@ function Home() {
             }
           })
           .catch(err => {
-            console.log('error home1 = ' + err);
+            console.log('error home3 = ' + err);
             setTotalPemasukan(0);
             setDataPemasukan(null);
             dispatch(
@@ -138,7 +140,7 @@ function Home() {
             }
           })
           .catch(err => {
-            console.log('error home2 = ' + err);
+            console.log('error home4 = ' + err);
             setTotalPengeluaran(0);
             setDataPengeluaran(null);
             dispatch(storeDataTransaksiOut({data: null}));
@@ -151,9 +153,9 @@ function Home() {
 
   useEffect(() => {
     // if (dataPemasukan !== null && dataPengeluaran !== null) {
-      // console.log('data pemasukan = ' + totalPemasukan);
-      // console.log("hit");
-      setTotal(totalPemasukan - totalPengeluaran);
+    // console.log('data pemasukan = ' + totalPemasukan);
+    // console.log("hit");
+    setTotal(totalPemasukan - totalPengeluaran);
     // }
   }, [totalPemasukan, totalPengeluaran]);
 
@@ -166,7 +168,7 @@ function Home() {
             style={{
               flex: 1,
               justifyContent: 'center',
-              alignSelf: 'center'
+              alignSelf: 'center',
             }}>
             <Bounce size={48} color="#FFF" />
           </View>
@@ -203,7 +205,7 @@ function Home() {
           <Navigation />
         </View>
         <BottomSheetNav />
-        <ScreenBottomSheetFilter />
+        <ScreenBottomSheetFilter state={'home'} />
       </SafeAreaView>
     </GestureHandlerRootView>
   );

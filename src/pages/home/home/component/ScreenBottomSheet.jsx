@@ -5,6 +5,8 @@ import ItemScreen from './component_item/item-screen';
 import {useSelector} from 'react-redux';
 import {ScrollView, FlatList} from 'react-native-gesture-handler';
 import {useState} from 'react';
+import {TouchableOpacity} from 'react-native';
+import Share from 'react-native-share';
 
 function ScreenBottomSheet() {
   const {dataTransaksiIn, dataTransaksiOut} = useSelector(
@@ -31,7 +33,7 @@ function ScreenBottomSheet() {
           {dataTransaksiIn !== null &&
             dataTransaksiIn.map((item, index) => {
               return (
-                <View key={index}>                  
+                <View key={index}>
                   <ItemScreen jenis={item.transaksi} item={item} />
                 </View>
               );
@@ -50,7 +52,9 @@ function ScreenBottomSheet() {
         <View>
           <View style={styles.container}>
             <Text style={styles.txt1}>Pengeluaran</Text>
-            <Image source={require('../../../../assets/Share.png')} />
+            <TouchableOpacity>
+              <Image source={require('../../../../assets/Share.png')} />
+            </TouchableOpacity>
           </View>
 
           {dataTransaksiOut !== null &&

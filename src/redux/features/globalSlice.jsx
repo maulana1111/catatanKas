@@ -25,6 +25,18 @@ const globalSlice = createSlice({
         real_tanggal_sampai: '',
       },
     },
+    dataFilterTagihan: {
+      status: false,
+      data: {
+        urutan_pemasukan: '',
+        urutan_pengeluaran: '',
+        tanggal_dari: '',
+        tanggal_sampai: '',
+        jenis_tagihan: '',
+        real_tanggal_dari: '',
+        real_tanggal_sampai: '',
+      },
+    },
   },
   reducers: {
     storeGlobalChildSheet: (state, action) => {
@@ -58,7 +70,7 @@ const globalSlice = createSlice({
       state.jumlahDataStatistikOut = action.payload.data;
     },
     storeDataFilter: (state, action) => {
-      state.dataFilter.status = true;
+      state.dataFilter.status = action.payload.status;
       state.dataFilter.data.urutan_pengeluaran =
         action.payload.urutan_pengeluaran;
       state.dataFilter.data.urutan_pemasukan = action.payload.urutan_pemasukan;
@@ -68,6 +80,22 @@ const globalSlice = createSlice({
       state.dataFilter.data.real_tanggal_dari =
         action.payload.real_tanggal_dari;
       state.dataFilter.data.real_tanggal_sampai =
+        action.payload.real_tanggal_sampai;
+    },
+    storeDataFilterTagihan: (state, action) => {
+      state.dataFilterTagihan.status = action.payload.status;
+      state.dataFilterTagihan.data.urutan_pengeluaran =
+        action.payload.urutan_pengeluaran;
+      state.dataFilterTagihan.data.urutan_pemasukan =
+        action.payload.urutan_pemasukan;
+      state.dataFilterTagihan.data.tanggal_dari = action.payload.tanggal_dari;
+      state.dataFilterTagihan.data.tanggal_sampai =
+        action.payload.tanggal_sampai;
+      state.dataFilterTagihan.data.jenis_tagihan =
+        action.payload.jenis_tagihan;
+      state.dataFilterTagihan.data.real_tanggal_dari =
+        action.payload.real_tanggal_dari;
+      state.dataFilterTagihan.data.real_tanggal_sampai =
         action.payload.real_tanggal_sampai;
     },
   },
@@ -85,5 +113,6 @@ export const {
   storeJumlahDataStatistikOut,
   storeDataTagihanIn,
   storeDataTagihanOut,
+  storeDataFilterTagihan,
 } = globalSlice.actions;
 export default globalSlice.reducer;

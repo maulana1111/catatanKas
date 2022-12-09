@@ -1,8 +1,15 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {SafeAreaView} from 'react-native';
-import {View, TouchableOpacity, Image, Text, StyleSheet} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  Text,
+  StyleSheet,
+  FlatList,
+  DevSettings,
+} from 'react-native';
 import MyStatusBar from '../../../auth/component/StatusBar';
-import ListItemBill from './component/ListItemBill.component';
 import {useNavigation} from '@react-navigation/native';
 import ScreenBottomSheetFilter from '../component/BottomSheetFilter';
 import {useDispatch, useSelector} from 'react-redux';
@@ -11,51 +18,121 @@ import {
   storeDataTagihanIn,
   storeDataTagihanOut,
 } from '../../../../redux/features/globalSlice';
-import {useState} from 'react';
-import {useEffect} from 'react';
 import Database from '../../../../utilSqlite/database';
 const db = new Database();
 import {useIsFocused} from '@react-navigation/native';
-import {FlatList} from 'react-native';
+import ModalItemSuccess from './component/ModalSuccess';
+import ModalAskDelete from './component/ModalAskDelete';
+import ListItemBill from './component/ListItemBill';
+import moment from 'moment';
+import 'moment/locale/id';
 
 function Bill() {
   const isFocused = useIsFocused();
   const navigation = useNavigation();
-  const {conditionChildSheet} = useSelector(state => state.globalStm);
+  const {conditionChildSheet, dataFilterTagihan} = useSelector(
+    state => state.globalStm,
+  );
   const dispatch = useDispatch();
   const [dataTagihanIn, setDataTagihanIn] = useState([]);
   const [dataTagihanOut, setDataTagihanOut] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [visiblee, setVisiblee] = useState(false);
+  const [idData, setIdData] = useState(null);
+  const [reloadPage, setReloadPage] = useState(0);
+  console.log('status = ' + dataFilterTagihan.status);
 
   useEffect(() => {
     const getData = async () => {
-      setLoading(true);
-      await db
-        .getDataTagihan('id001', 'pemasukan')
-        .then(data1 => {
-          data1 && setDataTagihanIn(data1);
-        })
-        .catch(err => {
-          console.log('error bill1 = ' + err);
-        });
+      // setLoading(true);
+      if (dataFilterTagihan.status === false) {
+        console.log('tidak hit filter');
+        await db
+          .getDataTagihan('id001', 'pemasukan')
+          .then(data1 => {
+            data1 && setDataTagihanIn(data1);
+          })
+          .catch(err => {
+            console.log('error bill1 = ' + err);
+          });
 
-      await db
-        .getDataTagihan('id001', 'pengeluaran')
-        .then(data2 => {
-          data2 && setDataTagihanOut(data2);
-        })
-        .catch(err => {
-          console.log('error bill2 = ' + err);
-        });
+        await db
+          .getDataTagihan('id001', 'pengeluaran')
+          .then(data2 => {
+            data2 && setDataTagihanOut(data2);
+          })
+          .catch(err => {
+            console.log('error bill2 = ' + err);
+          });
+      }
+      if (dataFilterTagihan.status === true) {
+        console.log('hit filter');
+        await db
+          .getDataTagihanWhere(
+            'id001',
+            'pemasukan',
+            dataFilterTagihan.data.urutan_pemasukan,
+            dataFilterTagihan.data.urutan_pengeluaran,
+            dataFilterTagihan.data.real_tanggal_dari,
+            dataFilterTagihan.data.real_tanggal_sampai,
+            dataFilterTagihan.data.jenis_tagihan,
+          )
+          .then(data1 => {
+            data1 && setDataTagihanIn(data1);
+          })
+          .catch(err => {
+            console.log('error filter1 = ' + err);
+          });
 
-      setLoading(false);
+        await db
+          .getDataTagihanWhere(
+            'id001',
+            'pengeluaran',
+            dataFilterTagihan.data.urutan_pemasukan,
+            dataFilterTagihan.data.urutan_pengeluaran,
+            dataFilterTagihan.data.real_tanggal_dari,
+            dataFilterTagihan.data.real_tanggal_sampai,
+            dataFilterTagihan.data.jenis_tagihan,
+          )
+          .then(data2 => {
+            data2 && setDataTagihanIn(data2);
+          })
+          .catch(err => {
+            console.log('error filter2 = ' + err);
+          });
+      }
+
+      // setLoading(false);
     };
     getData();
-  }, [isFocused]);
-  console.log('data = ' + JSON.stringify(dataTagihanIn));
+    // console.log('data has geted = ' + JSON.stringify(dataTagihanIn));
+  }, [isFocused, dataFilterTagihan.status, reloadPage]);
+
+  // console.log('data = ' + JSON.stringify(dataTagihanIn));
 
   const handleFilter = async () => {
     dispatch(storeGlobalChildSheet({condition: !conditionChildSheet}));
+  };
+
+  const handleDelete = id => {
+    setVisible(true);
+    setIdData(id);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
+  const doDelete = async () => {
+    await db.deleteDataTagihan(idData).then(res => {
+      setVisible(false);
+      setVisiblee(true);
+      setTimeout(() => {
+        setVisiblee(false);
+        setReloadPage(reloadPage + 1);
+      }, 3000);
+    });
   };
 
   return (
@@ -67,6 +144,19 @@ function Bill() {
       <SafeAreaView>
         <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
         <View>
+          <ModalItemSuccess
+            visible={visiblee}
+            text={'berhasil menghapus tagihan'}
+          />
+          <ModalAskDelete
+            visible={visible}
+            title={'Hapus Tagihan'}
+            desc={
+              'Apakah Anda yakin ingin menghapus bill ini? Periksa terlebih dahulu sebelum menghapus bill'
+            }
+            onClickHandle={() => doDelete()}
+            onClickCancel={() => handleCancel()}
+          />
           <View
             style={{
               flexDirection: 'row',
@@ -90,11 +180,17 @@ function Bill() {
           </View>
           <View style={{paddingHorizontal: 16}}>
             <View style={{marginVertical: 5}} />
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={styles.text1}>Tagihan Hari Ini</Text>
-              <Text style={styles.text2}>24 Mar 2020</Text>
-            </View>
+            {dataFilterTagihan.status === true && (
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text style={styles.text1}>Tagihan By Filter</Text>
+                <Text style={styles.text2}>
+                  {dataFilterTagihan.data.tanggal_dari} -
+                  {dataFilterTagihan.data.tanggal_sampai}
+                </Text>
+              </View>
+            )}
+
             <View style={{marginVertical: 5}} />
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -123,13 +219,8 @@ function Bill() {
                 data={dataTagihanIn}
                 renderItem={({item}) => (
                   <ListItemBill
-                    state={item.jenis_tagihan}
-                    jenis={item.tagihan}
-                    title={item.jenis_tagihan}
-                    text1={item.kategori}
-                    desc={item.description}
-                    waktu={item.waktu_tagihan}
-                    uang={item.nominal}
+                    data={item}
+                    onClickDelete={id => handleDelete(id)}
                   />
                 )}
               />
@@ -145,21 +236,19 @@ function Bill() {
 
               <FlatList
                 data={dataTagihanOut}
-                renderItem={({item}) => (
-                  <ListItemBill
-                    state={'transfer'}
-                    jenis="pengeluaran"
-                    title={'Transfer'}
-                    text1={'Ferran David'}
-                    text2={'05:34 - Adrian (Toko)'}
-                    uang={'Rp. 500.000'}
-                  />
-                )}
+                renderItem={({item}) => {
+                  return (
+                    <ListItemBill
+                      data={item}
+                      onClickDelete={id => handleDelete(id)}
+                    />
+                  );
+                }}
               />
             </View>
           </View>
         </View>
-        <ScreenBottomSheetFilter />
+        <ScreenBottomSheetFilter state={'tagihan'} />
       </SafeAreaView>
     </View>
   );

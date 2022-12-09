@@ -43,6 +43,7 @@ function FormTambahBill() {
   const [nominal, setNominal] = useState();
   const [deskripsi, setDeskripsi] = useState('');
   const [gambar, setGambar] = useState(null);
+  const [imageForUpload, setImageForUpload] = useState(null);
   const [txtNominal, setTxtNominal] = useState('');
   const [loading, setLoading] = useState(false);
   const [visibleSuccess, setVisibleSuccess] = useState(false);
@@ -162,8 +163,9 @@ function FormTambahBill() {
           alert(res.customButton);
         } else {
           // const source = {uri: res.uri};
-          // console.log('response', JSON.stringify(res.assets[0].uri));
-          setGambar(res.assets[0].uri);
+          console.log('response', JSON.stringify(res.assets[0]));
+          setGambar(res.assets[0]);
+          setImageForUpload(res.assets[0].uri);
           // this.setState({
           //   filePath: res,
           //   fileData: res.data,
@@ -195,16 +197,19 @@ function FormTambahBill() {
       kategori: kategori,
       nominal: nominal,
       deskripsi: deskripsi,
-      foto: gambar,
-      date: tanggal,
+      foto: imageForUpload,
+      // date: tanggal,
+      date: '2022-12-06',
       time: time,
     };
     await db
       .insertDataTagihan(data)
       .then(async () => {
         await _doDownloadImage;
+        setLoading(false);
         setVisibleSuccess(true);
         setTimeout(() => {
+          setVisibleSuccess(false);
           navigation.navigate('Bill');
         }, 3000);
       })
@@ -256,7 +261,7 @@ function FormTambahBill() {
       fileCache: true,
       appendExt: 'png',
     })
-      .fetch('GET', gambar)
+      .fetch('GET', imageForUpload)
       .then(res => {
         CameraRoll.saveToCameraRoll(res.data, 'photo')
           .then(() => {
@@ -288,6 +293,10 @@ function FormTambahBill() {
       });
   }
 
+  function changeValueModal() {
+    setLoading(false);
+  }
+
   return (
     <View
       style={{
@@ -300,12 +309,15 @@ function FormTambahBill() {
       <ModalItem
         visible={loading}
         onChange={() => {
-          setLoading(false);
+          changeValueModal();
         }}
         onSubmit={() => doSubmit()}
       />
 
-      <ModalItemSuccess visible={visibleSuccess} />
+      <ModalItemSuccess
+        text={'Anda telah berhasil membuat bill.'}
+        visible={visibleSuccess}
+      />
 
       <KeyboardAwareScrollView extraHeight={0}>
         <View style={{padding: 14}}>
@@ -315,7 +327,7 @@ function FormTambahBill() {
             }}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('Home');
+                navigation.navigate('Bill');
               }}>
               <View style={styles.back}>
                 <Image
@@ -335,40 +347,40 @@ function FormTambahBill() {
                 cameraLaunch();
               }}>
               {gambar !== null ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    setGambar(null);
-                  }}>
-                  <View style={styles.ThirdContainer}>
-                    <View>
-                      <View
-                        style={{
-                          width: 20,
-                          height: 20,
-                          backgroundColor: '#FF9292',
-                          borderRadius: 4,
-                          padding: 5,
-                          position: 'absolute',
-                          top: -20,
-                          left: 100,
+                <View style={styles.ThirdContainer}>
+                  <View>
+                    <View
+                      style={{
+                        width: 20,
+                        height: 20,
+                        backgroundColor: '#FF9292',
+                        borderRadius: 4,
+                        padding: 5,
+                        position: 'absolute',
+                        top: -20,
+                        left: 100,
+                      }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setGambar(null);
                         }}>
                         <Image
                           source={require('./assets/Cancel.png')}
                           style={{width: 10, height: 10, tintColor: '#CD1717'}}
                         />
-                      </View>
-                      <Image
-                        source={{uri: gambar.uri}}
-                        style={{
-                          justifyContent: 'center',
-                          alignSelf: 'center',
-                          width: 101,
-                          height: 183,
-                        }}
-                      />
+                      </TouchableOpacity>
                     </View>
+                    <Image
+                      source={{uri: gambar.uri}}
+                      style={{
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        width: 101,
+                        height: 183,
+                      }}
+                    />
                   </View>
-                </TouchableOpacity>
+                </View>
               ) : (
                 <View style={styles.secContainer}>
                   <View>

@@ -39,6 +39,8 @@ import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import 'moment/locale/id';
 import Modal from 'react-native-modal';
+import ModalItem from './component/componentBottomSheet/Modal';
+import ModalItemSuccess from './component/componentBottomSheet/ModalSuccess';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 60;
@@ -65,6 +67,8 @@ function FormTambah() {
   const [nominal, setNominal] = useState();
   const [deskripsi, setDeskripsi] = useState('');
   const [txtNominal, setTxtNominal] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [visibleSuccess, setVisibleSuccess] = useState(false);
   const translateY = useSharedValue(0);
   const translateDropShadow = useSharedValue(0);
   const navigation = useNavigation();
@@ -185,7 +189,7 @@ function FormTambah() {
     }).format(number);
   };
 
-  const handleSubmit = () => {
+  const doSubmit = () => {
     const db = new Database();
     data = {
       id_user: 'id001',
@@ -195,12 +199,21 @@ function FormTambah() {
       nominal: nominal,
       deskripsi: deskripsi,
       // date: tanggal,
-      date: '2022-12-04',
+      date: '2022-12-06',
       time: moment(new Date()).format('LT'),
     };
     db.insertDataTransaksi(data)
-      .then(data => navigation.navigate('Home'))
-      .catch(err => console.log("err "+err));
+      .then(data => {
+        navigation.navigate('Home');
+        setTimeout(() => {
+          navigation.navigate('Home');
+        }, 3000);
+      })
+      .catch(err => console.log('err ' + err));
+  };
+
+  const handleSubmit = () => {
+    setLoading(true);
   };
 
   return (
@@ -212,6 +225,15 @@ function FormTambah() {
       <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
       {/* <GestureHandlerRootView> */}
       <KeyboardAwareScrollView extraHeight={0}>
+        <ModalItem
+          visible={loading}
+          onChange={() => setLoading(false)}
+          onSubmit={() => {
+            doSubmit();
+            setVisibleSuccess(true);
+          }}
+        />
+        <ModalItemSuccess visible={visibleSuccess} />
         <View style={{padding: 14}}>
           <View
             style={{

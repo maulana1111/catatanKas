@@ -22,7 +22,6 @@ function ComponentTransaksi({dataIn, dataOut}) {
 
   const dtCount = Math.round((dataOut / dataIn) * 100);
   const dataRes = 100 - dtCount;
-  
 
   const HandleChangeState = e => {
     setStateMetode(e);
@@ -48,7 +47,9 @@ function ComponentTransaksi({dataIn, dataOut}) {
               }}>
               <View>
                 <Text style={styles.text3}>Minggu ini</Text>
-                <Text style={styles.text4}>{ChangeRupiah(dataIn - dataOut)}</Text>
+                <Text style={styles.text4}>
+                  {ChangeRupiah(dataIn - dataOut)}
+                </Text>
               </View>
               <View>
                 <Image source={require('./assets/Share.png')} />
@@ -115,7 +116,9 @@ function ComponentTransaksi({dataIn, dataOut}) {
               }}>
               <View>
                 <Text style={styles.text3}>Minggu ini</Text>
-                <Text style={styles.text4}>{ChangeRupiah(dataIn - dataOut)}</Text>
+                <Text style={styles.text4}>
+                  {ChangeRupiah(dataIn - dataOut)}
+                </Text>
               </View>
               <View>
                 <Image source={require('./assets/Share.png')} />

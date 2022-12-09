@@ -85,16 +85,17 @@ function BottomSheetNav() {
           <View style={styles.line}></View>
         </View>
         <View style={{paddingHorizontal: 24}}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={styles.txt1}>Transaksi Hari Ini</Text>
-            <Text style={styles.txt2}>
-              {dataFilter.status === true
-                ? dataFilter.data.tanggal_dari +
-                  ' - ' +
-                  dataFilter.data.tanggal_sampai
-                : moment(new Date()).format('ll')}
-            </Text>
-          </View>
+          {dataFilter.status === true && (
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={styles.txt1}>Transaksi By Filter</Text>
+              <Text style={styles.txt2}>
+                {dataFilter.data.tanggal_dari} -
+                {dataFilter.data.tanggal_sampai}
+              </Text>
+            </View>
+          )}
+
           {/* {moment(new Date).format('ll')} */}
           <View
             style={{

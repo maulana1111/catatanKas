@@ -171,7 +171,24 @@ export default class Database {
     });
   }
 
-  async getDataTagihan(id_user, transaksi) {
+  async deleteDataTagihan(id) {
+    return new Promise((resolve, reject) => {
+      this.initDb().then(db => {
+        db.transaction(async tx => {
+          await tx
+            .executeSql(`DELETE FROM tagihan WHERE id = ${id}`)
+            .then(([tx, res]) => {
+              resolve('success');
+            })
+            .catch(err => {
+              reject('error');
+            });
+        });
+      });
+    });
+  }
+
+  async getDataTagihan(id_user, tagihan) {
     return new Promise((resolve, reject) => {
       this.initDb()
         .then(db => {
@@ -184,7 +201,7 @@ export default class Database {
               await tx
                 .executeSql(
                   'SELECT * FROM tagihan WHERE id_user = ? AND tagihan = ? ORDER BY id DESC',
-                  [id_user, transaksi],
+                  [id_user, tagihan],
                 )
                 .then(([tx, res]) => {
                   if (res.rows.length !== 0) {
@@ -192,10 +209,76 @@ export default class Database {
                     for (let i = 0; i < res.rows.length; i++) {
                       data.push(JSON.parse(JSON.stringify(res.rows.item(i))));
                     }
-                    console.log('data = ' + JSON.stringify(data));
+                    // console.log('data = ' + JSON.stringify(data));
                     resolve(data);
                   } else {
                     resolve(null);
+                  }
+                });
+            }).then(() => {
+              this.closeDatabase(db);
+            });
+          });
+        })
+        .catch(er => {
+          console.log(er);
+          // reject(er);
+        });
+    });
+  }
+
+  async getDataTagihanWhere(
+    id_user,
+    tagihan,
+    urutan_pemasukan,
+    urutan_pengeluaran,
+    tanggal_dari,
+    tanggal_sampai,
+    jenis,
+  ) {
+    var date_dari = tanggal_dari.split('/');
+    var date_sampai = tanggal_sampai.split('/');
+    var tgl_dari = date_dari[2] + '-' + date_dari[1] + '-' + date_dari[0];
+    var tgl_sampai =
+      date_sampai[2] + '-' + date_sampai[1] + '-' + date_sampai[0];
+    let qry_jenis = '';
+    let operator = 'OR';
+    // let temp = "";
+    jenis && jenis.map((item, index) => {
+      qry = ` jenis_tagihan = '${item}' `;
+      if (jenis.length - 1 !== index) {
+        qry = qry.concat(operator);
+      }
+      qry_jenis = qry_jenis.concat(qry);
+    });
+    console.log('date_dari = ' + tgl_dari);
+    return new Promise((resolve, reject) => {
+      this.initDb()
+        .then(db => {
+          db.transaction(async tx => {
+            await tx.executeSql(
+              'CREATE TABLE IF NOT EXISTS tagihan (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), tagihan VARCHAR(15), jenis_tagihan VARCHAR(20), kategori VARCHAR(50), nominal INTEGER(100), description TEXT, foto TEXT, tanggal_tagihan DATE, waktu_tagihan TIME)',
+            );
+          }).then(async () => {
+            db.transaction(async tx => {
+              await tx
+                .executeSql(
+                  `SELECT * FROM tagihan WHERE id_user = '${id_user}' AND tagihan = '${tagihan}' AND (${qry_jenis}) AND tanggal_tagihan >= '${tgl_dari}' AND tanggal_tagihan <= '${tgl_sampai}' ORDER BY nominal ${
+                    tagihan === 'pemasukan'
+                      ? urutan_pemasukan.toUpperCase()
+                      : urutan_pengeluaran.toUpperCase()
+                  }`,
+                  [],
+                )
+                .then(([tx, res]) => {
+                  if (res.rows.length !== 0) {
+                    const data = new Array();
+                    for (let i = 0; i < res.rows.length; i++) {
+                      data.push(JSON.parse(JSON.stringify(res.rows.item(i))));
+                    }
+                    resolve(data);
+                  } else {
+                    reject(null);
                   }
                 });
             }).then(() => {

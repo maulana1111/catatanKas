@@ -9,11 +9,6 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {
-  GestureDetector,
-  Gesture,
-  ScrollView,
-} from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -32,11 +27,13 @@ import {
   storeGlobalChildSheet,
   storeGlobalSecChildSheet,
   storeDataFilter,
+  storeDataFilterTagihan,
 } from '../../../../redux/features/globalSlice';
 import FilterJenisItem from './component_item/filter-jenis-item';
 import {current} from '@reduxjs/toolkit';
+import Modal from 'react-native-modal';
 
-function ScreenBottomSheetFilter() {
+function ScreenBottomSheetFilter({state}) {
   const [stateIn, setStateIn] = useState('');
   const [stateOut, setStateOut] = useState('');
   const [dateFrom, setDateFrom] = useState('');
@@ -45,7 +42,7 @@ function ScreenBottomSheetFilter() {
   const [dateFromCom, setDateFromCom] = useState(new Date());
   const [dateToCom, setDateToCom] = useState(new Date());
   const [stateJenis, setStateJenis] = useState([]);
-
+  const [visible, setVisible] = useState(false);
   const {conditionChildSheet, secondConditionChildSheet} = useSelector(
     state => state.globalStm,
   );
@@ -89,18 +86,34 @@ function ScreenBottomSheetFilter() {
         {text: 'Oke'},
       ]);
     }
+    if (state === 'tagihan') {
+      dispatch(
+        storeDataFilterTagihan({
+          status: true,
+          urutan_pengeluaran: stateIn,
+          urutan_pemasukan: stateOut,
+          tanggal_dari: dateFrom,
+          tanggal_sampai: dateTo,
+          jenis_tagihan: stateJenis,
+          real_tanggal_dari: moment(dateFromCom).format('L'),
+          real_tanggal_sampai: moment(dateToCom).format('L'),
+        }),
+      );
+    } else {
+      dispatch(
+        storeDataFilter({
+          status: true,
+          urutan_pengeluaran: stateIn,
+          urutan_pemasukan: stateOut,
+          tanggal_dari: dateFrom,
+          tanggal_sampai: dateTo,
+          jenis_transaksi: stateJenis,
+          real_tanggal_dari: moment(dateFromCom).format('L'),
+          real_tanggal_sampai: moment(dateToCom).format('L'),
+        }),
+      );
+    }
 
-    dispatch(
-      storeDataFilter({
-        urutan_pengeluaran: stateIn,
-        urutan_pemasukan: stateOut,
-        tanggal_dari: dateFrom,
-        tanggal_sampai: dateTo,
-        jenis_transaksi: stateJenis,
-        real_tanggal_dari: moment(dateFromCom).format('L'),
-        real_tanggal_sampai: moment(dateToCom).format('L'),
-      }),
-    );
     dispatch(
       storeGlobalChildSheet({
         condition: false,
@@ -116,6 +129,30 @@ function ScreenBottomSheetFilter() {
     setDateTo('');
     setStateIn('');
     setStateOut('');
+    dispatch(
+      storeDataFilterTagihan({
+        status: false,
+        urutan_pengeluaran: '',
+        urutan_pemasukan: '',
+        tanggal_dari: '',
+        tanggal_sampai: '',
+        jenis_tagihan: '',
+        real_tanggal_dari: '',
+        real_tanggal_sampai: '',
+      }),
+    );
+    dispatch(
+      storeDataFilter({
+        status: false,
+        urutan_pengeluaran: '',
+        urutan_pemasukan: '',
+        tanggal_dari: '',
+        tanggal_sampai: '',
+        jenis_transaksi: '',
+        real_tanggal_dari: '',
+        real_tanggal_sampai: '',
+      }),
+    );
   };
 
   const BottomDropShadow = useAnimatedStyle(() => {
@@ -220,8 +257,8 @@ function ScreenBottomSheetFilter() {
               />
               <FilterJenisItem
                 images={require('../../../../assets/filter/instant.png')}
-                text={'Instan'}
-                value={'instan'}
+                text={'Instant'}
+                value={'instant'}
                 state={stateJenis}
                 onChange={value => handleChangeStateJenis(value)}
               />
