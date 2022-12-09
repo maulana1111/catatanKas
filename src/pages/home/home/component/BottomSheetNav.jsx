@@ -33,6 +33,8 @@ import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import 'moment/locale/id';
 
+console.log('height = ' + SCREEN_HEIGHT / 1.7);
+
 function BottomSheetNav() {
   const navigation = useNavigation();
   const [condition, setCondition] = useState(false);
@@ -55,7 +57,7 @@ function BottomSheetNav() {
         translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50});
       }
       if (translateY.value > -SCREEN_HEIGHT / 2) {
-        translateY.value = withSpring(-SCREEN_HEIGHT / 2, {damping: 50});
+        translateY.value = withSpring(-SCREEN_HEIGHT / 1.7, {damping: 50});
       }
     });
   const rBottomSheetStyle = useAnimatedStyle(() => {
@@ -76,7 +78,7 @@ function BottomSheetNav() {
   useEffect(() => {
     conditionChildSheet
       ? (translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50}))
-      : (translateY.value = withSpring(-SCREEN_HEIGHT / 2, {damping: 50}));
+      : (translateY.value = withSpring(-SCREEN_HEIGHT / 1.7, {damping: 50}));
   }, [conditionChildSheet]);
   return (
     <GestureDetector gesture={gesture}>
@@ -85,7 +87,7 @@ function BottomSheetNav() {
           <View style={styles.line}></View>
         </View>
         <View style={{paddingHorizontal: 24}}>
-          {dataFilter.status === true && (
+          {dataFilter.status && (
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <Text style={styles.txt1}>Transaksi By Filter</Text>

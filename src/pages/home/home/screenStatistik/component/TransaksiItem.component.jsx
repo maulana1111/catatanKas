@@ -9,11 +9,22 @@ function TransaksiItem({text, text2, state}) {
       currency: 'IDR',
     }).format(number);
   };
+
+  let str = '';
+  if (text === 'gaya_hidup') {
+    str = 'gaya hidup';
+  } else if (text === 'makanan&minuman') {
+    str = 'makanan & minuman';
+  } else {
+    str = text;
+  }
+
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
+        {console.log(text)}
         <ItemImage state={text} />
-        <Text style={styles.text}>{text}</Text>
+        <Text style={styles.text}>{str}</Text>
       </View>
       <View>
         <Text

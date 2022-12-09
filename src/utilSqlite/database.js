@@ -183,6 +183,27 @@ export default class Database {
             .catch(err => {
               reject('error');
             });
+        }).then(() => {
+          this.closeDatabase(db);
+        });
+      });
+    });
+  }
+
+  async deleteDataTransaksi(id) {
+    return new Promise((resolve, reject) => {
+      this.initDb().then(db => {
+        db.transaction(async tx => {
+          await tx
+            .executeSql(`DELETE FROM transaksi WHERE id = ${id}`)
+            .then(([tx, res]) => {
+              resolve('success');
+            })
+            .catch(err => {
+              reject('error');
+            });
+        }).then(() => {
+          this.closeDatabase(db);
         });
       });
     });
@@ -241,17 +262,17 @@ export default class Database {
     var tgl_dari = date_dari[2] + '-' + date_dari[1] + '-' + date_dari[0];
     var tgl_sampai =
       date_sampai[2] + '-' + date_sampai[1] + '-' + date_sampai[0];
-    let qry_jenis = '';
+    let qry_jenis = jenis ? 'AND (' : '';
     let operator = 'OR';
     // let temp = "";
-    jenis && jenis.map((item, index) => {
-      qry = ` jenis_tagihan = '${item}' `;
-      if (jenis.length - 1 !== index) {
-        qry = qry.concat(operator);
-      }
-      qry_jenis = qry_jenis.concat(qry);
-    });
-    console.log('date_dari = ' + tgl_dari);
+    jenis &&
+      jenis.map((item, index) => {
+        qry_jenis += ` jenis_tagihan = '${item}' `;
+        if (jenis.length - 1 !== index) {
+          qry_jenis += operator;
+        }
+        qry_jenis += ')';
+      });
     return new Promise((resolve, reject) => {
       this.initDb()
         .then(db => {
@@ -263,7 +284,7 @@ export default class Database {
             db.transaction(async tx => {
               await tx
                 .executeSql(
-                  `SELECT * FROM tagihan WHERE id_user = '${id_user}' AND tagihan = '${tagihan}' AND (${qry_jenis}) AND tanggal_tagihan >= '${tgl_dari}' AND tanggal_tagihan <= '${tgl_sampai}' ORDER BY nominal ${
+                  `SELECT * FROM tagihan WHERE id_user = '${id_user}' AND tagihan = '${tagihan}' ${qry_jenis} AND tanggal_tagihan >= '${tgl_dari}' AND tanggal_tagihan <= '${tgl_sampai}' ORDER BY nominal ${
                     tagihan === 'pemasukan'
                       ? urutan_pemasukan.toUpperCase()
                       : urutan_pengeluaran.toUpperCase()
@@ -307,17 +328,17 @@ export default class Database {
     var tgl_dari = date_dari[2] + '-' + date_dari[1] + '-' + date_dari[0];
     var tgl_sampai =
       date_sampai[2] + '-' + date_sampai[1] + '-' + date_sampai[0];
-    let qry_jenis = '';
+    let qry_jenis = jenis ? 'AND (' : '';
     let operator = 'OR';
     // let temp = "";
-    jenis.map((item, index) => {
-      qry = ` jenis_transaksi = '${item}' `;
-      if (jenis.length - 1 !== index) {
-        qry = qry.concat(operator);
-      }
-      qry_jenis = qry_jenis.concat(qry);
-    });
-    console.log('jenis = ' + qry_jenis);
+    jenis &&
+      jenis.map((item, index) => {
+        qry_jenis += ` jenis_tagihan = '${item}' `;
+        if (jenis.length - 1 !== index) {
+          qry_jenis += operator;
+        }
+        qry_jenis += ')';
+      });
     return new Promise((resolve, reject) => {
       this.initDb()
         .then(db => {
@@ -329,7 +350,7 @@ export default class Database {
             db.transaction(async tx => {
               await tx
                 .executeSql(
-                  `SELECT * FROM transaksi WHERE id_user = '${id_user}' AND transaksi = '${transaksi}' AND (${qry_jenis}) AND tanggal_transaksi >= '${tgl_dari}' AND tanggal_transaksi <= '${tgl_sampai}' ORDER BY nominal ${
+                  `SELECT * FROM transaksi WHERE id_user = '${id_user}' AND transaksi = '${transaksi}' ${qry_jenis} AND tanggal_transaksi >= '${tgl_dari}' AND tanggal_transaksi <= '${tgl_sampai}' ORDER BY nominal ${
                     transaksi === 'pemasukan'
                       ? urutan_pemasukan.toUpperCase()
                       : urutan_pengeluaran.toUpperCase()
@@ -360,15 +381,6 @@ export default class Database {
   }
 
   async getDataTransaksiThisWeek(id_user, transaksi) {
-    const today = new Date();
-    const tanggal =
-      today.getFullYear() +
-      '-' +
-      (today.getMonth() + 1) +
-      '-' +
-      (String(today.getDate()).length === 1
-        ? '0' + today.getDate()
-        : today.getDate());
     return new Promise((resolve, reject) => {
       this.initDb()
         .then(db => {

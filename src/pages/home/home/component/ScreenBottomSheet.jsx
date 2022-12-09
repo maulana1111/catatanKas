@@ -1,20 +1,136 @@
 import React, {Fragment} from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, Share} from 'react-native';
 import ItemScreen from './component_item/item-screen';
 
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {ScrollView, FlatList} from 'react-native-gesture-handler';
 import {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
-import Share from 'react-native-share';
+import ModalAskDelete from '../screenBill/component/ModalAskDelete';
+import ModalItemSuccess from '../screenBill/component/ModalSuccess';
+import {storeConditionDelete} from '../../../../redux/features/globalSlice';
+import Database from '../../../../utilSqlite/database';
+const db = new Database();
 
 function ScreenBottomSheet() {
   const {dataTransaksiIn, dataTransaksiOut} = useSelector(
     state => state.globalStm,
   );
+  const dispatch = useDispatch();
+  let strPem = 'Pemasukan = ';
+  let strPen = 'Pengeluaran = ';
 
-  const [stateTitle, setStateTitle] = useState('');
-  const [stateTemp, setStateTemp] = useState('');
+  const [visible, setvisible] = useState(false);
+  const [secVisible, setSecVisible] = useState(false);
+  const [id, setId] = useState('');
+
+  const ChangeRupiah = number => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+    }).format(number);
+  };
+
+  if (dataTransaksiIn.length !== 0) {
+    dataTransaksiIn.map(item => {
+      let st =
+        '( Tanggal Transaksi = ' +
+        item.tanggal_transaksi +
+        ', Waktu Transaksi = ' +
+        item.waktu_transaksi +
+        ', Kategori = ' +
+        item.kategori +
+        ', Nominal = ' +
+        ChangeRupiah(item.nominal) +
+        ', Jenis Transaksi = ' +
+        item.transaksi +
+        ') ';
+      strPem += st;
+    });
+  }
+
+  if (dataTransaksiOut.length !== 0) {
+    dataTransaksiOut.map(item => {
+      let txt =
+        '( Tanggal Transaksi = ' +
+        item.tanggal_transaksi +
+        ', Waktu Transaksi = ' +
+        item.waktu_transaksi +
+        ', Kategori = ' +
+        item.kategori +
+        ', Nominal = ' +
+        ChangeRupiah(item.nominal) +
+        ', Jenis Transaksi = ' +
+        item.transaksi +
+        ') ';
+      strPen += txt;
+    });
+  }
+
+  const sharePemasukan = async () => {
+    try {
+      const result = await Share.share({
+        message: JSON.stringify(strPem),
+      });
+      console.log('result = ' + result);
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const sharePengeluaran = async () => {
+    try {
+      const result = await Share.share({
+        message: JSON.stringify(strPen),
+      });
+      console.log('result = ' + result);
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleDelete = id => {
+    setvisible(true);
+    setId(id);
+  };
+
+  const handleClickCancel = () => {
+    setId(0);
+    setvisible(false);
+  };
+
+  const doDelete = async () => {
+    await db.deleteDataTransaksi(id).then(() => {
+      setvisible(false)
+      setSecVisible(true);
+      setTimeout(() => {
+        setSecVisible(false);
+        dispatch(
+          storeConditionDelete({
+            condition: true,
+          }),
+        );
+      }, 3000);
+    });
+  };
 
   return (
     <View>
@@ -27,14 +143,35 @@ function ScreenBottomSheet() {
         <View>
           <View style={styles.container}>
             <Text style={styles.txt1}>Pemasukan</Text>
-            <Image source={require('../../../../assets/Share.png')} />
+            <TouchableOpacity onPress={() => sharePemasukan()}>
+              <Image source={require('../../../../assets/Share.png')} />
+            </TouchableOpacity>
           </View>
+
+          <ModalItemSuccess
+            visible={secVisible}
+            text={'Berhasil menghapus transaksi'}
+          />
+
+          <ModalAskDelete
+            visible={visible}
+            title={'Hapus transaksi'}
+            desc={
+              'Apakah Anda yakin ingin menghapus transaksi ini? Periksa terlebih dahulu sebelum menghapus transaksi.'
+            }
+            onClickCancel={() => handleClickCancel()}
+            onClickHandle={() => doDelete()}
+          />
 
           {dataTransaksiIn !== null &&
             dataTransaksiIn.map((item, index) => {
               return (
                 <View key={index}>
-                  <ItemScreen jenis={item.transaksi} item={item} />
+                  <ItemScreen
+                    jenis={item.transaksi}
+                    item={item}
+                    onClick={id => handleDelete(id)}
+                  />
                 </View>
               );
             })}
@@ -52,7 +189,7 @@ function ScreenBottomSheet() {
         <View>
           <View style={styles.container}>
             <Text style={styles.txt1}>Pengeluaran</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => sharePengeluaran()}>
               <Image source={require('../../../../assets/Share.png')} />
             </TouchableOpacity>
           </View>
@@ -61,7 +198,11 @@ function ScreenBottomSheet() {
             dataTransaksiOut.map((item, index) => {
               return (
                 <View key={index}>
-                  <ItemScreen jenis={item.transaksi} item={item} />
+                  <ItemScreen
+                    jenis={item.transaksi}
+                    item={item}
+                    onClick={id => handleDelete(id)}
+                  />
                 </View>
               );
             })}

@@ -1,9 +1,10 @@
 import React from 'react';
+import {TouchableOpacity} from 'react-native';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {color} from 'react-native-reanimated';
 import ItemImage from './item-Image';
 
-function ItemScreen({jenis, item}) {
+function ItemScreen({jenis, item, onClick}) {
   const ChangeRupiah = number => {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -33,10 +34,12 @@ function ItemScreen({jenis, item}) {
           </View>
         </View>
         <View style={{marginTop: 10}}>
-          <Image
-            source={require('../../../../../assets/trash_icon.png')}
-            style={{width: 28, height: 28, alignSelf: 'flex-end'}}
-          />
+          <TouchableOpacity onPress={() => onClick(item.id)}>
+            <Image
+              source={require('../../../../../assets/trash_icon.png')}
+              style={{width: 28, height: 28, alignSelf: 'flex-end'}}
+            />
+          </TouchableOpacity>
           <Text
             style={[
               styles.txt4,

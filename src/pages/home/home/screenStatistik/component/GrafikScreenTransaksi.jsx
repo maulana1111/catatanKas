@@ -11,14 +11,22 @@ function GrafikScreenTransaksi() {
   const dataIn = new Array();
   const dataOut = new Array();
   const label = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
-  console.log('date trans in = ' + JSON.stringify(dataStatistikIn));
-  console.log('date trans out = ' + JSON.stringify(dataStatistikOut));
+  // console.log('date trans in = ' + JSON.stringify(dataStatistikIn));
+  // console.log('date trans out = ' + JSON.stringify(dataStatistikOut));
 
   if (dataStatistikIn.length !== 0) {
     let temp = 0;
     let state = new Date(dataStatistikIn[0].tanggal_transaksi).getDay();
+    // console.log('state out = ' + state);
     let count = 0;
     let i = 0;
+
+    if (state !== 1) {
+      for (let z = 0; z < state; z++) {
+        dataIn.push(0);
+        i++;
+      }
+    }
 
     for (const row of dataStatistikIn) {
       temp = new Date(row.tanggal_transaksi).getDay();
@@ -26,14 +34,13 @@ function GrafikScreenTransaksi() {
       if (temp !== state) {
         state = new Date(row.tanggal_transaksi).getDay();
         if (state - i > 1) {
-          // console.log('masuk');
           for (let j = i + 1; j < state; j++) {
             dataIn.push(0);
             i++;
-            // console.log('data saat ini = ' + dataIn);
           }
+        } else {
+          i++;
         }
-        i++;
       }
       let tmpDt = dataIn[i];
       if (tmpDt === null || tmpDt === undefined) {
@@ -46,7 +53,7 @@ function GrafikScreenTransaksi() {
 
     let coundArr = 7 - dataIn.length;
     for (let k = 0; k < coundArr; k++) {
-      dataIn.push();
+      dataIn.push(0);
     }
   } else {
     dataIn.push(0, 0, 0, 0, 0, 0, 0);
@@ -57,11 +64,11 @@ function GrafikScreenTransaksi() {
     let state = new Date(dataStatistikOut[0].tanggal_transaksi).getDay();
     let count = 0;
     let i = 0;
-    // console.log('state out = ' + state);
-    let stt = state - 1;
+
     if (state !== 1) {
-      for (let z = 0; z < stt; z++) {
+      for (let z = 0; z < state; z++) {
         dataOut.push(0);
+        i++;
       }
     }
 
@@ -71,21 +78,19 @@ function GrafikScreenTransaksi() {
       if (temp !== state) {
         state = new Date(row.tanggal_transaksi).getDay();
         if (state - i > 1) {
-          console.log('masuk');
           for (let j = i + 1; j < state; j++) {
             dataOut.push(0);
             i++;
-            // console.log('data saat ini = ' + dataIn);
           }
+        } else {
+          i++;
         }
-        i++;
-        stt++;
       }
-      let tmpDt = dataOut[stt];
+      let tmpDt = dataOut[i];
       if (tmpDt === null || tmpDt === undefined) {
         dataOut.push(count);
       } else {
-        dataOut[stt] = tmpDt + row.nominal;
+        dataOut[i] = tmpDt + row.nominal;
       }
       count = 0;
     }
@@ -97,6 +102,7 @@ function GrafikScreenTransaksi() {
   } else {
     dataOut.push(0, 0, 0, 0, 0, 0, 0);
   }
+
   console.log('data baru out = ' + JSON.stringify(dataOut));
   console.log('data baru in = ' + JSON.stringify(dataIn));
 

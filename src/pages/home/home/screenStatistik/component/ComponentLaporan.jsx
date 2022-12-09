@@ -1,19 +1,88 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Share,
+} from 'react-native';
 import TransaksiItem from './TransaksiItem.component';
 import {useSelector} from 'react-redux';
 import {FlatList} from 'react-native';
 
 function ComponentLaporan({dataIn, dataOut}) {
+  const dataPemasukan = new Array();
+  const dataPengeluaran = new Array();
+  let str = 'Pemasukan = ';
+
   const {dataStatistikIn, dataStatistikOut} = useSelector(
     state => state.globalStm,
   );
+  console.log('data = ' + JSON.stringify(dataStatistikIn));
   const ChangeRupiah = number => {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
       currency: 'IDR',
     }).format(number);
   };
+
+  if (dataStatistikIn.length !== 0 || dataStatistikOut.length !== 0) {
+    dataStatistikIn.map(item => {
+      let txt =
+        '( Tanggal Transaksi = ' +
+        item.tanggal_transaksi +
+        ', Waktu Transaksi = ' +
+        item.waktu_transaksi +
+        ', Kategori = ' +
+        item.kategori +
+        ', Nominal = ' +
+        ChangeRupiah(item.nominal) +
+        ', Jenis Transaksi = ' +
+        item.transaksi +
+        ') ';
+      str += txt;
+    });
+
+    str += ', Pengeluaran = '
+
+    dataStatistikOut.map(item => {
+      let txt =
+        '( Tanggal Transaksi = ' +
+        item.tanggal_transaksi +
+        ', Waktu Transaksi = ' +
+        item.waktu_transaksi +
+        ', Kategori = ' +
+        item.kategori +
+        ', Nominal = ' +
+        ChangeRupiah(item.nominal) +
+        ', Jenis Transaksi = ' +
+        item.transaksi +
+        ') ';
+      str += txt;
+    });
+  }
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: JSON.stringify(str),
+      });
+      console.log('result = ' + result);
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <View style={{padding: 16}}>
       <View style={styles.container}>
@@ -29,7 +98,9 @@ function ComponentLaporan({dataIn, dataOut}) {
             <Text style={styles.text3}>{ChangeRupiah(dataIn - dataOut)}</Text>
           </View>
           <View>
-            <Image source={require('./assets/Share.png')} />
+            <TouchableOpacity onPress={() => onShare()}>
+              <Image source={require('./assets/Share.png')} />
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.SecCon}>
@@ -84,6 +155,7 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 6,
     paddingHorizontal: 8,
     paddingVertical: 4,
+    marginVertical: 10,
   },
   text: {
     fontFamily: 'BalooBhaijaan2-SemiBold',

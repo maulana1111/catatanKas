@@ -5,6 +5,7 @@ const globalSlice = createSlice({
   initialState: {
     conditionChildSheet: false,
     secondConditionChildSheet: false,
+    conditionDelete: false,
     dataTransaksiIn: [],
     dataTransaksiOut: [],
     dataStatistikIn: [],
@@ -39,6 +40,9 @@ const globalSlice = createSlice({
     },
   },
   reducers: {
+    storeConditionDelete: (state, action) => {
+      state.conditionDelete = action.payload.condition;
+    },
     storeGlobalChildSheet: (state, action) => {
       state.conditionChildSheet = action.payload.condition;
     },
@@ -91,8 +95,7 @@ const globalSlice = createSlice({
       state.dataFilterTagihan.data.tanggal_dari = action.payload.tanggal_dari;
       state.dataFilterTagihan.data.tanggal_sampai =
         action.payload.tanggal_sampai;
-      state.dataFilterTagihan.data.jenis_tagihan =
-        action.payload.jenis_tagihan;
+      state.dataFilterTagihan.data.jenis_tagihan = action.payload.jenis_tagihan;
       state.dataFilterTagihan.data.real_tanggal_dari =
         action.payload.real_tanggal_dari;
       state.dataFilterTagihan.data.real_tanggal_sampai =
@@ -102,6 +105,7 @@ const globalSlice = createSlice({
 });
 
 export const {
+  storeConditionDelete,
   storeGlobalChildSheet,
   storeGlobalSecChildSheet,
   storeDataTransaksiIn,

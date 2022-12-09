@@ -9,6 +9,7 @@ import {
   Dimensions,
   PermissionsAndroid,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 import MyStatusBar from '../../../auth/component/StatusBar';
 // import Dropdown from './component/dropdown';
@@ -39,7 +40,7 @@ function FormTambahBill() {
   const [stateScreen, setStateScreen] = useState('tagihan');
   const [tagihan, setTagihan] = useState('');
   const [jenisTagihan, setJenisTagihan] = useState('');
-  const [kategori, setKategori] = useState('');
+  const [kategori, setKategori] = useState('0');
   const [nominal, setNominal] = useState();
   const [deskripsi, setDeskripsi] = useState('');
   const [gambar, setGambar] = useState(null);
@@ -190,6 +191,7 @@ function FormTambahBill() {
         : today.getDate());
     const time =
       today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+
     const data = {
       id_user: 'id001',
       tagihan: tagihan,
@@ -198,8 +200,8 @@ function FormTambahBill() {
       nominal: nominal,
       deskripsi: deskripsi,
       foto: imageForUpload,
-      // date: tanggal,
-      date: '2022-12-06',
+      date: tanggal,
+      // date: '2022-12-07',
       time: time,
     };
     await db
@@ -217,7 +219,18 @@ function FormTambahBill() {
   };
 
   const handleSubmit = async () => {
-    setLoading(true);
+    if (
+      tagihan !== '' &&
+      jenisTagihan !== '' &&
+      kategori !== '' &&
+      nominal !== 0 &&
+      gambar !== null &&
+      deskripsi !== ''
+    ) {
+      setLoading(true);
+    } else {
+      return Alert.alert('Warning!', 'Mohon Lengkapi Form !');
+    }
   };
 
   const getPermissionAndroid = async () => {

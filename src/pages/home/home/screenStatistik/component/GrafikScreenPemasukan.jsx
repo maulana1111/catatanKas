@@ -14,8 +14,16 @@ function GrafikScreenPemasukan() {
   if (dataStatistikIn.length !== 0) {
     let temp = 0;
     let state = new Date(dataStatistikIn[0].tanggal_transaksi).getDay();
+    // console.log('state out = ' + state);
     let count = 0;
     let i = 0;
+
+    if (state !== 1) {
+      for (let z = 0; z < state; z++) {
+        dataIn.push(0);
+        i++;
+      }
+    }
 
     for (const row of dataStatistikIn) {
       temp = new Date(row.tanggal_transaksi).getDay();
@@ -23,14 +31,13 @@ function GrafikScreenPemasukan() {
       if (temp !== state) {
         state = new Date(row.tanggal_transaksi).getDay();
         if (state - i > 1) {
-          // console.log('masuk');
           for (let j = i + 1; j < state; j++) {
             dataIn.push(0);
             i++;
-            // console.log('data saat ini = ' + dataIn);
           }
+        } else {
+          i++;
         }
-        i++;
       }
       let tmpDt = dataIn[i];
       if (tmpDt === null || tmpDt === undefined) {

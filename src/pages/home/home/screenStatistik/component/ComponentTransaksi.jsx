@@ -12,6 +12,7 @@ import {
   Dimensions,
   ToastAndroid,
   ScrollView,
+  Share,
 } from 'react-native';
 import Database from '../../../../../utilSqlite/database';
 const db = new Database();
@@ -32,6 +33,29 @@ function ComponentTransaksi({dataIn, dataOut}) {
       currency: 'IDR',
     }).format(number);
   };
+
+  const onShareData = async () => {
+    try {
+      const result = await Share.share({
+        message: `data Pemasukan Minggu Ini = ${ChangeRupiah(
+          dataIn,
+        )}, Data Pengeluaran Minggu Ini = ${ChangeRupiah(dataOut)} `,
+      });
+      console.log('result = ' + result);
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <View>
       <ScrollView>
@@ -52,7 +76,9 @@ function ComponentTransaksi({dataIn, dataOut}) {
                 </Text>
               </View>
               <View>
-                <Image source={require('./assets/Share.png')} />
+                <TouchableOpacity onPress={() => onShareData()}>
+                  <Image source={require('./assets/Share.png')} />
+                </TouchableOpacity>
               </View>
             </View>
             <View
@@ -120,9 +146,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
                   {ChangeRupiah(dataIn - dataOut)}
                 </Text>
               </View>
-              <View>
-                <Image source={require('./assets/Share.png')} />
-              </View>
+              <View></View>
             </View>
             <View style={styles.thirdCon}>
               <TouchableOpacity onPress={() => HandleChangeState('transaksi')}>

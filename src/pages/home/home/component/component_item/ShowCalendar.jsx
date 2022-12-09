@@ -54,7 +54,7 @@ function ShowCalendar({date, title, onChangeDate, selectedStartDate}) {
               styles.date,
               title === 'Dari Tanggal'
                 ? {
-                    right: -245,
+                    right: -260,
                   }
                 : {right: -45},
             ]}>

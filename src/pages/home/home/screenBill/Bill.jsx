@@ -8,6 +8,7 @@ import {
   StyleSheet,
   FlatList,
   DevSettings,
+  Share,
 } from 'react-native';
 import MyStatusBar from '../../../auth/component/StatusBar';
 import {useNavigation} from '@react-navigation/native';
@@ -42,6 +43,8 @@ function Bill() {
   const [idData, setIdData] = useState(null);
   const [reloadPage, setReloadPage] = useState(0);
   console.log('status = ' + dataFilterTagihan.status);
+  const dataPemasukan = new Array();
+  const dataPengeluaran = new Array();
 
   useEffect(() => {
     const getData = async () => {
@@ -102,14 +105,49 @@ function Bill() {
             console.log('error filter2 = ' + err);
           });
       }
-
-      // setLoading(false);
     };
     getData();
-    // console.log('data has geted = ' + JSON.stringify(dataTagihanIn));
   }, [isFocused, dataFilterTagihan.status, reloadPage]);
 
-  // console.log('data = ' + JSON.stringify(dataTagihanIn));
+  const ChangeRupiah = number => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+    }).format(number);
+  };
+
+  // useEffect(() => {
+  if (dataTagihanIn.length !== 0) {
+    dataTagihanIn.map(item => {
+      data =
+        '(tanggal tagihan = ' +
+        item.tanggal_tagihan +
+        ', Judul = ' +
+        item.kategori +
+        ', Jenis Tagihan = ' +
+        item.jenis_tagihan +
+        ', Waktu Tagihan = ' +
+        ChangeRupiah(item.nominal)+')';
+      dataPemasukan.push(data);
+    });
+  }
+
+  if (dataTagihanOut.length !== 0) {
+    dataTagihanOut.map(item => {
+      data1 =
+        'tanggal tagihan = ' +
+        item.tanggal_tagihan +
+        ', Judul = ' +
+        item.kategori +
+        ', Jenis Tagihan = ' +
+        item.jenis_tagihan +
+        ', Waktu Tagihan = ' +
+        ChangeRupiah(item.nominal);
+      dataPengeluaran.push(data1);
+    });
+  }
+  // }, []);
+  // console.log('data pemasukan = ' + dataPemasukan);
 
   const handleFilter = async () => {
     dispatch(storeGlobalChildSheet({condition: !conditionChildSheet}));
@@ -133,6 +171,48 @@ function Bill() {
         setReloadPage(reloadPage + 1);
       }, 3000);
     });
+  };
+
+  const onSharePemasukan = async () => {
+    try {
+      const result = await Share.share({
+        title: 'Pemasukan',
+        message: JSON.stringify(dataPemasukan),
+      });
+      console.log('result = ' + result);
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const onSharePengeluaran = async () => {
+    try {
+      const result = await Share.share({
+        title: 'Pemasukan',
+        message: JSON.stringify(dataPengeluaran),
+      });
+      console.log('result = ' + result);
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
@@ -213,7 +293,9 @@ function Bill() {
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={[styles.text1, {color: '#000'}]}>Pemasukan</Text>
-                <Image source={require('./assets/Share.png')} />
+                <TouchableOpacity onPress={() => onSharePemasukan()}>
+                  <Image source={require('./assets/Share.png')} />
+                </TouchableOpacity>
               </View>
               <FlatList
                 data={dataTagihanIn}
@@ -231,7 +313,9 @@ function Bill() {
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={[styles.text1, {color: '#000'}]}>Pengeluaran</Text>
-                <Image source={require('./assets/Share.png')} />
+                <TouchableOpacity onPress={() => onSharePengeluaran()}>
+                  <Image source={require('./assets/Share.png')} />
+                </TouchableOpacity>
               </View>
 
               <FlatList

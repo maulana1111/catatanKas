@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
+  LogBox,
 } from 'react-native';
 import MyStatusBar from '../../auth/component/StatusBar';
 import {Style} from './style/index';
@@ -21,6 +22,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   storeDataTransaksiIn,
   storeDataTransaksiOut,
+  storeConditionDelete,
 } from '../../../redux/features/globalSlice';
 const db = new Database();
 import {useIsFocused} from '@react-navigation/native';
@@ -30,7 +32,7 @@ import Modal from 'react-native-modal';
 function Home() {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
-  const {dataFilter} = useSelector(state => state.globalStm);
+  const {dataFilter, conditionDelete} = useSelector(state => state.globalStm);
   const [data, setData] = useState(null);
   const [dataPemasukan, setDataPemasukan] = useState([]);
   const [dataPengeluaran, setDataPengeluaran] = useState([]);
@@ -38,12 +40,14 @@ function Home() {
   const [totalPengeluaran, setTotalPengeluaran] = useState(0);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
+  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+  LogBox.ignoreAllLogs();
 
   useEffect(() => {
-    console.log("hit useEffect");
     const getData = async () => {
       setLoading(true);
       if (dataFilter.status === false) {
+        console.log('hit false');
         await db
           .getDataTransaksi('id001', 'pemasukan')
           .then(data1 => {
@@ -83,6 +87,7 @@ function Home() {
           });
       }
       if (dataFilter.status === true) {
+        console.log('hit true');
         await db
           .getDataTransaksiWhere(
             'id001',
@@ -149,14 +154,11 @@ function Home() {
       setLoading(false);
     };
     isFocused && getData();
-  }, [isFocused, dataFilter.status]);
+    dispatch(storeConditionDelete({condition: false}));
+  }, [isFocused, dataFilter.status, conditionDelete]);
 
   useEffect(() => {
-    // if (dataPemasukan !== null && dataPengeluaran !== null) {
-    // console.log('data pemasukan = ' + totalPemasukan);
-    // console.log("hit");
     setTotal(totalPemasukan - totalPengeluaran);
-    // }
   }, [totalPemasukan, totalPengeluaran]);
 
   return (

@@ -153,6 +153,7 @@ function ScreenBottomSheetFilter({state}) {
         real_tanggal_sampai: '',
       }),
     );
+    setGlobalChildSheet();
   };
 
   const BottomDropShadow = useAnimatedStyle(() => {
@@ -166,6 +167,14 @@ function ScreenBottomSheetFilter({state}) {
       transform: [{translateY: translateY.value}],
     };
   });
+
+  const setGlobalChildSheet = () => {
+    dispatch(
+      storeGlobalChildSheet({
+        condition: false,
+      }),
+    );
+  };
 
   useEffect(() => {
     if (conditionChildSheet) {
@@ -195,14 +204,7 @@ function ScreenBottomSheetFilter({state}) {
         <View style={{padding: 24}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={styles.text1}>Filter & Urutan</Text>
-            <TouchableOpacity
-              onPress={() =>
-                dispatch(
-                  storeGlobalChildSheet({
-                    condition: false,
-                  }),
-                )
-              }>
+            <TouchableOpacity onPress={() => setGlobalChildSheet()}>
               <Image source={require('../../../../assets/Cancel.png')} />
             </TouchableOpacity>
           </View>

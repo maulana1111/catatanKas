@@ -199,17 +199,24 @@ function FormTambah() {
       nominal: nominal,
       deskripsi: deskripsi,
       // date: tanggal,
-      date: '2022-12-06',
+      date: '2022-12-05',
       time: moment(new Date()).format('LT'),
     };
     db.insertDataTransaksi(data)
       .then(data => {
-        navigation.navigate('Home');
+        // navigation.navigate('Home');
         setTimeout(() => {
+          setVisibleSuccess(false);
           navigation.navigate('Home');
         }, 3000);
       })
       .catch(err => console.log('err ' + err));
+  };
+
+  const handleDoSubmit = () => {
+    setLoading(false);
+    setVisibleSuccess(true);
+    doSubmit();
   };
 
   const handleSubmit = () => {
@@ -229,8 +236,7 @@ function FormTambah() {
           visible={loading}
           onChange={() => setLoading(false)}
           onSubmit={() => {
-            doSubmit();
-            setVisibleSuccess(true);
+            handleDoSubmit();
           }}
         />
         <ModalItemSuccess visible={visibleSuccess} />

@@ -32,7 +32,7 @@ function ItemImage({state}) {
       </View>
     );
   }
-  if (state === 'food') {
+  if (state === 'makanan&minuman') {
     return (
       <View style={[styles.container, {backgroundColor: 'rgba(237, 110, 19, 0.4)'}]}>
         <Image
@@ -42,7 +42,7 @@ function ItemImage({state}) {
       </View>
     );
   }
-  if (state === 'entertainment') {
+  if (state === 'gaya_hidup') {
     return (
       <View style={[styles.container, {backgroundColor: '#D39BFF'}]}>
         <Image

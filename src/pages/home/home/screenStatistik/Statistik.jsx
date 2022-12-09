@@ -91,6 +91,7 @@ function Statistik() {
           style={{
             flexDirection: 'row',
             paddingHorizontal: 16,
+            marginTop: 15
           }}>
           <TouchableOpacity
             onPress={() => {
