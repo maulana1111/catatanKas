@@ -31,7 +31,7 @@ import 'moment/locale/id';
 function Bill() {
   const isFocused = useIsFocused();
   const navigation = useNavigation();
-  const {conditionChildSheet, dataFilterTagihan} = useSelector(
+  const {conditionChildSheet, dataFilterTagihan, dataUser} = useSelector(
     state => state.globalStm,
   );
   const dispatch = useDispatch();
@@ -52,7 +52,7 @@ function Bill() {
       if (dataFilterTagihan.status === false) {
         console.log('tidak hit filter');
         await db
-          .getDataTagihan('id001', 'pemasukan')
+          .getDataTagihan(dataUser.data.id, 'pemasukan')
           .then(data1 => {
             data1 && setDataTagihanIn(data1);
           })
@@ -61,7 +61,7 @@ function Bill() {
           });
 
         await db
-          .getDataTagihan('id001', 'pengeluaran')
+          .getDataTagihan(dataUser.data.id, 'pengeluaran')
           .then(data2 => {
             data2 && setDataTagihanOut(data2);
           })
@@ -73,7 +73,7 @@ function Bill() {
         console.log('hit filter');
         await db
           .getDataTagihanWhere(
-            'id001',
+            dataUser.data.id,
             'pemasukan',
             dataFilterTagihan.data.urutan_pemasukan,
             dataFilterTagihan.data.urutan_pengeluaran,
@@ -90,7 +90,7 @@ function Bill() {
 
         await db
           .getDataTagihanWhere(
-            'id001',
+            dataUser.data.id,
             'pengeluaran',
             dataFilterTagihan.data.urutan_pemasukan,
             dataFilterTagihan.data.urutan_pengeluaran,
@@ -127,7 +127,8 @@ function Bill() {
         ', Jenis Tagihan = ' +
         item.jenis_tagihan +
         ', Waktu Tagihan = ' +
-        ChangeRupiah(item.nominal)+')';
+        ChangeRupiah(item.nominal) +
+        ')';
       dataPemasukan.push(data);
     });
   }

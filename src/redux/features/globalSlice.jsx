@@ -38,8 +38,25 @@ const globalSlice = createSlice({
         real_tanggal_sampai: '',
       },
     },
+    dataUser: {
+      status_logged_in: false,
+      data: {
+        id_user: '',
+        nama_user: '',
+        email: '',
+        foto: '',
+      },
+    },
   },
   reducers: {
+    storeUser: (state, action) => {
+      console.log('id user = ' + JSON.stringify(action));
+      state.dataUser.status_logged_in = action.payload.dt.status;
+      state.dataUser.data.id_user = action.payload.dt.data.id_user;
+      state.dataUser.data.nama_user = action.payload.dt.data.nama_user;
+      state.dataUser.data.email = action.payload.dt.data.email;
+      state.dataUser.data.foto = action.payload.dt.data.foto;
+    },
     storeConditionDelete: (state, action) => {
       state.conditionDelete = action.payload.condition;
     },
@@ -105,6 +122,7 @@ const globalSlice = createSlice({
 });
 
 export const {
+  storeUser,
   storeConditionDelete,
   storeGlobalChildSheet,
   storeGlobalSecChildSheet,

@@ -41,6 +41,8 @@ import 'moment/locale/id';
 import Modal from 'react-native-modal';
 import ModalItem from './component/componentBottomSheet/Modal';
 import ModalItemSuccess from './component/componentBottomSheet/ModalSuccess';
+import {useSelector} from 'react-redux';
+import {Alert} from 'react-native';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 60;
@@ -60,6 +62,7 @@ const time =
 // console.log('tanggal = ' + dt);
 
 function FormTambah() {
+  const {dataUser} = useSelector(state => state.globalStm);
   const [stateScreen, setStateScreen] = useState('transaksi');
   const [transaksi, setTransaksi] = useState('');
   const [jenisTransaksi, setJenisTransaksi] = useState('');
@@ -192,14 +195,14 @@ function FormTambah() {
   const doSubmit = () => {
     const db = new Database();
     data = {
-      id_user: 'id001',
+      id_user: dataUser.data.id_user,
       transaksi: transaksi,
       jenisTransaksi: jenisTransaksi,
       kategori: kategori,
       nominal: nominal,
       deskripsi: deskripsi,
-      // date: tanggal,
-      date: '2022-12-05',
+      date: tanggal,
+      // date: '2022-12-05',
       time: moment(new Date()).format('LT'),
     };
     db.insertDataTransaksi(data)
@@ -220,6 +223,15 @@ function FormTambah() {
   };
 
   const handleSubmit = () => {
+    if (
+      transaksi === '' ||
+      jenisTransaksi === '' ||
+      kategori === '' ||
+      nominal === 0 ||
+      deskripsi === ''
+    ) {
+      return Alert.alert('Peringatan!!', 'Semua Inputan Harus Terisi');
+    }
     setLoading(true);
   };
 

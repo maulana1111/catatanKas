@@ -15,7 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import ComponentTransaksi from './component/ComponentTransaksi';
 import ComponentLaporan from './component/ComponentLaporan';
 import Database from '../../../../utilSqlite/database';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   storeDataStatistikIn,
   storeDataStatistikOut,
@@ -26,6 +26,7 @@ const db = new Database();
 
 function Statistik() {
   const dispatch = useDispatch();
+  const {dataUser} = useSelector(state => state.globalStm);
   const navigation = useNavigation();
   const [stateScreen, setStateScreen] = useState('transaksi');
   const [totalPemasukan, setTotalPemasukan] = useState(0);
@@ -37,7 +38,7 @@ function Statistik() {
   useEffect(() => {
     const getData = async () => {
       await db
-        .getDataTransaksiThisWeek('id001', 'pemasukan')
+        .getDataTransaksiThisWeek(dataUser.data.id, 'pemasukan')
         .then(data1 => {
           if (data1 !== null) {
             let totall = 0;
@@ -58,7 +59,7 @@ function Statistik() {
         });
 
       await db
-        .getDataTransaksiThisWeek('id001', 'pengeluaran')
+        .getDataTransaksiThisWeek(dataUser.data.id, 'pengeluaran')
         .then(data2 => {
           if (data2 !== null) {
             let total = 0;
@@ -91,7 +92,7 @@ function Statistik() {
           style={{
             flexDirection: 'row',
             paddingHorizontal: 16,
-            marginTop: 15
+            marginTop: 15,
           }}>
           <TouchableOpacity
             onPress={() => {

@@ -31,7 +31,7 @@ function ScreenBottomSheet() {
     }).format(number);
   };
 
-  if (dataTransaksiIn.length !== 0) {
+  if (dataTransaksiIn) {
     dataTransaksiIn.map(item => {
       let st =
         '( Tanggal Transaksi = ' +
@@ -49,7 +49,7 @@ function ScreenBottomSheet() {
     });
   }
 
-  if (dataTransaksiOut.length !== 0) {
+  if (dataTransaksiOut) {
     dataTransaksiOut.map(item => {
       let txt =
         '( Tanggal Transaksi = ' +

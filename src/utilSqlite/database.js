@@ -418,7 +418,7 @@ export default class Database {
     });
   }
 
-  async getDataUser(id_user) {
+  async getDataUser({id_user}) {
     return new Promise((resolve, reject) => {
       this.initDb()
         .then(db => {

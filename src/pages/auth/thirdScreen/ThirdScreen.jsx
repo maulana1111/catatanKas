@@ -6,6 +6,7 @@ import {
   View,
   PermissionsAndroid,
   Platform,
+  LogBox,
 } from 'react-native';
 import {Style} from './style/';
 import MyStatusBar from '../component/StatusBar';
@@ -19,7 +20,8 @@ import {
 import NetInfo from '@react-native-community/netinfo';
 import Database from '../../../utilSqlite/database';
 import {useDispatch} from 'react-redux';
-import {storeUser} from '../../../redux/features/stmSlice';
+// import {storeUser} from '../../../redux/features/globalSlice';
+import {storeUser} from '../../../redux/features/globalSlice';
 
 import RNFetchBlob from 'rn-fetch-blob';
 
@@ -31,9 +33,12 @@ function ThirdScreen() {
   const [linkFoto, setLinkFoto] = useState('');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
+  const [stateUser, setStateUser] = useState(false);
   const [image, setImage] = useState(
     'image_' + Math.floor(date.getTime() + date.getSeconds() / 2) + '.jpg',
   );
+  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+  LogBox.ignoreAllLogs();
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -44,6 +49,48 @@ function ThirdScreen() {
         '732363084015-fl8rg588mh76g0urn7k6voi7v7ot2n43.apps.googleusercontent.com',
       offlineAccess: true,
     });
+    async function _isSignedIn() {
+      const isSignedIn = await GoogleSignin.isSignedIn();
+      if (isSignedIn) {
+        const {id} = await _getCurrentUserInfo();
+        await db.getDataUser({id_user: id}).then(rowData => {
+          if (rowData) {
+            console.log('data user = ' + JSON.stringify(rowData));
+            const dt = {
+              status: true,
+              data: {
+                id_user: rowData.id_user,
+                nama_user: rowData.nama_user,
+                email: rowData.email,
+                foto: rowData.foto,
+              },
+            };
+            dispatch(
+              storeUser({
+                dt,
+              }),
+            );
+            navigation.navigate('Home');
+          }
+        });
+      }
+    }
+
+    async function _getCurrentUserInfo() {
+      try {
+        const userInfo = await GoogleSignin.signInSilently();
+        const {user} = JSON.parse(JSON.stringify(userInfo));
+        // console.log('data user google = ' + JSON.stringify(userInfo));
+        return user;
+      } catch (error) {
+        if (error.code === statusCodes.SIGN_IN_REQUIRED) {
+          console.log('user has not signed in yet');
+        } else {
+          console.log('some other error');
+        }
+      }
+    }
+    _isSignedIn();
   }, []);
 
   async function _signIn() {
@@ -53,21 +100,39 @@ function ThirdScreen() {
       });
       const userInfo = await GoogleSignin.signIn();
       const {user} = JSON.parse(JSON.stringify(userInfo));
-      console.log('dt json = ' + user);
-      const dataSet = {
-        id_user: user.id,
-        nama_user: user.name,
-        email: user.email,
-        foto: image,
+      // console.log("data user google = "+user);
+
+      db.getDataUser(user.id)
+        .then(data => {
+          setStateUser(true);
+        })
+        .catch(err => {
+          console.log('Error when Check');
+        });
+
+      const dt = {
+        status: true,
+        data: {
+          id_user: user.id,
+          nama_user: user.name,
+          email: user.email,
+          foto: image,
+        },
       };
       dispatch(
         storeUser({
-          dataSet,
+          dt,
         }),
       );
-      db.addDataUser(dataSet)
+      const dataset = {
+        id_user: user.id,
+        nama_user: user.nama_user,
+        email: user.email,
+        foto: image,
+      };
+      db.addDataUser(dataset)
         .then(async res => {
-          await _checkPermission(user.photo);
+          stateUser && (await _checkPermission(user.photo));
           console.log('res data = ' + res);
           navigation.navigate('Home');
         })

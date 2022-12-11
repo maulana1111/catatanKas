@@ -35,8 +35,10 @@ const db = new Database();
 import ModalItem from './component/Modal';
 import Modal from 'react-native-modal';
 import ModalItemSuccess from './component/ModalSuccess';
+import {useSelector} from 'react-redux';
 
 function FormTambahBill() {
+  const {dataUser} = useSelector(state => state.globalStm);
   const [stateScreen, setStateScreen] = useState('tagihan');
   const [tagihan, setTagihan] = useState('');
   const [jenisTagihan, setJenisTagihan] = useState('');
@@ -193,7 +195,7 @@ function FormTambahBill() {
       today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 
     const data = {
-      id_user: 'id001',
+      id_user: dataUser.data.id_user,
       tagihan: tagihan,
       jenisTagihan: jenisTagihan,
       kategori: kategori,
