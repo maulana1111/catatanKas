@@ -235,6 +235,9 @@ function Home() {
   };
 
   const handleLogout = async () => {
+    setVisibleAsk(true);
+  };
+  const doLogout = async () => {
     const dt = {
       status: false,
       data: {
@@ -251,6 +254,7 @@ function Home() {
     );
     try {
       await GoogleSignin.signOut();
+      setVisibleAsk(false);
       navigation.navigate('SecScreen');
       // Remember to remove the user from your app's state as well
     } catch (error) {
@@ -280,6 +284,8 @@ function Home() {
           visible={visibleAsk}
           title="Keluar Aplikasi"
           desc={'Apakah Anda Yakin Ingin Keluar Dari Aplikasi ini ?'}
+          onClickHandle={() => doLogout()}
+          onClickCancel={() => setVisibleAsk(false)}
         />
         <View
           style={{

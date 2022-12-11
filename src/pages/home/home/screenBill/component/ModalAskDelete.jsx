@@ -85,7 +85,9 @@ function ModalAskDelete({visible, title, desc, onClickHandle, onClickCancel}) {
                       marginTop: 5,
                       marginRight: 10,
                     }}>
-                    Hapus Sekarang
+                    {title === 'Keluar Aplikasi'
+                      ? 'Keluar Sekarang'
+                      : 'Hapus Sekarang'}
                   </Text>
                   <Image
                     source={require('../assets/arrow_right.png')}
