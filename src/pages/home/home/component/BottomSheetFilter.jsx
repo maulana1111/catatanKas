@@ -86,14 +86,19 @@ function ScreenBottomSheetFilter({state}) {
         {text: 'Oke'},
       ]);
     }
+
+    const defDateFrom = dateFrom ? dateFrom : moment(dateFromCom).format('ll');
+    const defDateTo = dateTo ? dateTo : moment(dateToCom).format('ll');
+
+    console.log('date from = ' + defDateFrom + ', date to = ' + defDateTo);
     if (state === 'tagihan') {
       dispatch(
         storeDataFilterTagihan({
           status: true,
           urutan_pengeluaran: stateIn,
           urutan_pemasukan: stateOut,
-          tanggal_dari: dateFrom,
-          tanggal_sampai: dateTo,
+          tanggal_dari: defDateFrom,
+          tanggal_sampai: defDateTo,
           jenis_tagihan: stateJenis,
           real_tanggal_dari: moment(dateFromCom).format('L'),
           real_tanggal_sampai: moment(dateToCom).format('L'),
@@ -105,8 +110,8 @@ function ScreenBottomSheetFilter({state}) {
           status: true,
           urutan_pengeluaran: stateIn,
           urutan_pemasukan: stateOut,
-          tanggal_dari: dateFrom,
-          tanggal_sampai: dateTo,
+          tanggal_dari: defDateFrom,
+          tanggal_sampai: defDateTo,
           jenis_transaksi: stateJenis,
           real_tanggal_dari: moment(dateFromCom).format('L'),
           real_tanggal_sampai: moment(dateToCom).format('L'),

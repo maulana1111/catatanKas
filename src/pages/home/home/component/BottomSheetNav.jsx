@@ -78,7 +78,7 @@ function BottomSheetNav() {
   useEffect(() => {
     conditionChildSheet
       ? (translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50}))
-      : (translateY.value = withSpring(-SCREEN_HEIGHT / 1.7, {damping: 50}));
+      : (translateY.value = withSpring(-SCREEN_HEIGHT / 2, {damping: 50}));
   }, [conditionChildSheet]);
   return (
     <GestureDetector gesture={gesture}>

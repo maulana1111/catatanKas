@@ -54,15 +54,13 @@ function ShowCalendar({date, title, onChangeDate, selectedStartDate}) {
               styles.date,
               title === 'Dari Tanggal'
                 ? {
-                    right: -260,
+                    right: -250,
                   }
                 : {right: -45},
             ]}>
             {selectedStartDate !== null ? (
               <CalendarPicker
                 textStyle={{color: 'black'}}
-                // selectedEndDate={selectedStartDate}
-                // disabledDates=
                 selectedStartDate={selectedStartDate}
                 minDate={selectedStartDate}
                 onDateChange={e => handleChangeDate(e)}
@@ -70,7 +68,7 @@ function ShowCalendar({date, title, onChangeDate, selectedStartDate}) {
             ) : (
               <CalendarPicker
                 textStyle={{color: 'black'}}
-                selectedStartDate={date}
+                initialDate={new Date(date)}
                 onDateChange={e => handleChangeDate(e)}
               />
             )}

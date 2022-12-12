@@ -52,15 +52,15 @@ function ThirdScreen() {
     async function _isSignedIn() {
       const isSignedIn = await GoogleSignin.isSignedIn();
       if (isSignedIn) {
-        const {id} = await _getCurrentUserInfo();
-        await db.getDataUser({id_user: id}).then(rowData => {
+        const dat = await _getCurrentUserInfo();
+        console.log('data user = ' + JSON.stringify(dat));
+        await db.getDataUser({id_user: dat.id}).then(rowData => {
           if (rowData) {
-            console.log('data user = ' + JSON.stringify(rowData));
             const dt = {
               status: true,
               data: {
                 id_user: rowData.id_user,
-                nama_user: rowData.nama_user,
+                nama_user: dat.name,
                 email: rowData.email,
                 foto: rowData.foto,
               },
@@ -126,7 +126,7 @@ function ThirdScreen() {
       );
       const dataset = {
         id_user: user.id,
-        nama_user: user.nama_user,
+        nama_user: user.name,
         email: user.email,
         foto: image,
       };
