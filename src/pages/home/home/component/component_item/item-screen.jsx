@@ -11,6 +11,22 @@ function ItemScreen({jenis, item, onClick}) {
       currency: 'IDR',
     }).format(number);
   };
+  let str = '';
+  if (
+    item.jenis_transaksi !== 'gaya_hidup' ||
+    item.jenis_transaksi !== 'makanan&minuman'
+  ) {
+    let tx = item.jenis_transaksi;
+    let str2 = tx.charAt(0).toUpperCase() + tx.slice(1);
+    str = str2;
+  }
+  if (item.jenis_transaksi === 'gaya_hidup') {
+    str = 'Gaya Hidup';
+  }
+  if (item.jenis_transaksi === 'makanan&minuman') {
+    str = 'Makanan & Minuman';
+  }
+
   return (
     <View>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -25,7 +41,7 @@ function ItemScreen({jenis, item, onClick}) {
                 fontFamily: 'BalooBhaijaan2-Regular',
                 color: '#9A9A9A',
               }}>
-              {item.jenis_transaksi}
+              {str}
             </Text>
             <Text style={styles.txt2}>{item.kategori}</Text>
             <Text style={styles.txt3}>

@@ -25,6 +25,8 @@ import {storeUser} from '../../../redux/features/globalSlice';
 
 import RNFetchBlob from 'rn-fetch-blob';
 
+// import {FileSystem} from 'expo'
+
 const db = new Database();
 const date = new Date();
 
@@ -53,7 +55,7 @@ function ThirdScreen() {
       const isSignedIn = await GoogleSignin.isSignedIn();
       if (isSignedIn) {
         const dat = await _getCurrentUserInfo();
-        console.log('data user = ' + JSON.stringify(dat));
+        // console.log('data user = ' + JSON.stringify(dat));
         await db.getDataUser({id_user: dat.id}).then(rowData => {
           if (rowData) {
             const dt = {
@@ -63,6 +65,7 @@ function ThirdScreen() {
                 nama_user: dat.name,
                 email: rowData.email,
                 foto: rowData.foto,
+                link_foto: dat.photo
               },
             };
             dispatch(
@@ -100,7 +103,7 @@ function ThirdScreen() {
       });
       const userInfo = await GoogleSignin.signIn();
       const {user} = JSON.parse(JSON.stringify(userInfo));
-      // console.log("data user google = "+user);
+      // console.log("data user google = "+JSON.stringify(user));
 
       db.getDataUser(user.id)
         .then(data => {
@@ -117,6 +120,7 @@ function ThirdScreen() {
           nama_user: user.name,
           email: user.email,
           foto: image,
+          link_foto: user.photo
         },
       };
       dispatch(
@@ -129,11 +133,12 @@ function ThirdScreen() {
         nama_user: user.name,
         email: user.email,
         foto: image,
+        link_foto: user.photo
       };
       db.addDataUser(dataset)
         .then(async res => {
-          stateUser && (await _checkPermission(user.photo));
-          console.log('res data = ' + res);
+          // stateUser && (await _checkPermission(user.photo));
+          // console.log('res data = ' + res);
           navigation.navigate('Home');
         })
         .catch(err => {
@@ -195,7 +200,7 @@ function ThirdScreen() {
       .fetch('GET', linkImage)
       .then(res => {
         // Showing alert after successful downloading
-        console.log('res -> ', JSON.stringify(res));
+        // console.log('res -> ', JSON.stringify(res));
         alert('Image For User Downloaded Successfully.');
       })
       .catch(err => {

@@ -90,7 +90,7 @@ function ScreenBottomSheetFilter({state}) {
     const defDateFrom = dateFrom ? dateFrom : moment(dateFromCom).format('ll');
     const defDateTo = dateTo ? dateTo : moment(dateToCom).format('ll');
 
-    console.log('date from = ' + defDateFrom + ', date to = ' + defDateTo);
+    // console.log('date from = ' + defDateFrom + ', date to = ' + defDateTo);
     if (state === 'tagihan') {
       dispatch(
         storeDataFilterTagihan({

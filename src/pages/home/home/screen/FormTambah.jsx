@@ -205,13 +205,15 @@ function FormTambah() {
       // date: '2022-12-05',
       time: moment(new Date()).format('LT'),
     };
+    // setVisibleSuccess(false);
+    // console.log('data form = ' + JSON.stringify(data));
     db.insertDataTransaksi(data)
       .then(data => {
         // navigation.navigate('Home');
         setTimeout(() => {
           setVisibleSuccess(false);
           navigation.navigate('Home');
-        }, 3000);
+        }, 1000);
       })
       .catch(err => console.log('err ' + err));
   };

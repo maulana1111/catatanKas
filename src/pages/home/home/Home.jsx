@@ -41,6 +41,8 @@ import {
 
 import {useNavigation} from '@react-navigation/native';
 import ModalAskDelete from './screenBill/component/ModalAskDelete';
+import moment from 'moment';
+import 'moment/locale/id';
 
 function Home() {
   const isFocused = useIsFocused();
@@ -60,13 +62,31 @@ function Home() {
   LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
   LogBox.ignoreAllLogs();
 
+  const date = new Date();
+  const strWaktu = moment(date).format('LT');
+  const waktu = strWaktu.split('.');
+  // console.log("wakttu = "+waktu[0]);
+  let strText = '';
+  if (waktu[0] >= 2 && waktu[0] < 10) {
+    strText = 'Selamat Pagi';
+  }
+  if (waktu[0] >= 10 && waktu[0] < 14) {
+    strText = 'Selamat Siang';
+  }
+  if (waktu[0] >= 14 && waktu[0] < 20) {
+    strText = 'Selamat Sore';
+  }
+  if (waktu[0] >= 20) {
+    strText = 'Selamat Malam';
+  }
+
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
       if (dataFilter.status === false) {
-        console.log('hit false');
+        // console.log('hit false');
         await db
-          .getDataTransaksi(dataUser.data.id, 'pemasukan')
+          .getDataTransaksi(dataUser.data.id_user, 'pemasukan')
           .then(data1 => {
             if (data1 !== null) {
               let totall = 0;
@@ -87,7 +107,7 @@ function Home() {
           });
 
         await db
-          .getDataTransaksi(dataUser.data.id, 'pengeluaran')
+          .getDataTransaksi(dataUser.data.id_user, 'pengeluaran')
           .then(data2 => {
             if (data2 !== null) {
               let total = 0;
@@ -104,10 +124,10 @@ function Home() {
           });
       }
       if (dataFilter.status === true) {
-        console.log('hit true');
+        // console.log('hit true');
         await db
           .getDataTransaksiWhere(
-            'id001',
+            dataUser.data.id_user,
             'pemasukan',
             dataFilter.data.urutan_pemasukan,
             dataFilter.data.urutan_pengeluaran,
@@ -142,7 +162,7 @@ function Home() {
           });
         await db
           .getDataTransaksiWhere(
-            'id001',
+            dataUser.data.id_user,
             'pengeluaran',
             dataFilter.data.urutan_pemasukan,
             dataFilter.data.urutan_pengeluaran,
@@ -218,7 +238,7 @@ function Home() {
       },
     };
     await launchImageLibrary(options, response => {
-      console.log('Response = ', response);
+      // console.log('Response = ', response);
 
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -264,7 +284,7 @@ function Home() {
 
   let img = dataUser.data.foto;
   // CameraRoll.getPhotos(dataUser.data.foto)
-  console.log('path = ' + RNFS.PicturesDirectoryPath);
+  // console.log('path = ' + dataUser.data.link_foto);
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -296,15 +316,23 @@ function Home() {
           }}>
           <View style={{flexDirection: 'row'}}>
             <View style={{marginRight: 10}}>
-              {/* <Image source={require('../../../assets/img_person.png')} /> */}
+              {/* <CachedImage
+                source={{uri: data.data.link_foto}}
+                style={{height: 40, width: 40}}
+              /> */}
               <Image
+                source={{uri: dataUser.data.link_foto}}
+                style={{height: 40, width: 40}}
+              />
+              {/* <Image source={require('../../../assets/img_person.png')} /> */}
+              {/* <Image
                 source={{
-                  // uri: `file:///data/user/0/com.catatankas/cache/rn_image_picker_lib_temp_d3fc6f3b-6c7f-49ef-b958-2c845a3a7a5c.jpg`,
-                  // uri: `file:/${RNFS.PicturesDirectoryPath}/${dataUser.data.foto}`,
+                  uri: `file:///data/user/0/com.catatankas/cache/rn_image_picker_lib_temp_d3fc6f3b-6c7f-49ef-b958-2c845a3a7a5c.jpg`,
+                  uri: `file:/${RNFS.PicturesDirectoryPath}/${dataUser.data.foto}`,
                   uri: `file:///storage/emulated/0/DCIM/Pictures/${dataUser.data.foto}`,
                 }}
                 style={{height: 40, width: 40}}
-              />
+              /> */}
               {/* /storage/emulated/0/Pictures/image_1670674560014.jpg */}
               {/* <Image
                 source={{
@@ -313,7 +341,7 @@ function Home() {
               /> */}
             </View>
             <View>
-              <Text style={Style.txt1}>Selamat Pagi</Text>
+              <Text style={Style.txt1}>{strText}</Text>
               <Text style={Style.txt2}>{dataUser.data.nama_user}</Text>
             </View>
           </View>

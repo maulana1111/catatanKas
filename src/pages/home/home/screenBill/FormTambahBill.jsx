@@ -206,6 +206,7 @@ function FormTambahBill() {
       // date: '2022-12-07',
       time: time,
     };
+    console.log('state data = ' + JSON.stringify(data));
     await db
       .insertDataTagihan(data)
       .then(async () => {
@@ -215,7 +216,7 @@ function FormTambahBill() {
         setTimeout(() => {
           setVisibleSuccess(false);
           navigation.navigate('Bill');
-        }, 3000);
+        }, 1000);
       })
       .catch(err => console.log('err ' + err));
   };

@@ -99,6 +99,7 @@ export default class Database {
                 )
                 .then(([tx, res]) => {
                   if (res.rows.length !== 0) {
+                    // console.log("data = "+res);
                     const data = new Array();
                     for (let i = 0; i < res.rows.length; i++) {
                       data.push(JSON.parse(JSON.stringify(res.rows.item(i))));
@@ -426,7 +427,7 @@ export default class Database {
         .then(db => {
           db.transaction(async tx => {
             await tx.executeSql(
-              'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), nama_user VARCHAR(30), email VARCHAR(30), foto VARCHAR(255))',
+              'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), nama_user VARCHAR(30), email VARCHAR(30), foto VARCHAR(255), link_foto VARCHAR(255))',
             );
           })
             .then(async () => {
@@ -442,6 +443,7 @@ export default class Database {
                         foto: row.foto,
                         email: row.email,
                         user_logged_in: true,
+                        link_foto: row.link_foto
                       };
                       resolve(data_user);
                     }
@@ -452,30 +454,28 @@ export default class Database {
             })
             .catch(er => {
               console.log(er);
-              // reject(er);r
             });
         })
         .catch(er => {
           console.log(er);
-          // reject(er);
         });
     });
   }
 
-  async addDataUser({id_user, nama_user, email, foto}) {
+  async addDataUser({id_user, nama_user, email, foto, link_foto}) {
     return new Promise((resolve, reject) => {
       this.initDb()
         .then(async db => {
           db.transaction(async tx => {
             await tx.executeSql(
-              'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), nama_user VARCHAR(30), email VARCHAR(30), foto VARCHAR(255))',
+              'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), nama_user VARCHAR(30), email VARCHAR(30), foto VARCHAR(255), link_foto VARCHAR(255))',
             );
           }).then(() => {
             db.transaction(async tx => {
               await tx
                 .executeSql(
-                  'INSERT INTO user(id_user, nama_user, email, foto) VALUES(?, ?, ?, ?)',
-                  [id_user, nama_user, email, foto],
+                  'INSERT INTO user(id_user, nama_user, email, foto, link_foto) VALUES(?, ?, ?, ?, ?)',
+                  [id_user, nama_user, email, foto, link_foto],
                   (tx, res) => {
                     if (res) {
                       console.log('Success Inserted = ' + res);

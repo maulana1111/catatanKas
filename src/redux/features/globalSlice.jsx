@@ -45,17 +45,19 @@ const globalSlice = createSlice({
         nama_user: '',
         email: '',
         foto: '',
+        link_foto: ''
       },
     },
   },
   reducers: {
     storeUser: (state, action) => {
-      console.log('id user = ' + JSON.stringify(action));
+      // console.log('id user = ' + JSON.stringify(action));
       state.dataUser.status_logged_in = action.payload.dt.status;
       state.dataUser.data.id_user = action.payload.dt.data.id_user;
       state.dataUser.data.nama_user = action.payload.dt.data.nama_user;
       state.dataUser.data.email = action.payload.dt.data.email;
       state.dataUser.data.foto = action.payload.dt.data.foto;
+      state.dataUser.data.link_foto = action.payload.dt.data.link_foto;
     },
     storeConditionDelete: (state, action) => {
       state.conditionDelete = action.payload.condition;

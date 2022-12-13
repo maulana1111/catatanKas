@@ -10,7 +10,12 @@ import ModalAskDelete from '../screenBill/component/ModalAskDelete';
 import ModalItemSuccess from '../screenBill/component/ModalSuccess';
 import {storeConditionDelete} from '../../../../redux/features/globalSlice';
 import Database from '../../../../utilSqlite/database';
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import RNPrint from 'react-native-print';
+import {NOTES_SVG, LOGO_SVG, HTML} from './component_html/assets/StrHTML';
+
 const db = new Database();
+const date = new Date();
 
 function ScreenBottomSheet() {
   const {dataTransaksiIn, dataTransaksiOut} = useSelector(
@@ -67,12 +72,32 @@ function ScreenBottomSheet() {
     });
   }
 
-  const sharePemasukan = async () => {
+  // const sharePemasukan = async () => {
+  //   try {
+  //     const result = await Share.share({
+  //       message: JSON.stringify(strPem),
+  //     });
+  //     // console.log('result = ' + result);
+  //     if (result.action === Share.sharedAction) {
+  //       if (result.activityType) {
+  //         // shared with activity type of result.activityType
+  //       } else {
+  //         // shared
+  //       }
+  //     } else if (result.action === Share.dismissedAction) {
+  //       // dismissed
+  //     }
+  //   } catch (error) {
+  //     alert(error.message);
+  //   }
+  // };
+
+  const sharePengeluaran = async () => {
     try {
       const result = await Share.share({
-        message: JSON.stringify(strPem),
+        message: JSON.stringify(strPen),
       });
-      console.log('result = ' + result);
+      // console.log('result = ' + result);
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // shared with activity type of result.activityType
@@ -87,24 +112,24 @@ function ScreenBottomSheet() {
     }
   };
 
-  const sharePengeluaran = async () => {
-    try {
-      const result = await Share.share({
-        message: JSON.stringify(strPen),
-      });
-      console.log('result = ' + result);
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      alert(error.message);
-    }
+  const createPdfPemasukan = async () => {
+    // let file = await RNPrint.print({
+    //   html: HTML,
+    // });
+    let name_pdf =
+      'document_pemasukan_' +
+      Math.floor(date.getTime() + date.getSeconds() / 2);
+    let options = {
+      html: HTML,
+      fileName: name_pdf,
+      directory: 'Documents',
+      base64: true
+    };
+    let file = await RNHTMLtoPDF.convert(options);
+    await RNPrint.print({ filePath: file.filePath })
+    console.log(file.filePath);
+    console.log('res = ' + file);
+    return alert(file.filePath);
   };
 
   const handleDelete = id => {
@@ -119,7 +144,7 @@ function ScreenBottomSheet() {
 
   const doDelete = async () => {
     await db.deleteDataTransaksi(id).then(() => {
-      setvisible(false)
+      setvisible(false);
       setSecVisible(true);
       setTimeout(() => {
         setSecVisible(false);
@@ -143,7 +168,7 @@ function ScreenBottomSheet() {
         <View>
           <View style={styles.container}>
             <Text style={styles.txt1}>Pemasukan</Text>
-            <TouchableOpacity onPress={() => sharePemasukan()}>
+            <TouchableOpacity onPress={() => createPdfPemasukan()}>
               <Image source={require('../../../../assets/Share.png')} />
             </TouchableOpacity>
           </View>

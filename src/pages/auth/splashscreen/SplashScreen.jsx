@@ -8,7 +8,7 @@ import MyStatusBar from '../component/StatusBar';
 function SplashScreen(props) {
   const navigation = useNavigation();
   const nxtScreen = props.route.params.nextScreen;
-  console.log('next screen = ' + nxtScreen);
+  // console.log('next screen = ' + nxtScreen);
 
   useEffect(() => {
     setTimeout(() => {

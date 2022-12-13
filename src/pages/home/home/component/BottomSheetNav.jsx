@@ -33,7 +33,8 @@ import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import 'moment/locale/id';
 
-console.log('height = ' + SCREEN_HEIGHT / 1.7);
+// console.log('height = ' + -SCREEN_HEIGHT / 1.7);
+// console.log('res height = ' + (58 / 100) * -SCREEN_HEIGHT);
 
 function BottomSheetNav() {
   const navigation = useNavigation();
@@ -53,11 +54,11 @@ function BottomSheetNav() {
       translateY.value = Math.max(translateY.value, MAX_TRANSLATE_Y);
     })
     .onEnd(() => {
-      if (translateY.value < -SCREEN_HEIGHT / 2) {
+      if (translateY.value < (50 / 100) * -SCREEN_HEIGHT) {
         translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50});
       }
       if (translateY.value > -SCREEN_HEIGHT / 2) {
-        translateY.value = withSpring(-SCREEN_HEIGHT / 1.7, {damping: 50});
+        translateY.value = withSpring((50 / 100) * -SCREEN_HEIGHT, {damping: 50});
       }
     });
   const rBottomSheetStyle = useAnimatedStyle(() => {
@@ -70,7 +71,7 @@ function BottomSheetNav() {
     if (conditionChildSheet !== true) {
       translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50});
     } else {
-      translateY.value = withSpring(-SCREEN_HEIGHT / 2, {damping: 50});
+      translateY.value = withSpring((50 / 100) * -SCREEN_HEIGHT, {damping: 50});
     }
     dispatch(storeGlobalChildSheet({condition: !conditionChildSheet}));
   };
@@ -78,7 +79,7 @@ function BottomSheetNav() {
   useEffect(() => {
     conditionChildSheet
       ? (translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50}))
-      : (translateY.value = withSpring(-SCREEN_HEIGHT / 2, {damping: 50}));
+      : (translateY.value = withSpring((50 / 100) * -SCREEN_HEIGHT, {damping: 50}));
   }, [conditionChildSheet]);
   return (
     <GestureDetector gesture={gesture}>
@@ -92,8 +93,7 @@ function BottomSheetNav() {
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <Text style={styles.txt1}>Transaksi By Filter</Text>
               <Text style={styles.txt2}>
-                {dataFilter.data.tanggal_dari} -
-                {dataFilter.data.tanggal_sampai}
+                {dataFilter.data.tanggal_dari} -{dataFilter.data.tanggal_sampai}
               </Text>
             </View>
           )}

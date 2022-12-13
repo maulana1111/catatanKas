@@ -20,9 +20,10 @@ function GrafikScreenTransaksi() {
     // console.log('state out = ' + state);
     let count = 0;
     let i = 0;
+    console.log("state out = "+state);
 
     if (state !== 1) {
-      for (let z = 0; z < state; z++) {
+      for (let z = 1; z < state; z++) {
         dataIn.push(0);
         i++;
       }
@@ -66,7 +67,7 @@ function GrafikScreenTransaksi() {
     let i = 0;
 
     if (state !== 1) {
-      for (let z = 0; z < state; z++) {
+      for (let z = 1; z < state; z++) {
         dataOut.push(0);
         i++;
       }

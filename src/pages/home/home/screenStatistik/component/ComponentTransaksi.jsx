@@ -102,7 +102,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
                   styles.bg2,
                   {
                     backgroundColor: '#31CE5D',
-                    width: `${dataIn !== null ? dataRes + '%' : '0%'}`,
+                    width: `${dataIn !== null ? dtCount + '%' : '0%'}`,
                   },
                 ]}
               />
@@ -124,7 +124,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
                   styles.bg2,
                   {
                     backgroundColor: '#FF5942',
-                    width: `${dataOut !== null ? dtCount + '%' : '0%'}`,
+                    width: `${dataOut !== null ? dataRes + '%' : '0%'}`,
                   },
                 ]}
               />

@@ -372,7 +372,7 @@ function ItemImage({state}) {
       </View>
     );
   }
-  if (state === 'ranchmarker') {
+  if (state === 'ranchmarket') {
     return (
       <View>
         <Image
@@ -402,6 +402,15 @@ function ItemImage({state}) {
       </View>
     );
   }
+
+  return (
+    <View>
+      <Image
+        source={require('../../screen/assets/kontak/pria.png')}
+        style={styles.container}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

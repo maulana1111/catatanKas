@@ -12,7 +12,7 @@ function ItemImage({state}) {
       </View>
     );
   }
-  if (state === 'lifestyle') {
+  if (state === 'gaya_hidup') {
     return (
       <View style={[styles.container, {backgroundColor: 'rgba(130, 255, 240, 0.4)'}]}>
         <Image
@@ -42,7 +42,7 @@ function ItemImage({state}) {
       </View>
     );
   }
-  if (state === 'gaya_hidup') {
+  if (state === 'hiburan') {
     return (
       <View style={[styles.container, {backgroundColor: '#D39BFF'}]}>
         <Image

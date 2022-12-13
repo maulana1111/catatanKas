@@ -251,6 +251,8 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation project(':react-native-contacts')
+    implementation project(':react-native-html-to-pdf')
+    implementation project(':react-native-print')
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 

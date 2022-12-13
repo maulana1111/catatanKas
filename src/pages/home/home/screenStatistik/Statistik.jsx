@@ -38,7 +38,7 @@ function Statistik() {
   useEffect(() => {
     const getData = async () => {
       await db
-        .getDataTransaksiThisWeek(dataUser.data.id, 'pemasukan')
+        .getDataTransaksiThisWeek(dataUser.data.id_user, 'pemasukan')
         .then(data1 => {
           if (data1 !== null) {
             let totall = 0;
@@ -59,7 +59,7 @@ function Statistik() {
         });
 
       await db
-        .getDataTransaksiThisWeek(dataUser.data.id, 'pengeluaran')
+        .getDataTransaksiThisWeek(dataUser.data.id_user, 'pengeluaran')
         .then(data2 => {
           if (data2 !== null) {
             let total = 0;

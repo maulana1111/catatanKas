@@ -12,10 +12,13 @@ import com.facebook.soloader.SoLoader;
 import com.catatankas.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import com.christopherdro.htmltopdf.RNHTMLtoPDFPackage;
+import com.christopherdro.RNPrint.RNPrintPackage;
+
 // import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 
 public class MainApplication extends Application implements ReactApplication {
-
+  // new MainReactPackage(),new RNHTMLtoPDFPackage();
   private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {
 

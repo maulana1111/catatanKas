@@ -5,7 +5,7 @@ function ComponentSecItem({image1, text, image2}) {
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
-        <Image source={image1} />
+        <Image source={image1} style={{width: 24, height: 24}} />
         <Text style={styles.text}>{text}</Text>
       </View>
       <View>

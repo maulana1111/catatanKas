@@ -42,7 +42,7 @@ function Bill() {
   const [visiblee, setVisiblee] = useState(false);
   const [idData, setIdData] = useState(null);
   const [reloadPage, setReloadPage] = useState(0);
-  console.log('status = ' + dataFilterTagihan.status);
+  // console.log('status = ' + dataFilterTagihan.status);
   const dataPemasukan = new Array();
   const dataPengeluaran = new Array();
 
@@ -50,9 +50,9 @@ function Bill() {
     const getData = async () => {
       // setLoading(true);
       if (dataFilterTagihan.status === false) {
-        console.log('tidak hit filter');
+        // console.log('tidak hit filter');
         await db
-          .getDataTagihan(dataUser.data.id, 'pemasukan')
+          .getDataTagihan(dataUser.data.id_user, 'pemasukan')
           .then(data1 => {
             data1 && setDataTagihanIn(data1);
           })
@@ -61,7 +61,7 @@ function Bill() {
           });
 
         await db
-          .getDataTagihan(dataUser.data.id, 'pengeluaran')
+          .getDataTagihan(dataUser.data.id_user, 'pengeluaran')
           .then(data2 => {
             data2 && setDataTagihanOut(data2);
           })
@@ -70,10 +70,10 @@ function Bill() {
           });
       }
       if (dataFilterTagihan.status === true) {
-        console.log('hit filter');
+        // console.log('hit filter');
         await db
           .getDataTagihanWhere(
-            dataUser.data.id,
+            dataUser.data.id_user,
             'pemasukan',
             dataFilterTagihan.data.urutan_pemasukan,
             dataFilterTagihan.data.urutan_pengeluaran,
@@ -90,7 +90,7 @@ function Bill() {
 
         await db
           .getDataTagihanWhere(
-            dataUser.data.id,
+            dataUser.data.id_user,
             'pengeluaran',
             dataFilterTagihan.data.urutan_pemasukan,
             dataFilterTagihan.data.urutan_pengeluaran,

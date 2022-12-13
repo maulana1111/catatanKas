@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Share,
+  ScrollView,
 } from 'react-native';
 import TransaksiItem from './TransaksiItem.component';
 import {useSelector} from 'react-redux';
@@ -19,7 +20,7 @@ function ComponentLaporan({dataIn, dataOut}) {
   const {dataStatistikIn, dataStatistikOut} = useSelector(
     state => state.globalStm,
   );
-  console.log('data = ' + JSON.stringify(dataStatistikIn));
+  // console.log('data = ' + JSON.stringify(dataStatistikIn));
   const ChangeRupiah = number => {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -44,7 +45,7 @@ function ComponentLaporan({dataIn, dataOut}) {
       str += txt;
     });
 
-    str += ', Pengeluaran = '
+    str += ', Pengeluaran = ';
 
     dataStatistikOut.map(item => {
       let txt =
@@ -86,55 +87,57 @@ function ComponentLaporan({dataIn, dataOut}) {
   return (
     <View style={{padding: 16}}>
       <View style={styles.container}>
-        <Text style={styles.text}>Buku Pemasukan & Pengeluaran</Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginVertical: 3,
-          }}>
-          <View>
-            <Text style={styles.text2}>Minggu ini</Text>
-            <Text style={styles.text3}>{ChangeRupiah(dataIn - dataOut)}</Text>
+        <ScrollView style={{marginBottom: 10}} >
+          <Text style={styles.text}>Buku Pemasukan & Pengeluaran</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginVertical: 3,
+            }}>
+            <View>
+              <Text style={styles.text2}>Minggu ini</Text>
+              <Text style={styles.text3}>{ChangeRupiah(dataIn - dataOut)}</Text>
+            </View>
+            <View>
+              <TouchableOpacity onPress={() => onShare()}>
+                <Image source={require('./assets/Share.png')} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.SecCon}>
+            <Text style={styles.text4}>Pemasukan</Text>
+            <Text style={styles.text5}>+{ChangeRupiah(dataIn)}</Text>
           </View>
           <View>
-            <TouchableOpacity onPress={() => onShare()}>
-              <Image source={require('./assets/Share.png')} />
-            </TouchableOpacity>
+            <FlatList
+              data={dataStatistikIn}
+              renderItem={({item}) => (
+                <TransaksiItem
+                  text={item.jenis_transaksi}
+                  text2={item.nominal}
+                  state={item.transaksi}
+                />
+              )}
+            />
           </View>
-        </View>
-        <View style={styles.SecCon}>
-          <Text style={styles.text4}>Pemasukan</Text>
-          <Text style={styles.text5}>+{ChangeRupiah(dataIn)}</Text>
-        </View>
-        <View>
-          <FlatList
-            data={dataStatistikIn}
-            renderItem={({item}) => (
-              <TransaksiItem
-                text={item.jenis_transaksi}
-                text2={item.nominal}
-                state={item.transaksi}
-              />
-            )}
-          />
-        </View>
-        <View style={styles.SecCon}>
-          <Text style={styles.text4}>Pengeluaran</Text>
-          <Text style={styles.text5}>-{ChangeRupiah(dataOut)}</Text>
-        </View>
-        <View>
-          <FlatList
-            data={dataStatistikOut}
-            renderItem={({item}) => (
-              <TransaksiItem
-                text={item.jenis_transaksi}
-                text2={item.nominal}
-                state={item.transaksi}
-              />
-            )}
-          />
-        </View>
+          <View style={styles.SecCon}>
+            <Text style={styles.text4}>Pengeluaran</Text>
+            <Text style={styles.text5}>-{ChangeRupiah(dataOut)}</Text>
+          </View>
+          <View>
+            <FlatList
+              data={dataStatistikOut}
+              renderItem={({item}) => (
+                <TransaksiItem
+                  text={item.jenis_transaksi}
+                  text2={item.nominal}
+                  state={item.transaksi}
+                />
+              )}
+            />
+          </View>
+        </ScrollView>
       </View>
     </View>
   );
@@ -143,7 +146,8 @@ function ComponentLaporan({dataIn, dataOut}) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'rgba(255, 234, 189, 1)',
-    justifyContent: 'flex-start',
+    // justifyContent: 'flex-start',
+    height: '89%',
     padding: 12,
     borderRadius: 16,
   },
