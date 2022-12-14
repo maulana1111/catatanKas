@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import ModalEmpty from './ModalEmpty';
 // import HtmlGenerate from './StrHTML';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import {
   svg_notes,
@@ -89,12 +89,14 @@ async function GeneratePDF(
                 border-bottom: 2px solid black;
                 margin: auto;
             }
+            .openItem{
+              width: 100%;
+              height: 250px;
+            }
             .bottom {
                 width: 100%;
                 height: 155px;
-                background-color: #FFE6B1;
-                position: absolute;
-                bottom: 0;                
+                background-color: #FFE6B1;       
             }
             @media print {
                 .pagebreak { page-break-before: always; } /* page-break-after works, as well */
@@ -122,17 +124,13 @@ async function GeneratePDF(
   let HtmlFooter = `
       <div class="bottom">
           <div style="width:10%; margin:auto; padding-top: 20px;">
-            ${svg_notes}
+            ${logo}
           </div>
           <br>
           <div class="hr3"></div>
           <br>
           <h2 style="text-align: center; color: #795B1B;">Catatan Kas 2022</h2>
       </div>`;
-
-  // let HTMLTop = `
-  //   ${HtmlHead}
-  //     <body> `;
 
   let HTMLBottom = `
       </body>
@@ -210,7 +208,7 @@ async function GeneratePDF(
           <div class="flex">
               <div style="margin-right: 10px;"></div>
               ${strIcon}
-              <h3>${state}</h3>
+              <h3 style="margin-left: 20px">${state}</h3>
           </div>
           <div>
               <h3 style="color: #FF5942;">- ${ChangeRupiah(item.nominal)}</h3>
@@ -263,11 +261,12 @@ async function GeneratePDF(
         <!-- <div class="hr2"> -->
         </div>
       ${HtmlFooter}
-      <!-- pagebreak-->
-    <!-- HTMLBottom -->
   `;
 
-  let TagPageBreak = '<!-- <div class="pagebreak"></div> -->';
+  let TagPageBreak = '<div class="pagebreak"></div>';
+
+  let strOpenItem = `<div class="openItem">`;
+  let strCloseItem = `</div>`;
 
   let HTMLItem = ``;
 
@@ -280,36 +279,18 @@ async function GeneratePDF(
   while (condition1 === true) {
     if (itemPemasukan.length > 0) {
       let StrHtmlResItem = '';
-      // console.log("data pemasukan = "+itemPemasukan.length);
-      if (itemPemasukan.length > 6) {
-        j += 6;
-        for (let k = i; k < j; k++) {
-          StrHtmlResItem += itemPemasukan[k];
-          i++;
-          if (i > itemPemasukan.length) {
-            break;
-          }
-        }
-      } else {
-        for (let a = i; a < itemPemasukan.length; a++) {
-          i++;
-          StrHtmlResItem += itemPemasukan[a];
-          if (i > itemPemasukan.length) {
-            break;
-          }
+      j += 6;
+      for (let k = i; k < j; k++) {
+        StrHtmlResItem += itemPemasukan[k];
+        i++;
+        if (itemPemasukan.length === i) {
+          break;
         }
       }
-      console.log(i);
-      // j += 6;
-      // for (let k = i; k < j; k++) {
-      //   StrHtmlResItem += itemPemasukan[k];
-      //   i++;
-      //   if (itemPemasukan[i] === null) {
-      //     break;
-      //   }
-      // }
       StrHTMLRes += htmlTopSecPemasukan;
+      StrHTMLRes += strOpenItem;
       StrHTMLRes += StrHtmlResItem;
+      StrHTMLRes += strCloseItem;
       StrHTMLRes += htmlBottomSec;
       StrHTMLRes += TagPageBreak;
       if (i >= itemPemasukan.length) {
@@ -318,41 +299,42 @@ async function GeneratePDF(
     } else {
       StrHTMLRes += htmlTopSecPemasukan;
       StrHTMLRes += htmlBottomSec;
-      StrHTMLRes += TagPageBreak;
+      // StrHTMLRes += TagPageBreak;
       condition1 = false;
     }
   }
 
   let condition2 = true;
-  let a = 0;
-  let b = 0;
+  j = 0;
+  i = 0;
 
   while (condition2 === true) {
-    if (itemPengeluaran.length !== 0) {
+    if (itemPengeluaran.length > 0) {
       let StrHtmlResItem = '';
-      a += 6;
-      for (let k = b; k < a; k++) {
+      j += 6;
+      for (let k = i; k < j; k++) {
         StrHtmlResItem += itemPengeluaran[k];
-        b++;
-        if (itemPengeluaran[b] === null) {
+        i++;
+        if (itemPengeluaran.length === i) {
           break;
         }
       }
       StrHTMLRes += htmlTopSecPengeluaran;
+      StrHTMLRes += strOpenItem;
       StrHTMLRes += StrHtmlResItem;
+      StrHTMLRes += strCloseItem;
       StrHTMLRes += htmlBottomSec;
       StrHTMLRes += TagPageBreak;
-      if (i > itemPengeluaran.length) {
+      if (i >= itemPengeluaran.length) {
         condition2 = false;
       }
     } else {
       StrHTMLRes += htmlTopSecPengeluaran;
       StrHTMLRes += htmlBottomSec;
-      StrHTMLRes += TagPageBreak;
+      // StrHTMLRes += TagPageBreak;
       condition2 = false;
     }
   }
-
   StrHTMLRes += HTMLBottom;
 
   // return HtmlGenerate()
