@@ -25,6 +25,8 @@ import {
   storeDataTransaksiOut,
   storeConditionDelete,
   storeUser,
+  storeJumlahDataTransaksiIn,
+  storeJumlahDataTransaksiOut,
 } from '../../../redux/features/globalSlice';
 const db = new Database();
 import {useIsFocused} from '@react-navigation/native';
@@ -94,6 +96,11 @@ function Home() {
                 totall = totall + row.nominal;
               }
               setTotalPemasukan(totall);
+              dispatch(
+                storeJumlahDataTransaksiIn({
+                  data: totall,
+                }),
+              );
             }
             setDataPemasukan(data1);
             dispatch(
@@ -115,6 +122,11 @@ function Home() {
                 total = total + row.nominal;
               }
               setTotalPengeluaran(total);
+              dispatch(
+                storeJumlahDataTransaksiOut({
+                  data: total,
+                }),
+              );
             }
             setDataPengeluaran(data2);
             dispatch(storeDataTransaksiOut({data: data2}));
@@ -148,6 +160,11 @@ function Home() {
                   data: data1,
                 }),
               );
+              dispatch(
+                storeJumlahDataTransaksiIn({
+                  data: total,
+                }),
+              );
             }
           })
           .catch(err => {
@@ -179,6 +196,11 @@ function Home() {
               setTotalPengeluaran(total);
               setDataPengeluaran(data2);
               dispatch(storeDataTransaksiOut({data: data2}));
+              dispatch(
+                storeJumlahDataTransaksiOut({
+                  data: total,
+                }),
+              );
             }
           })
           .catch(err => {
@@ -316,29 +338,10 @@ function Home() {
           }}>
           <View style={{flexDirection: 'row'}}>
             <View style={{marginRight: 10}}>
-              {/* <CachedImage
-                source={{uri: data.data.link_foto}}
-                style={{height: 40, width: 40}}
-              /> */}
               <Image
                 source={{uri: dataUser.data.link_foto}}
                 style={{height: 40, width: 40}}
               />
-              {/* <Image source={require('../../../assets/img_person.png')} /> */}
-              {/* <Image
-                source={{
-                  uri: `file:///data/user/0/com.catatankas/cache/rn_image_picker_lib_temp_d3fc6f3b-6c7f-49ef-b958-2c845a3a7a5c.jpg`,
-                  uri: `file:/${RNFS.PicturesDirectoryPath}/${dataUser.data.foto}`,
-                  uri: `file:///storage/emulated/0/DCIM/Pictures/${dataUser.data.foto}`,
-                }}
-                style={{height: 40, width: 40}}
-              /> */}
-              {/* /storage/emulated/0/Pictures/image_1670674560014.jpg */}
-              {/* <Image
-                source={{
-                  uri: 'file://storage/emulated/0/DCIM/image_1670664930580.jpg',
-                }}
-              /> */}
             </View>
             <View>
               <Text style={Style.txt1}>{strText}</Text>

@@ -12,20 +12,40 @@ import {storeConditionDelete} from '../../../../redux/features/globalSlice';
 import Database from '../../../../utilSqlite/database';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import RNPrint from 'react-native-print';
-import {NOTES_SVG, LOGO_SVG, HTML} from './component_html/assets/StrHTML';
+// import {NOTES_SVG, LOGO_SVG, HTML} from './component_html/assets/StrHTML';
+// import HtmlGenerate, {logo} from './component_html/StrHTML';
+import GeneratePDF from './component_html/GeneratePDF';
+import ModalEmpty from './component_html/ModalEmpty';
+
+// import {
+//   svg_notes,
+//   logo,
+//   SvgGayaHidup,
+//   SvgHiburan,
+//   SvgInstant,
+//   SvgMakananMinuman,
+//   SvgTransfer,
+//   SvgTunai,
+// } from './component_html/assets/ItemSVG';
 
 const db = new Database();
 const date = new Date();
 
 function ScreenBottomSheet() {
-  const {dataTransaksiIn, dataTransaksiOut} = useSelector(
-    state => state.globalStm,
-  );
+  const {
+    dataTransaksiIn,
+    dataTransaksiOut,
+    jumlahDataTransaksiIn,
+    jumlahDataTransaksiOut,
+    dataUser,
+  } = useSelector(state => state.globalStm);
+  // console.log('jumlah in ' + jumlahDataTransaksiIn);
   const dispatch = useDispatch();
   let strPem = 'Pemasukan = ';
   let strPen = 'Pengeluaran = ';
 
   const [visible, setvisible] = useState(false);
+  const [visibleModalEmpty, setVisibleModalEmpty] = useState(false);
   const [secVisible, setSecVisible] = useState(false);
   const [id, setId] = useState('');
 
@@ -112,25 +132,38 @@ function ScreenBottomSheet() {
     }
   };
 
-  const createPdfPemasukan = async () => {
+  async function createPdfPemasukan() {
+    var t = await GeneratePDF(
+      dataTransaksiIn,
+      dataTransaksiOut,
+      jumlahDataTransaksiIn,
+      jumlahDataTransaksiOut,
+      dataUser,
+    );
+    // console.log(t);
+    // <HtmlGenerate />
+    // dataTransaksiIn.length === 0 && dataTransaksiOut.length === 0
+    //   ? setvisible(true)
+    //   : GeneratePDF();
+    // let ret = await GeneratePDF();
     // let file = await RNPrint.print({
-    //   html: HTML,
+    //   html: t,
     // });
     let name_pdf =
       'document_pemasukan_' +
       Math.floor(date.getTime() + date.getSeconds() / 2);
     let options = {
-      html: HTML,
+      html: t,
       fileName: name_pdf,
       directory: 'Documents',
       base64: true
     };
     let file = await RNHTMLtoPDF.convert(options);
-    await RNPrint.print({ filePath: file.filePath })
+    // await RNPrint.print({ filePath: file.filePath })
     console.log(file.filePath);
     console.log('res = ' + file);
     return alert(file.filePath);
-  };
+  }
 
   const handleDelete = id => {
     setvisible(true);
@@ -156,6 +189,9 @@ function ScreenBottomSheet() {
       }, 3000);
     });
   };
+  const onChangeVisible = () => {
+    setvisible(false);
+  };
 
   return (
     <View>
@@ -172,12 +208,14 @@ function ScreenBottomSheet() {
               <Image source={require('../../../../assets/Share.png')} />
             </TouchableOpacity>
           </View>
-
+          <ModalEmpty
+            visible={visibleModalEmpty}
+            onChange={() => onChangeVisible()}
+          />
           <ModalItemSuccess
             visible={secVisible}
             text={'Berhasil menghapus transaksi'}
           />
-
           <ModalAskDelete
             visible={visible}
             title={'Hapus transaksi'}
@@ -187,7 +225,6 @@ function ScreenBottomSheet() {
             onClickCancel={() => handleClickCancel()}
             onClickHandle={() => doDelete()}
           />
-
           {dataTransaksiIn !== null &&
             dataTransaksiIn.map((item, index) => {
               return (

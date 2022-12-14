@@ -142,7 +142,6 @@ function BottomSheetNav() {
             <ScreenBottomSheet />
           </ScrollView>
         </SafeAreaView>
-        {/* <ScreenBottomSheetFilter /> */}
       </Animated.View>
     </GestureDetector>
   );

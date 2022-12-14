@@ -14,6 +14,8 @@ const globalSlice = createSlice({
     dataTagihanOut: [],
     jumlahDataStatistikIn: 0,
     jumlahDataStatistikOut: 0,
+    jumlahDataTransaksiIn: 0,
+    jumlahDataTransaksiOut: 0,
     dataFilter: {
       status: false,
       data: {
@@ -45,7 +47,7 @@ const globalSlice = createSlice({
         nama_user: '',
         email: '',
         foto: '',
-        link_foto: ''
+        link_foto: '',
       },
     },
   },
@@ -91,6 +93,12 @@ const globalSlice = createSlice({
     },
     storeJumlahDataStatistikOut: (state, action) => {
       state.jumlahDataStatistikOut = action.payload.data;
+    },
+    storeJumlahDataTransaksiIn: (state, action) => {
+      state.jumlahDataTransaksiIn = action.payload.data;
+    },
+    storeJumlahDataTransaksiOut: (state, action) => {
+      state.jumlahDataTransaksiOut = action.payload.data;
     },
     storeDataFilter: (state, action) => {
       state.dataFilter.status = action.payload.status;
@@ -138,5 +146,7 @@ export const {
   storeDataTagihanIn,
   storeDataTagihanOut,
   storeDataFilterTagihan,
+  storeJumlahDataTransaksiIn,
+  storeJumlahDataTransaksiOut,
 } = globalSlice.actions;
 export default globalSlice.reducer;
