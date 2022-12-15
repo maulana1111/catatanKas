@@ -4,7 +4,7 @@ import {StyleSheet, Image, View} from 'react-native';
 function ItemImage({state}) {
   if (state === 'bca') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/transfer/bca.png')}
           style={styles.container}
@@ -14,7 +14,7 @@ function ItemImage({state}) {
   }
   if (state === 'bjb') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/transfer/bjb.png')}
           style={styles.container}
@@ -24,7 +24,7 @@ function ItemImage({state}) {
   }
   if (state === 'bni') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/transfer/bni.png')}
           style={styles.container}
@@ -34,7 +34,7 @@ function ItemImage({state}) {
   }
   if (state === 'bri') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/transfer/bri.png')}
           style={styles.container}
@@ -44,7 +44,7 @@ function ItemImage({state}) {
   }
   if (state === 'bsi') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/transfer/bsi.png')}
           style={styles.container}
@@ -54,7 +54,7 @@ function ItemImage({state}) {
   }
   if (state === 'mandiri') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/transfer/mandiri.png')}
           style={styles.container}
@@ -64,7 +64,7 @@ function ItemImage({state}) {
   }
   if (state === 'aw') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/makan/aw.png')}
           style={styles.container}
@@ -74,7 +74,7 @@ function ItemImage({state}) {
   }
   if (state === 'burger') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/makan/burger.png')}
           style={styles.container}
@@ -84,7 +84,7 @@ function ItemImage({state}) {
   }
   if (state === 'carl') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/makan/carl.png')}
           style={styles.container}
@@ -94,7 +94,7 @@ function ItemImage({state}) {
   }
   if (state === 'domino') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/makan/domino.png')}
           style={styles.container}
@@ -104,7 +104,7 @@ function ItemImage({state}) {
   }
   if (state === 'dunkin') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/makan/dunkin.png')}
           style={styles.container}
@@ -114,7 +114,7 @@ function ItemImage({state}) {
   }
   if (state === 'gofood') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/makan/gofood.png')}
           style={styles.container}
@@ -124,7 +124,7 @@ function ItemImage({state}) {
   }
   if (state === 'grab') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/makan/grab.png')}
           style={styles.container}
@@ -134,7 +134,7 @@ function ItemImage({state}) {
   }
   if (state === 'hokben') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/makan/hokben.png')}
           style={styles.container}
@@ -144,7 +144,7 @@ function ItemImage({state}) {
   }
   if (state === 'jco') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/makan/jco.png')}
           style={styles.container}
@@ -154,7 +154,7 @@ function ItemImage({state}) {
   }
   if (state === 'kfc') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/makan/kfc.png')}
           style={styles.container}
@@ -165,6 +165,8 @@ function ItemImage({state}) {
   if (state === 'mcd') {
     ireturn(
       <View>
+        {' '}
+        style={styles.border}
         <Image
           source={require('../../screen/assets/makan/mcd.png')}
           style={styles.container}
@@ -174,7 +176,7 @@ function ItemImage({state}) {
   }
   if (state === 'pizza') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/makan/pizza.png')}
           style={styles.container}
@@ -184,7 +186,7 @@ function ItemImage({state}) {
   }
   if (state === 'shoopeFood') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/makan/shoope.png')}
           style={styles.container}
@@ -194,7 +196,7 @@ function ItemImage({state}) {
   }
   if (state === 'starbuck') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/makan/starbuck.png')}
           style={styles.container}
@@ -204,7 +206,7 @@ function ItemImage({state}) {
   }
   if (state === 'yoshinoya') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/makan/yoshinoya.png')}
           style={styles.container}
@@ -214,7 +216,7 @@ function ItemImage({state}) {
   }
   if (state === 'dana') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/instant/dana.png')}
           style={styles.container}
@@ -224,7 +226,7 @@ function ItemImage({state}) {
   }
   if (state === 'linkaja') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/instant/linkaja.png')}
           style={styles.container}
@@ -234,7 +236,7 @@ function ItemImage({state}) {
   }
   if (state === 'ovo') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/instant/ovo.png')}
           style={styles.container}
@@ -244,7 +246,7 @@ function ItemImage({state}) {
   }
   if (state === 'shopeePay') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/instant/shoope.png')}
           style={styles.container}
@@ -254,7 +256,7 @@ function ItemImage({state}) {
   }
   if (state === 'apple') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/hiburan/apple.png')}
           style={styles.container}
@@ -264,7 +266,7 @@ function ItemImage({state}) {
   }
   if (state === 'disney') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/hiburan/disney.png')}
           style={styles.container}
@@ -274,7 +276,7 @@ function ItemImage({state}) {
   }
   if (state === 'netflix') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/hiburan/netflix.png')}
           style={styles.container}
@@ -284,7 +286,7 @@ function ItemImage({state}) {
   }
   if (state === 'prime') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/hiburan/prime.png')}
           style={styles.container}
@@ -294,7 +296,7 @@ function ItemImage({state}) {
   }
   if (state === 'spotify') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/hiburan/spotify.png')}
           style={styles.container}
@@ -304,7 +306,7 @@ function ItemImage({state}) {
   }
   if (state === 'tix') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/hiburan/tix.png')}
           style={styles.container}
@@ -314,7 +316,7 @@ function ItemImage({state}) {
   }
   if (state === 'video') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/hiburan/video.png')}
           style={styles.container}
@@ -324,7 +326,7 @@ function ItemImage({state}) {
   }
   if (state === 'alfamart') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/gayahidup/alfamart.png')}
           style={styles.container}
@@ -334,7 +336,7 @@ function ItemImage({state}) {
   }
   if (state === 'hero') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/gayahidup/hero.png')}
           style={styles.container}
@@ -344,7 +346,7 @@ function ItemImage({state}) {
   }
   if (state === 'indomart') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/gayahidup/indomart.png')}
           style={styles.container}
@@ -354,7 +356,7 @@ function ItemImage({state}) {
   }
   if (state === 'lotte') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/gayahidup/lotte.png')}
           style={styles.container}
@@ -364,7 +366,7 @@ function ItemImage({state}) {
   }
   if (state === 'pertamina') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/gayahidup/pertamina.png')}
           style={styles.container}
@@ -374,7 +376,7 @@ function ItemImage({state}) {
   }
   if (state === 'ranchmarket') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/gayahidup/ranchmarket.png')}
           style={styles.container}
@@ -384,7 +386,7 @@ function ItemImage({state}) {
   }
   if (state === 'shell') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/gayahidup/shell.png')}
           style={styles.container}
@@ -394,7 +396,7 @@ function ItemImage({state}) {
   }
   if (state === 'superindo') {
     return (
-      <View>
+      <View style={styles.border}>
         <Image
           source={require('../../screen/assets/gayahidup/superindo.png')}
           style={styles.container}
@@ -404,10 +406,10 @@ function ItemImage({state}) {
   }
 
   return (
-    <View>
+    <View style={styles.border}>
       <Image
-        source={require('../../screen/assets/kontak/pria.png')}
-        style={styles.container}
+        source={require('../../screen/assets/kontak/person.png')}
+        style={[styles.container, {backgroundColor: 'white'}]}
       />
     </View>
   );
@@ -415,10 +417,12 @@ function ItemImage({state}) {
 
 const styles = StyleSheet.create({
   container: {
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
     borderRadius: 16,
     marginRight: 5,
+    borderWidth:2,
+    borderColor: '#D8D8D8',
   },
 });
 

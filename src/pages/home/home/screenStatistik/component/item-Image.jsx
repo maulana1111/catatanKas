@@ -62,6 +62,14 @@ function ItemImage({state}) {
       </View>
     );
   }
+  return (
+    <View style={[styles.container, {backgroundColor: 'rgba(49, 206, 93, 0.4)'}]}>
+      <Image
+        source={require('./assets/filter/coin.png')}
+        style={[styles.image, {tintColor: '#31CE5D'}]}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -19,7 +19,7 @@ function KategoriGayaHidup({onClickCancel, onChangeState}) {
         </TouchableOpacity>
       </View>
       <View style={{marginTop: 10}}>
-        <Text style={styles.text2}>Transfer</Text>
+        <Text style={styles.text2}>Gaya Hidup</Text>
       </View>
       <View>
         <TouchableOpacity onPress={() => handleChange('alfamart')}>

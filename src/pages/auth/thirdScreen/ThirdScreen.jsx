@@ -51,49 +51,6 @@ function ThirdScreen() {
         '732363084015-fl8rg588mh76g0urn7k6voi7v7ot2n43.apps.googleusercontent.com',
       offlineAccess: true,
     });
-    async function _isSignedIn() {
-      const isSignedIn = await GoogleSignin.isSignedIn();
-      if (isSignedIn) {
-        const dat = await _getCurrentUserInfo();
-        // console.log('data user = ' + JSON.stringify(dat));
-        await db.getDataUser({id_user: dat.id}).then(rowData => {
-          if (rowData) {
-            const dt = {
-              status: true,
-              data: {
-                id_user: rowData.id_user,
-                nama_user: dat.name,
-                email: rowData.email,
-                foto: rowData.foto,
-                link_foto: dat.photo
-              },
-            };
-            dispatch(
-              storeUser({
-                dt,
-              }),
-            );
-            navigation.navigate('Home');
-          }
-        });
-      }
-    }
-
-    async function _getCurrentUserInfo() {
-      try {
-        const userInfo = await GoogleSignin.signInSilently();
-        const {user} = JSON.parse(JSON.stringify(userInfo));
-        // console.log('data user google = ' + JSON.stringify(userInfo));
-        return user;
-      } catch (error) {
-        if (error.code === statusCodes.SIGN_IN_REQUIRED) {
-          console.log('user has not signed in yet');
-        } else {
-          console.log('some other error');
-        }
-      }
-    }
-    _isSignedIn();
   }, []);
 
   async function _signIn() {
@@ -120,7 +77,7 @@ function ThirdScreen() {
           nama_user: user.name,
           email: user.email,
           foto: image,
-          link_foto: user.photo
+          link_foto: user.photo,
         },
       };
       dispatch(
@@ -133,7 +90,7 @@ function ThirdScreen() {
         nama_user: user.name,
         email: user.email,
         foto: image,
-        link_foto: user.photo
+        link_foto: user.photo,
       };
       db.addDataUser(dataset)
         .then(async res => {

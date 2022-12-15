@@ -24,7 +24,7 @@ const ListItemBill = ({data, onClickDelete}) => {
         style={{
           flexDirection: 'row',
           width: '100%',
-          marginVertical: 10
+          marginVertical: 10,
         }}>
         {state === 'instant' && <InstantImage />}
         {state === 'transfer' && <TransferImage />}
@@ -33,61 +33,65 @@ const ListItemBill = ({data, onClickDelete}) => {
         {state === 'gaya_hidup' && <GayaImage />}
         {state === 'makanan&minuman' && <MakananImage />}
         <View style={{width: '82%'}}>
-          <Text style={[styles.text2, {color: '#9A9A9A'}]}>{state}</Text>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Text style={[styles.text3, {marginTop: 10}]}>
-              {data.kategori} - {data.waktu_tagihan}
-            </Text>
-            <TouchableOpacity onPress={() => onClickDelete(data.id)}>
-              <Image
-                source={require('../assets/delete.png')}
-                style={{width: 42, height: 42}}
-              />
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Text style={styles.text4}>{data.description}</Text>
-            <Text
-              style={[
-                styles.text3,
-                {fontSize: 12},
-                data.tagihan === 'pemasukan'
-                  ? {color: '#31CE5D'}
-                  : {color: '#FF5942'},
-              ]}>
-              {ChangeRupiah(data.nominal)}
-            </Text>
+            <View>
+              <Text style={[styles.text2, {color: '#9A9A9A'}]}>{state}</Text>
+              <Text style={styles.text3}>
+                {data.kategori} - {data.waktu_tagihan}
+              </Text>
+              <Text style={styles.text4}>{data.description}</Text>
+              {/* <Text style={styles.text4}>{data.description}</Text> */}
+            </View>
+            <View>
+              <View
+                style={{
+                  justifyContent: 'flex-end',
+                  alignSelf: 'flex-end',
+                  marginVertical: 3,
+                  marginRight: 3
+                }}>
+                <TouchableOpacity onPress={() => onClickDelete(data.id)}>
+                  <Image
+                    source={require('../assets/trash_icon.png')}
+                    style={{width: 18, height: 18, tintColor: '#FF5942'}}
+                  />
+                </TouchableOpacity>
+              </View>
+              <Text
+                style={[
+                  styles.text3,
+                  {fontSize: 12, marginRight: 5},
+                  data.tagihan === 'pemasukan'
+                    ? {color: '#31CE5D'}
+                    : {color: '#FF5942'},
+                ]}>
+                {ChangeRupiah(data.nominal)}
+              </Text>
+            </View>
           </View>
         </View>
       </View>
     </View>
   );
-}
+};
 const styles = StyleSheet.create({
   text2: {
     fontFamily: 'BalooBhaijaan2-Regular',
     fontSize: 16,
-    lineHeight: 24,
     color: '#000000',
   },
   text3: {
     fontFamily: 'BalooBhaijaan2-SemiBold',
     fontSize: 14,
-    lineHeight: 21,
     color: '#000',
   },
   text4: {
     fontFamily: 'BalooBhaijaan2-Regular',
     fontSize: 14,
-    lineHeight: 21,
     color: '#DBA42D',
   },
 });

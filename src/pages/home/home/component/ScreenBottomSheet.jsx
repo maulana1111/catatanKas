@@ -38,6 +38,7 @@ function ScreenBottomSheet() {
     jumlahDataTransaksiIn,
     jumlahDataTransaksiOut,
     dataUser,
+    dataFilter,
   } = useSelector(state => state.globalStm);
   // console.log('jumlah in ' + jumlahDataTransaksiIn);
   const dispatch = useDispatch();
@@ -139,6 +140,7 @@ function ScreenBottomSheet() {
       jumlahDataTransaksiIn,
       jumlahDataTransaksiOut,
       dataUser,
+      dataFilter,
     );
     // console.log(t);
     // <HtmlGenerate />
@@ -148,7 +150,7 @@ function ScreenBottomSheet() {
     let file = await RNPrint.print({
       html: t,
     });
-    await RNPrint.print({ filePath: file.filePath })
+    await RNPrint.print({filePath: file.filePath});
     // let name_pdf =
     //   'document_pemasukan_' +
     //   Math.floor(date.getTime() + date.getSeconds() / 2);
@@ -189,7 +191,7 @@ function ScreenBottomSheet() {
     });
   };
   const onChangeVisible = () => {
-    setvisible(false);
+    setVisibleModalEmpty(false);
   };
 
   return (
@@ -203,11 +205,10 @@ function ScreenBottomSheet() {
         <View>
           <View style={styles.container}>
             <Text style={styles.txt1}>Pemasukan</Text>
-            <TouchableOpacity onPress={() => createPdfPemasukan()}>
-              <Image source={require('../../../../assets/Share.png')} />
-            </TouchableOpacity>
+            <View></View>
           </View>
           <ModalEmpty
+            text={"Data Transaksi Kosong!"}
             visible={visibleModalEmpty}
             onChange={() => onChangeVisible()}
           />
@@ -250,9 +251,6 @@ function ScreenBottomSheet() {
         <View>
           <View style={styles.container}>
             <Text style={styles.txt1}>Pengeluaran</Text>
-            <TouchableOpacity onPress={() => sharePengeluaran()}>
-              <Image source={require('../../../../assets/Share.png')} />
-            </TouchableOpacity>
           </View>
 
           {dataTransaksiOut !== null &&

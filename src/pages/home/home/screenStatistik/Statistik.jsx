@@ -52,6 +52,11 @@ function Statistik() {
                 data: data1,
               }),
             );
+            dispatch(
+              storeJumlahDataStatistikIn({
+                data: totall,
+              }),
+            );
           }
         })
         .catch(err => {
@@ -67,6 +72,11 @@ function Statistik() {
               total = total + row.nominal;
             }
             setTotalPengeluaran(total);
+            dispatch(
+              storeJumlahDataStatistikOut({
+                data: total,
+              }),
+            );
           }
           setDataPengeluaran(data2);
           dispatch(storeDataStatistikOut({data: data2}));

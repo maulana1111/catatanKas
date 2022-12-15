@@ -14,17 +14,17 @@ import {
   SvgTunai,
 } from './assets/ItemSVG';
 
-async function GeneratePDF(
-  dataTransaksiIn,
-  dataTransaksiOut,
-  jumlahDataTransaksiIn,
-  jumlahDataTransaksiOut,
+async function GeneratePDFTagihan(
+  dataTagihanIn,
+  dataTagihanOut,
+  totalPemasukan,
+  totalPengeluaran,
   dataUser,
-  dataFilter,
+  dataFilterTagihan,
 ) {
   let itemPemasukan = new Array();
   let itemPengeluaran = new Array();
-  let total = jumlahDataTransaksiIn - jumlahDataTransaksiOut;
+  let total = totalPemasukan - totalPengeluaran;
 
   let HtmlHead = `<!DOCTYPE html>
     <html lang="en">
@@ -112,14 +112,14 @@ async function GeneratePDF(
     </div>
     <div class="top">
         <div class='left_top' style="margin-top: 100px;">
-            <h1>Laporan</h1><h1>Keuanganmu</h1>
+            <h1>Laporan</h1><h1>Tagihan</h1>
             <p>Laporan:</p>
             <p>${
-              dataFilter.status === false
+              dataFilterTagihan.status === false
                 ? 'Sekarang'
-                : dataFilter.data.tanggal_dari +
+                : dataFilterTagihan.data.tanggal_dari +
                   ' - ' +
-                  dataFilter.data.tanggal_sampai
+                  dataFilterTagihan.data.tanggal_sampai
             }</p>
         </div>
         <div class='right_top'>
@@ -150,11 +150,11 @@ async function GeneratePDF(
     }).format(number);
   };
 
-  dataTransaksiIn &&
-    dataTransaksiIn.map(item => {
+  dataTagihanIn &&
+    dataTagihanIn.map(item => {
       let strItem = ``;
       let strIcon = '';
-      let state = item.jenis_transaksi;
+      let state = item.jenis_tagihan;
       if (state === 'transfer') {
         strIcon += SvgTransfer;
       }
@@ -187,11 +187,11 @@ async function GeneratePDF(
       itemPemasukan.push(strItem);
     });
 
-  dataTransaksiOut &&
-    dataTransaksiOut.map(item => {
+  dataTagihanOut &&
+    dataTagihanOut.map(item => {
       let strItem = ``;
       let strIcon = '';
-      let state = item.jenis_transaksi;
+      let state = item.jenis_tagihan;
       if (state === 'transfer') {
         strIcon += SvgTransfer;
       }
@@ -238,7 +238,7 @@ async function GeneratePDF(
         <br>
         <div class="item">
             <h3>Pemasukan</h3>
-            <h3>+ ${ChangeRupiah(jumlahDataTransaksiIn)}</h3>
+            <h3>+ ${ChangeRupiah(totalPemasukan)}</h3>
       </div>`;
 
   let htmlTopSecPengeluaran = `
@@ -255,7 +255,7 @@ async function GeneratePDF(
           <br>
           <div class="item">
               <h3>Pengeluaran</h3>
-              <h3>- ${ChangeRupiah(jumlahDataTransaksiOut)}</h3>
+              <h3>- ${ChangeRupiah(totalPengeluaran)}</h3>
         </div>`;
 
   let htmlBottomSec = `
@@ -353,4 +353,4 @@ async function GeneratePDF(
   return StrHTMLRes;
 }
 
-export default GeneratePDF;
+export default GeneratePDFTagihan;

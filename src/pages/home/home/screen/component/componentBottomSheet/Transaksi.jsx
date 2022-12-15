@@ -33,12 +33,11 @@ function Transaksi({onClickCancel, onChangeState}) {
               paddingVertical: 10,
             }}>
             <View style={{flexDirection: 'row'}}>
-              <View
-                style={[
-                  styles.bgIcon,
-                  {backgroundColor: 'rgba(49, 206, 93, 0.4)'},
-                ]}>
-                <Image source={require('../../assets/income.png')} />
+              <View style={{marginRight: 10}}>
+                <Image
+                  style={{width: 32, height: 32}}
+                  source={require('../../assets/income.png')}
+                />
               </View>
               <Text style={styles.text3}>Pemasukan</Text>
             </View>
@@ -58,12 +57,11 @@ function Transaksi({onClickCancel, onChangeState}) {
               paddingVertical: 10,
             }}>
             <View style={{flexDirection: 'row'}}>
-              <View
-                style={[
-                  styles.bgIcon,
-                  {backgroundColor: 'rgba(255, 89, 66, 0.4)'},
-                ]}>
-                <Image source={require('../../assets/outcome.png')} />
+              <View style={{marginRight: 10}}>
+                <Image
+                  style={{width: 32, height: 32}}
+                  source={require('../../assets/outcome.png')}
+                />
               </View>
               <Text style={styles.text3}>Pengeluaran</Text>
             </View>

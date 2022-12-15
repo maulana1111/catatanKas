@@ -14,17 +14,16 @@ import {
   SvgTunai,
 } from './assets/ItemSVG';
 
-async function GeneratePDF(
-  dataTransaksiIn,
-  dataTransaksiOut,
-  jumlahDataTransaksiIn,
-  jumlahDataTransaksiOut,
+async function GenerateStatistik(
+  dataStatistikIn,
+  dataStatistikOut,
+  jumlahDataStatistikIn,
+  jumlahDataStatistikOut,
   dataUser,
-  dataFilter,
 ) {
   let itemPemasukan = new Array();
   let itemPengeluaran = new Array();
-  let total = jumlahDataTransaksiIn - jumlahDataTransaksiOut;
+  let total = jumlahDataStatistikIn - jumlahDataStatistikOut;
 
   let HtmlHead = `<!DOCTYPE html>
     <html lang="en">
@@ -112,15 +111,7 @@ async function GeneratePDF(
     </div>
     <div class="top">
         <div class='left_top' style="margin-top: 100px;">
-            <h1>Laporan</h1><h1>Keuanganmu</h1>
-            <p>Laporan:</p>
-            <p>${
-              dataFilter.status === false
-                ? 'Sekarang'
-                : dataFilter.data.tanggal_dari +
-                  ' - ' +
-                  dataFilter.data.tanggal_sampai
-            }</p>
+            <h1>Laporan</h1><h1>Keuanganmu</h1><h1>Minggu Ini</h1>
         </div>
         <div class='right_top'>
         ${svg_notes}
@@ -150,8 +141,8 @@ async function GeneratePDF(
     }).format(number);
   };
 
-  dataTransaksiIn &&
-    dataTransaksiIn.map(item => {
+  dataStatistikIn &&
+    dataStatistikIn.map(item => {
       let strItem = ``;
       let strIcon = '';
       let state = item.jenis_transaksi;
@@ -187,8 +178,8 @@ async function GeneratePDF(
       itemPemasukan.push(strItem);
     });
 
-  dataTransaksiOut &&
-    dataTransaksiOut.map(item => {
+  dataStatistikOut &&
+    dataStatistikOut.map(item => {
       let strItem = ``;
       let strIcon = '';
       let state = item.jenis_transaksi;
@@ -238,7 +229,7 @@ async function GeneratePDF(
         <br>
         <div class="item">
             <h3>Pemasukan</h3>
-            <h3>+ ${ChangeRupiah(jumlahDataTransaksiIn)}</h3>
+            <h3>+ ${ChangeRupiah(jumlahDataStatistikIn)}</h3>
       </div>`;
 
   let htmlTopSecPengeluaran = `
@@ -255,7 +246,7 @@ async function GeneratePDF(
           <br>
           <div class="item">
               <h3>Pengeluaran</h3>
-              <h3>- ${ChangeRupiah(jumlahDataTransaksiOut)}</h3>
+              <h3>- ${ChangeRupiah(jumlahDataStatistikOut)}</h3>
         </div>`;
 
   let htmlBottomSec = `
@@ -353,4 +344,4 @@ async function GeneratePDF(
   return StrHTMLRes;
 }
 
-export default GeneratePDF;
+export default GenerateStatistik;

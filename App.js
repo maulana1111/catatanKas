@@ -1,11 +1,5 @@
-import React, {
-  useState,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  Component,
-} from 'react';
+import React, {useState, useEffect} from 'react';
+import {LogBox} from 'react-native';
 import {useDispatch, Provider, useSelector} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -31,6 +25,8 @@ import Bill from './src/pages/home/home/screenBill/Bill';
 const db = new Database();
 const Stack = createNativeStackNavigator();
 function App() {
+  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+  LogBox.ignoreAllLogs();
   return (
     <NavigationContainer>
       <Provider store={store}>
@@ -59,7 +55,6 @@ function Logic() {
       <Stack.Screen name="FormTambahTagihan" component={FormTambahBill} />
     </Stack.Navigator>
   );
-
 }
 
 export default App;

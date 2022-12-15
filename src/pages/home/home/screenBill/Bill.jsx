@@ -18,6 +18,7 @@ import {
   storeGlobalChildSheet,
   storeDataTagihanIn,
   storeDataTagihanOut,
+  storeDataFilterTagihan,
 } from '../../../../redux/features/globalSlice';
 import Database from '../../../../utilSqlite/database';
 const db = new Database();
@@ -27,6 +28,11 @@ import ModalAskDelete from './component/ModalAskDelete';
 import ListItemBill from './component/ListItemBill';
 import moment from 'moment';
 import 'moment/locale/id';
+import ModalEmpty from '../component/component_html/ModalEmpty';
+import GeneratePDF from '../component/component_html/GeneratePDF';
+import GeneratePDFTagihan from '../component/component_html/GeneratePDFTagihan';
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import RNPrint from 'react-native-print';
 
 function Bill() {
   const isFocused = useIsFocused();
@@ -37,11 +43,14 @@ function Bill() {
   const dispatch = useDispatch();
   const [dataTagihanIn, setDataTagihanIn] = useState([]);
   const [dataTagihanOut, setDataTagihanOut] = useState([]);
+  const [totalPemasukan, setTotalPemasukan] = useState(0);
+  const [totalPengeluaran, setTotalPengeluaran] = useState(0);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [visiblee, setVisiblee] = useState(false);
   const [idData, setIdData] = useState(null);
   const [reloadPage, setReloadPage] = useState(0);
+  const [visibleModalEmpty, setVisibleModalEmpty] = useState(false);
   // console.log('status = ' + dataFilterTagihan.status);
   const dataPemasukan = new Array();
   const dataPengeluaran = new Array();
@@ -54,7 +63,14 @@ function Bill() {
         await db
           .getDataTagihan(dataUser.data.id_user, 'pemasukan')
           .then(data1 => {
-            data1 && setDataTagihanIn(data1);
+            if (data1) {
+              let totall = 0;
+              for (const row of data1) {
+                totall = totall + row.nominal;
+              }
+              setTotalPemasukan(totall);
+              setDataTagihanIn(data1);
+            }
           })
           .catch(err => {
             console.log('error bill1 = ' + err);
@@ -63,7 +79,14 @@ function Bill() {
         await db
           .getDataTagihan(dataUser.data.id_user, 'pengeluaran')
           .then(data2 => {
-            data2 && setDataTagihanOut(data2);
+            if (data2) {
+              let totall = 0;
+              for (const row of data2) {
+                totall = totall + row.nominal;
+              }
+              setTotalPengeluaran(totall);
+              setDataTagihanOut(data2);
+            }
           })
           .catch(err => {
             console.log('error bill2 = ' + err);
@@ -82,7 +105,14 @@ function Bill() {
             dataFilterTagihan.data.jenis_tagihan,
           )
           .then(data1 => {
-            data1 && setDataTagihanIn(data1);
+            if (data1) {
+              let totall = 0;
+              for (const row of data1) {
+                totall = totall + row.nominal;
+              }
+              setTotalPemasukan(totall);
+              setDataTagihanIn(data1);
+            }
           })
           .catch(err => {
             console.log('error filter1 = ' + err);
@@ -99,7 +129,14 @@ function Bill() {
             dataFilterTagihan.data.jenis_tagihan,
           )
           .then(data2 => {
-            data2 && setDataTagihanIn(data2);
+            if (data2) {
+              let totall = 0;
+              for (const row of data2) {
+                totall = totall + row.nominal;
+              }
+              setTotalPengeluaran(totall);
+              setDataTagihanOut(data2);
+            }
           })
           .catch(err => {
             console.log('error filter2 = ' + err);
@@ -174,46 +211,58 @@ function Bill() {
     });
   };
 
-  const onSharePemasukan = async () => {
-    try {
-      const result = await Share.share({
-        title: 'Pemasukan',
-        message: JSON.stringify(dataPemasukan),
-      });
-      console.log('result = ' + result);
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      alert(error.message);
-    }
+  async function createPdfPemasukan() {
+    var t = await GeneratePDFTagihan(
+      dataTagihanIn,
+      dataTagihanOut,
+      totalPemasukan,
+      totalPengeluaran,
+      dataUser,
+      dataFilterTagihan,
+    );
+    // console.log(t);
+    // <HtmlGenerate />
+    dataTagihanIn.length === 0 &&
+      dataTagihanOut.length === 0 &&
+      setVisibleModalEmpty(true);
+    let file = await RNPrint.print({
+      html: t,
+    });
+    await RNPrint.print({filePath: file.filePath});
+    // let name_pdf =
+    //   'document_pemasukan_' +
+    //   Math.floor(date.getTime() + date.getSeconds() / 2);
+    // let options = {
+    //   html: t,
+    //   fileName: name_pdf,
+    //   directory: 'Documents',
+    //   base64: true
+    // };
+    // let file = await RNHTMLtoPDF.convert(options);
+    // console.log(file.filePath);
+    // console.log('res = ' + file);
+    // return alert(file.filePath);
+  }
+
+  const onChangeVisible = () => {
+    setVisibleModalEmpty(false);
   };
 
-  const onSharePengeluaran = async () => {
-    try {
-      const result = await Share.share({
-        title: 'Pemasukan',
-        message: JSON.stringify(dataPengeluaran),
-      });
-      console.log('result = ' + result);
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      alert(error.message);
-    }
+  const handleBack = () => {
+    dispatch(
+      storeDataFilterTagihan({
+        status: false,
+        urutan_pengeluaran: '',
+        urutan_pemasukan: '',
+        tanggal_dari: '',
+        tanggal_sampai: '',
+        jenis_tagihan: '',
+        real_tanggal_dari: '',
+        real_tanggal_sampai: '',
+      }),
+    );
+
+    navigation.navigate('Home');
   };
 
   return (
@@ -225,6 +274,10 @@ function Bill() {
       <SafeAreaView>
         <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
         <View>
+          <ModalEmpty
+            visible={visibleModalEmpty}
+            onChange={() => onChangeVisible()}
+          />
           <ModalItemSuccess
             visible={visiblee}
             text={'berhasil menghapus tagihan'}
@@ -246,7 +299,7 @@ function Bill() {
             }}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('Home');
+                handleBack();
               }}>
               <View style={styles.back}>
                 <Image
@@ -276,17 +329,25 @@ function Bill() {
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View style={styles.bg}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('FormTambahTagihan');
-                  }}>
-                  <Image source={require('./assets/capture_bill.png')} />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.bg}>
                 <TouchableOpacity onPress={() => handleFilter()}>
                   <Image source={require('./assets/filter.png')} />
                 </TouchableOpacity>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <View style={styles.bg}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('FormTambahTagihan');
+                    }}>
+                    <Image source={require('./assets/capture_bill.png')} />
+                  </TouchableOpacity>
+                </View>
+                <View style={{marginHorizontal: 5}} />
+                <View style={styles.bg}>
+                  <TouchableOpacity onPress={() => createPdfPemasukan()}>
+                    <Image source={require('./assets/Share.png')} />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
             <View style={{marginVertical: 5}} />
@@ -294,9 +355,7 @@ function Bill() {
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={[styles.text1, {color: '#000'}]}>Pemasukan</Text>
-                <TouchableOpacity onPress={() => onSharePemasukan()}>
-                  <Image source={require('./assets/Share.png')} />
-                </TouchableOpacity>
+                <View />
               </View>
               <FlatList
                 data={dataTagihanIn}
@@ -314,9 +373,7 @@ function Bill() {
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={[styles.text1, {color: '#000'}]}>Pengeluaran</Text>
-                <TouchableOpacity onPress={() => onSharePengeluaran()}>
-                  <Image source={require('./assets/Share.png')} />
-                </TouchableOpacity>
+                <View />
               </View>
 
               <FlatList

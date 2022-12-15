@@ -24,7 +24,7 @@ function ModalAskDelete({visible, title, desc, onClickHandle, onClickCancel}) {
             }}>
             <View style={{justifyContent: 'center', alignSelf: 'center'}}>
               <Image
-                source={require('../assets/delete.png')}
+                source={require('../assets/trash_icon.png')}
                 style={{width: 45, height: 45, tintColor: '#fff'}}
               />
             </View>

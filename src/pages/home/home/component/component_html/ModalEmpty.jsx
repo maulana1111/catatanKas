@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 
-function ModalEmpty({visible}) {
+function ModalEmpty({text, visible, onChange}) {
   return (
     <View>
       <Modal isVisible={visible}>
@@ -37,7 +37,7 @@ function ModalEmpty({visible}) {
                   right: 0,
                   padding: 10,
                 }}>
-                <TouchableOpacity onPress={() => onClickCancel()}>
+                <TouchableOpacity onPress={() => onChange()}>
                   <Image
                     source={require('./assets/Cancel.png')}
                     style={{tintColor: '#fff'}}
@@ -60,7 +60,7 @@ function ModalEmpty({visible}) {
                   fontFamily: 'BalooBhaijaan2-SemiBold',
                   textAlign: 'center',
                 }}>
-                Data transaksi Kosong
+                {text}
               </Text>
             </View>
           </View>

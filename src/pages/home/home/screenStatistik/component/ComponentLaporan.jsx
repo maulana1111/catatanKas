@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -11,15 +11,24 @@ import {
 import TransaksiItem from './TransaksiItem.component';
 import {useSelector} from 'react-redux';
 import {FlatList} from 'react-native';
+import GeneratePDFStatistik from '../../component/component_html/GeneratePDFStatistik';
+import ModalEmpty from '../../component/component_html/ModalEmpty';
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import RNPrint from 'react-native-print';
 
 function ComponentLaporan({dataIn, dataOut}) {
   const dataPemasukan = new Array();
   const dataPengeluaran = new Array();
   let str = 'Pemasukan = ';
+  const [visibleModalEmpty, setVisibleModalEmpty] = useState(false);
 
-  const {dataStatistikIn, dataStatistikOut} = useSelector(
-    state => state.globalStm,
-  );
+  const {
+    dataStatistikIn,
+    dataStatistikOut,
+    jumlahDataStatistikIn,
+    jumlahDataStatistikOut,
+    dataUser,
+  } = useSelector(state => state.globalStm);
   // console.log('data = ' + JSON.stringify(dataStatistikIn));
   const ChangeRupiah = number => {
     return new Intl.NumberFormat('id-ID', {
@@ -84,10 +93,50 @@ function ComponentLaporan({dataIn, dataOut}) {
     }
   };
 
+  async function createPdfPemasukan() {
+    var t = await GeneratePDFStatistik(
+      dataStatistikIn,
+      dataStatistikOut,
+      jumlahDataStatistikIn,
+      jumlahDataStatistikOut,
+      dataUser,
+    );
+    // console.log(t);
+    // <HtmlGenerate />
+    dataStatistikIn.length === 0 &&
+      dataStatistikOut.length === 0 &&
+      setVisibleModalEmpty(true);
+    let file = await RNPrint.print({
+      html: t,
+    });
+    await RNPrint.print({filePath: file.filePath});
+    // let name_pdf =
+    //   'document_pemasukan_' +
+    //   Math.floor(date.getTime() + date.getSeconds() / 2);
+    // let options = {
+    //   html: t,
+    //   fileName: name_pdf,
+    //   directory: 'Documents',
+    //   base64: true
+    // };
+    // let file = await RNHTMLtoPDF.convert(options);
+    // console.log(file.filePath);
+    // console.log('res = ' + file);
+    // return alert(file.filePath);
+  }
+  const onChangeVisible = () => {
+    setVisibleModalEmpty(false);
+  };
+
   return (
     <View style={{padding: 16}}>
       <View style={styles.container}>
-        <ScrollView style={{marginBottom: 10}} >
+        <ModalEmpty
+          text={'Data Tagihan Kosong!'}
+          visible={visibleModalEmpty}
+          onChange={() => onChangeVisible()}
+        />
+        <ScrollView style={{marginBottom: 10}}>
           <Text style={styles.text}>Buku Pemasukan & Pengeluaran</Text>
           <View
             style={{
@@ -100,7 +149,7 @@ function ComponentLaporan({dataIn, dataOut}) {
               <Text style={styles.text3}>{ChangeRupiah(dataIn - dataOut)}</Text>
             </View>
             <View>
-              <TouchableOpacity onPress={() => onShare()}>
+              <TouchableOpacity onPress={() => createPdfPemasukan()}>
                 <Image source={require('./assets/Share.png')} />
               </TouchableOpacity>
             </View>
@@ -110,32 +159,34 @@ function ComponentLaporan({dataIn, dataOut}) {
             <Text style={styles.text5}>+{ChangeRupiah(dataIn)}</Text>
           </View>
           <View>
-            <FlatList
-              data={dataStatistikIn}
-              renderItem={({item}) => (
-                <TransaksiItem
-                  text={item.jenis_transaksi}
-                  text2={item.nominal}
-                  state={item.transaksi}
-                />
-              )}
-            />
+            {dataStatistikIn &&
+              dataStatistikIn.map((item, index) => {
+                return (
+                  <TransaksiItem
+                    key={index}
+                    text={item.jenis_transaksi}
+                    text2={item.nominal}
+                    state={item.transaksi}
+                  />
+                );
+              })}
           </View>
           <View style={styles.SecCon}>
             <Text style={styles.text4}>Pengeluaran</Text>
             <Text style={styles.text5}>-{ChangeRupiah(dataOut)}</Text>
           </View>
           <View>
-            <FlatList
-              data={dataStatistikOut}
-              renderItem={({item}) => (
-                <TransaksiItem
-                  text={item.jenis_transaksi}
-                  text2={item.nominal}
-                  state={item.transaksi}
-                />
-              )}
-            />
+            {dataStatistikOut &&
+              dataStatistikOut.map((item, index) => {
+                return (
+                  <TransaksiItem
+                    key={index}
+                    text={item.jenis_transaksi}
+                    text2={item.nominal}
+                    state={item.transaksi}
+                  />
+                );
+              })}
           </View>
         </ScrollView>
       </View>

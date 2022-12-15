@@ -93,7 +93,7 @@ function FormTambah() {
     translateDropShadow.value = withSpring(SEC_MAX_TRANSLATE_Y, {
       damping: 50,
     });
-    translateY.value = withSpring(-SCREEN_HEIGHT / 4, {damping: 50});
+    translateY.value = withSpring(-SCREEN_HEIGHT / 3.6, {damping: 50});
   };
   const handleOpenBottomSheetJenis = () => {
     if (transaksi === '') {
@@ -110,7 +110,7 @@ function FormTambah() {
     translateDropShadow.value = withSpring(SEC_MAX_TRANSLATE_Y, {
       damping: 50,
     });
-    translateY.value = withSpring(-SCREEN_HEIGHT / 1.7, {damping: 50});
+    translateY.value = withSpring(-SCREEN_HEIGHT / 1.5, {damping: 50});
   };
   const handleOpenBottomSheetKategori = () => {
     if (jenisTransaksi === '') {
@@ -127,19 +127,19 @@ function FormTambah() {
       damping: 50,
     });
     if (jenisTransaksi === 'transfer') {
-      translateY.value = withSpring(-SCREEN_HEIGHT / 1.7, {damping: 50});
+      translateY.value = withSpring(-SCREEN_HEIGHT / 1.5, {damping: 50});
     }
     if (jenisTransaksi === 'instant') {
-      translateY.value = withSpring(-SCREEN_HEIGHT / 2.2, {damping: 50});
+      translateY.value = withSpring(-SCREEN_HEIGHT / 2.0, {damping: 50});
     }
     if (jenisTransaksi === 'tunai') {
       translateY.value = withSpring(-SCREEN_HEIGHT / 1.1, {damping: 50});
     }
     if (jenisTransaksi === 'hiburan') {
-      translateY.value = withSpring(-SCREEN_HEIGHT / 1.5, {damping: 50});
+      translateY.value = withSpring(-SCREEN_HEIGHT / 1.3, {damping: 50});
     }
     if (jenisTransaksi === 'gaya_hidup') {
-      translateY.value = withSpring(-SCREEN_HEIGHT / 1.3, {damping: 50});
+      translateY.value = withSpring(-SCREEN_HEIGHT / 1.2, {damping: 50});
     }
     if (jenisTransaksi === 'makanan&minuman') {
       translateY.value = withSpring(-SCREEN_HEIGHT / 1.1, {damping: 50});
@@ -213,7 +213,7 @@ function FormTambah() {
         setTimeout(() => {
           setVisibleSuccess(false);
           navigation.navigate('Home');
-        }, 1000);
+        }, 500);
       })
       .catch(err => console.log('err ' + err));
   };

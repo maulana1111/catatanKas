@@ -70,7 +70,7 @@ function FormTambahBill() {
     translateDropShadow.value = withSpring(SEC_MAX_TRANSLATE_Y, {
       damping: 50,
     });
-    translateY.value = withSpring(-SCREEN_HEIGHT / 4, {damping: 50});
+    translateY.value = withSpring(-SCREEN_HEIGHT / 3.6, {damping: 50});
   };
 
   const handleOpenBottomSheetJenis = () => {
@@ -88,7 +88,7 @@ function FormTambahBill() {
     translateDropShadow.value = withSpring(SEC_MAX_TRANSLATE_Y, {
       damping: 50,
     });
-    translateY.value = withSpring(-SCREEN_HEIGHT / 1.7, {damping: 50});
+    translateY.value = withSpring(-SCREEN_HEIGHT / 1.5, {damping: 50});
   };
 
   const handleCancelClick = () => {
@@ -216,7 +216,7 @@ function FormTambahBill() {
         setTimeout(() => {
           setVisibleSuccess(false);
           navigation.navigate('Bill');
-        }, 1000);
+        }, 500);
       })
       .catch(err => console.log('err ' + err));
   };

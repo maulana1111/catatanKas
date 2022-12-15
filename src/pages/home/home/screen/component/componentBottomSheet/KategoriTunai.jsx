@@ -23,19 +23,6 @@ function KategoriTunai({onClickCancel, onChangeState}) {
   };
 
   useEffect(() => {
-    // PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS)
-    //   .then(
-    //     Contacts.getAll()
-    //       .then(contacts => {
-    //         console.log(contacts);
-    //       })
-    //       .catch(err => {
-    //         console.log(err);
-    //       }),
-    //   )
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
     async function getContactById() {
       try {
         const andoidContactPermission = await PermissionsAndroid.request(
@@ -82,17 +69,29 @@ function KategoriTunai({onClickCancel, onChangeState}) {
       <View style={{marginTop: 10}}>
         <Text style={styles.text2}>Tunai</Text>
       </View>
-      <View style={{marginTop: 10}}>
+      <View style={{marginTop: 10, marginBottom: 200}}>
         <FlatList
           data={dataKontak}
           renderItem={({item}) => {
             return (
               <TouchableOpacity onPress={() => handleChange(item.displayName)}>
-                <ComponentSecItem
-                  image1={require('../../assets/kontak/pria.png')}
+                {/* <ComponentSecItem
+                  image1={require('../../assets/kontak/person.png')}
                   text={item.displayName}
                   image2={require('../../assets/arrow_right.png')}
-                />
+                /> */}
+                <View style={styles.container}>
+                  <View style={{flexDirection: 'row'}}>
+                    <Image
+                      source={require('../../assets/kontak/person.png')}
+                      style={{width: 25, height: 25}}
+                    />
+                    <Text style={styles.text}>{item.displayName}</Text>
+                  </View>
+                  <View>
+                    <Image source={require('../../assets/arrow_right.png')} />
+                  </View>
+                </View>
               </TouchableOpacity>
             );
           }}
@@ -114,6 +113,29 @@ const styles = StyleSheet.create({
     lineHeight: 27,
     color: '#FCBC31',
     fontFamily: 'BalooBhaijaan2-SemiBold',
+  },
+  container: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#FFD16C',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  bgColor: {
+    width: 24,
+    height: 24,
+    borderRadius: 6,
+    padding: 3,
+  },
+  text: {
+    fontSize: 12,
+    lineHeight: 18,
+    color: '#232E31',
+    fontFamily: 'BalooBhaijaan2-SemiBold',
+    marginLeft: 10,
+    marginTop: 3,
   },
 });
 

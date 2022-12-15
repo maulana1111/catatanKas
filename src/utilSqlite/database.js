@@ -263,10 +263,11 @@ export default class Database {
     var tgl_dari = date_dari[2] + '-' + date_dari[1] + '-' + date_dari[0];
     var tgl_sampai =
       date_sampai[2] + '-' + date_sampai[1] + '-' + date_sampai[0];
-    let qry_jenis = jenis ? 'AND (' : '';
     let operator = 'OR';
+    let qry_jenis = '';
     // let temp = "";
-    jenis &&
+    if (Object.is(jenis, null)) {
+      qry_jenis += 'AND (';
       jenis.map((item, index) => {
         qry_jenis += ` jenis_tagihan = '${item}' `;
         if (jenis.length - 1 !== index) {
@@ -274,6 +275,7 @@ export default class Database {
         }
         qry_jenis += ')';
       });
+    }
     return new Promise((resolve, reject) => {
       this.initDb()
         .then(db => {
@@ -333,7 +335,7 @@ export default class Database {
     let operator = 'OR';
     // let temp = "";
     if (Object.is(jenis, null)) {
-      qry_jenis += "AND ("
+      qry_jenis += 'AND (';
       jenis.map((item, index) => {
         qry_jenis += ` jenis_tagihan = '${item}' `;
         if (jenis.length - 1 !== index) {
@@ -443,7 +445,7 @@ export default class Database {
                         foto: row.foto,
                         email: row.email,
                         user_logged_in: true,
-                        link_foto: row.link_foto
+                        link_foto: row.link_foto,
                       };
                       resolve(data_user);
                     }

@@ -29,9 +29,14 @@ function ItemScreen({jenis, item, onClick}) {
 
   return (
     <View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginVertical: 10,
+        }}>
         <View style={{flexDirection: 'row'}}>
-          <View style={{marginTop: 10}}>
+          <View style={{marginTop: 0}}>
             <ItemImage state={item.kategori} />
           </View>
           <View>
@@ -43,17 +48,22 @@ function ItemScreen({jenis, item, onClick}) {
               }}>
               {str}
             </Text>
-            <Text style={styles.txt2}>{item.kategori}</Text>
-            <Text style={styles.txt3}>
-              {item.waktu_transaksi} {item.description}
+            <Text style={styles.txt2}>
+              {item.kategori} - {item.waktu_transaksi}
             </Text>
+            <Text style={styles.txt3}>{item.description}</Text>
           </View>
         </View>
         <View style={{marginTop: 10}}>
           <TouchableOpacity onPress={() => onClick(item.id)}>
             <Image
               source={require('../../../../../assets/trash_icon.png')}
-              style={{width: 28, height: 28, alignSelf: 'flex-end'}}
+              style={{
+                width: 18,
+                height: 18,
+                alignSelf: 'flex-end',
+                tintColor: '#FF5942',
+              }}
             />
           </TouchableOpacity>
           <Text

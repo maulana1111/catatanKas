@@ -1,19 +1,11 @@
 import React from 'react';
-import {View, Image} from 'react-native';
+import {View, Image, StyleSheet} from 'react-native';
 const InstantImage = () => {
   return (
-    <View
-      style={{
-        backgroundColor: 'rgba(224, 50, 112, 0.4)',
-        borderRadius: 16,
-        padding: 5,
-        marginRight: 10,
-        justifyContent: 'flex-start',
-        height: 50,
-      }}>
+    <View style={[styles.container]}>
       <Image
         source={require('../../assets/instant.png')}
-        style={{width: 42, height: 42, tintColor: '#E03270'}}
+        style={{width: 50, height: 50, borderRadius: 16}}
       />
     </View>
   );
@@ -22,17 +14,15 @@ const InstantImage = () => {
 const TransferImage = () => {
   return (
     <View
-      style={{
-        backgroundColor: '#B4B4B4',
-        borderRadius: 16,
-        padding: 5,
-        marginRight: 10,
-        marginTop: 15,
-        height: 50,
-      }}>
+      style={[
+        {
+          backgroundColor: '#B4B4B4',
+        },
+        styles.container,
+      ]}>
       <Image
         source={require('../../assets/transfer.png')}
-        style={{width: 42, height: 42, tintColor: '#000'}}
+        style={{width: 50, height: 50, borderRadius: 16}}
       />
     </View>
   );
@@ -41,17 +31,15 @@ const TransferImage = () => {
 const TunaiImage = () => {
   return (
     <View
-      style={{
-        backgroundColor: 'rgba(49, 206, 93, 0.4)',
-        borderRadius: 16,
-        padding: 5,
-        marginRight: 10,
-        marginTop: 15,
-        height: 50,
-      }}>
+      style={[
+        {
+          backgroundColor: 'rgba(49, 206, 93, 0.4)',
+        },
+        styles.container,
+      ]}>
       <Image
         source={require('../../assets/transfer.png')}
-        style={{width: 42, height: 42, tintColor: '#31CE5D'}}
+        style={{width: 50, height: 50, borderRadius: 16}}
       />
     </View>
   );
@@ -60,17 +48,15 @@ const TunaiImage = () => {
 const HiburanImage = () => {
   return (
     <View
-      style={{
-        backgroundColor: '#D39BFF',
-        borderRadius: 16,
-        padding: 5,
-        marginRight: 10,
-        marginTop: 15,
-        height: 50,
-      }}>
+      style={[
+        {
+          backgroundColor: '#D39BFF',
+        },
+        styles.container,
+      ]}>
       <Image
         source={require('../../assets/transfer.png')}
-        style={{width: 42, height: 42, tintColor: '#8015D3'}}
+        style={{width: 50, height: 50, borderRadius: 16}}
       />
     </View>
   );
@@ -79,17 +65,15 @@ const HiburanImage = () => {
 const GayaImage = () => {
   return (
     <View
-      style={{
-        backgroundColor: 'rgba(130, 255, 240, 0.4)',
-        borderRadius: 16,
-        padding: 5,
-        marginRight: 10,
-        marginTop: 15,
-        height: 50,
-      }}>
+      style={[
+        {
+          backgroundColor: 'rgba(130, 255, 240, 0.4)',
+        },
+        styles.container,
+      ]}>
       <Image
         source={require('../../assets/transfer.png')}
-        style={{width: 42, height: 42, tintColor: '#07BBA5'}}
+        style={{width: 50, height: 50, borderRadius: 16}}
       />
     </View>
   );
@@ -98,21 +82,34 @@ const GayaImage = () => {
 const MakananImage = () => {
   return (
     <View
-      style={{
-        backgroundColor: 'rgba(237, 110, 19, 0.4)',
-        borderRadius: 16,
-        padding: 5,
-        marginRight: 10,
-        marginTop: 15,
-        height: 50,
-      }}>
+      style={[
+        {
+          backgroundColor: 'rgba(237, 110, 19, 0.4)',
+        },
+        styles.container,
+      ]}>
       <Image
         source={require('../../assets/transfer.png')}
-        style={{width: 42, height: 42, tintColor: '#ED6E13'}}
+        style={{width: 50, height: 50, borderRadius: 16}}
       />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    borderRadius: 16,
+    marginRight: 10,
+    height:49,
+    borderWidth: 1,
+    borderColor: '#D8D8D8',
+  },
+  image: {
+    width: 42,
+    height: 42,
+  },
+});
+
 export {
   InstantImage,
   TransferImage,

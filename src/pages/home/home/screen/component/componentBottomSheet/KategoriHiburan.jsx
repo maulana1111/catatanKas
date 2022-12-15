@@ -19,7 +19,7 @@ function KategoriHiburan({onClickCancel, onChangeState}) {
         </TouchableOpacity>
       </View>
       <View style={{marginTop: 10}}>
-        <Text style={styles.text2}>Transfer</Text>
+        <Text style={styles.text2}>Hiburan</Text>
       </View>
       <View>
         <TouchableOpacity onPress={() => handleChange('prime')}>

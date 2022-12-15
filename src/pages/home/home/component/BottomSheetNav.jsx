@@ -32,6 +32,10 @@ const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 60;
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import 'moment/locale/id';
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import RNPrint from 'react-native-print';
+import ModalEmpty from './component_html/ModalEmpty';
+import GeneratePDF from './component_html/GeneratePDF';
 
 // console.log('height = ' + -SCREEN_HEIGHT / 1.7);
 // console.log('res height = ' + (58 / 100) * -SCREEN_HEIGHT);
@@ -39,9 +43,16 @@ import 'moment/locale/id';
 function BottomSheetNav() {
   const navigation = useNavigation();
   const [condition, setCondition] = useState(false);
-  const {conditionChildSheet, dataFilter} = useSelector(
-    state => state.globalStm,
-  );
+  const {
+    conditionChildSheet,
+    dataTransaksiIn,
+    dataTransaksiOut,
+    jumlahDataTransaksiIn,
+    jumlahDataTransaksiOut,
+    dataUser,
+    dataFilter,
+  } = useSelector(state => state.globalStm);
+  const [visibleModalEmpty, setVisibleModalEmpty] = useState(false);
   const dispatch = useDispatch();
   const translateY = useSharedValue(0);
   const context = useSharedValue({y: 0});
@@ -58,7 +69,9 @@ function BottomSheetNav() {
         translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50});
       }
       if (translateY.value > -SCREEN_HEIGHT / 2) {
-        translateY.value = withSpring((50 / 100) * -SCREEN_HEIGHT, {damping: 50});
+        translateY.value = withSpring((50 / 100) * -SCREEN_HEIGHT, {
+          damping: 50,
+        });
       }
     });
   const rBottomSheetStyle = useAnimatedStyle(() => {
@@ -76,14 +89,57 @@ function BottomSheetNav() {
     dispatch(storeGlobalChildSheet({condition: !conditionChildSheet}));
   };
 
+  async function createPdfPemasukan() {
+    var t = await GeneratePDF(
+      dataTransaksiIn,
+      dataTransaksiOut,
+      jumlahDataTransaksiIn,
+      jumlahDataTransaksiOut,
+      dataUser,
+      dataFilter,
+    );
+    // console.log(t);
+    // <HtmlGenerate />
+    dataTransaksiIn.length === 0 &&
+      dataTransaksiOut.length === 0 &&
+      setVisibleModalEmpty(true);
+    let file = await RNPrint.print({
+      html: t,
+    });
+    await RNPrint.print({filePath: file.filePath});
+    // let name_pdf =
+    //   'document_pemasukan_' +
+    //   Math.floor(date.getTime() + date.getSeconds() / 2);
+    // let options = {
+    //   html: t,
+    //   fileName: name_pdf,
+    //   directory: 'Documents',
+    //   base64: true
+    // };
+    // let file = await RNHTMLtoPDF.convert(options);
+    // console.log(file.filePath);
+    // console.log('res = ' + file);
+    // return alert(file.filePath);
+  }
+
+  const onChangeVisible = () => {
+    setVisibleModalEmpty(false);
+  };
+
   useEffect(() => {
     conditionChildSheet
       ? (translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50}))
-      : (translateY.value = withSpring((50 / 100) * -SCREEN_HEIGHT, {damping: 50}));
+      : (translateY.value = withSpring((50 / 100) * -SCREEN_HEIGHT, {
+          damping: 50,
+        }));
   }, [conditionChildSheet]);
   return (
     <GestureDetector gesture={gesture}>
       <Animated.View style={[styles.container, rBottomSheetStyle]}>
+        <ModalEmpty
+          visible={visibleModalEmpty}
+          onChange={() => onChangeVisible()}
+        />
         <View style={styles.view_first}>
           <View style={styles.line}></View>
         </View>
@@ -105,7 +161,28 @@ function BottomSheetNav() {
               justifyContent: 'space-between',
               marginVertical: 7,
             }}>
-            <View>
+            <View
+              style={{
+                flexDirection: 'row',
+              }}>
+              <TouchableOpacity
+                style={styles.bgCard}
+                onPress={() => handleFilter()}>
+                <Image
+                  source={require('../../../../assets/filter.png')}
+                  style={{
+                    width: 24,
+                    height: 24,
+                    marginLeft: '14%',
+                    marginTop: '14%',
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+              }}>
               <TouchableOpacity
                 style={styles.bgCard}
                 onPress={() => navigation.navigate('FormTambahTransaksi')}>
@@ -119,20 +196,8 @@ function BottomSheetNav() {
                   }}
                 />
               </TouchableOpacity>
-            </View>
-            <View>
-              <TouchableOpacity
-                style={styles.bgCard}
-                onPress={() => handleFilter()}>
-                <Image
-                  source={require('../../../../assets/filter.png')}
-                  style={{
-                    width: 24,
-                    height: 24,
-                    marginLeft: '14%',
-                    marginTop: '14%',
-                  }}
-                />
+              <TouchableOpacity onPress={() => createPdfPemasukan()}>
+                <Image source={require('../../../../assets/Share.png')} />
               </TouchableOpacity>
             </View>
           </View>

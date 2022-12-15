@@ -5,8 +5,8 @@ function ComponentItem({image1, text, image2, bgColor, tintColor}) {
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
-        <View style={[styles.bgColor, {backgroundColor: bgColor}]}>
-          <Image source={image1} style={{tintColor: tintColor}} />
+        <View>
+          <Image source={image1} style={{width: 32, height: 32}} />
         </View>
         <Text style={styles.text}>{text}</Text>
       </View>
