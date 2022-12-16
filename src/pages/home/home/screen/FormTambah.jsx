@@ -207,15 +207,25 @@ function FormTambah() {
     };
     // setVisibleSuccess(false);
     // console.log('data form = ' + JSON.stringify(data));
-    db.insertDataTransaksi(data)
-      .then(data => {
-        // navigation.navigate('Home');
-        setTimeout(() => {
-          setVisibleSuccess(false);
-          navigation.navigate('Home');
-        }, 500);
-      })
-      .catch(err => console.log('err ' + err));
+    try {
+      db.insertDataTransaksi(data)
+        .then(data => {
+          // navigation.navigate('Home');
+          setTimeout(() => {
+            setVisibleSuccess(false);
+            navigation.navigate('Home');
+          }, 500);
+        })
+        .catch(err => console.log('err ' + err));
+    } catch (err) {
+      console.log('somthing err3 = ' + err);
+      ToastAndroid.showWithGravity(
+        'Internal Error',
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+      );
+      navigation.navigate('Home');
+    }
   };
 
   const handleDoSubmit = () => {

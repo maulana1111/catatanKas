@@ -35,7 +35,6 @@ function SplashScreen(props) {
           <Text style={Style.secTitle}>Kas</Text>
         </View>
         <View style={Style.footer}>
-          <Image source={require('../../../assets/all.png')} />
         </View>
       </ImageBackground>
     </SafeAreaView>

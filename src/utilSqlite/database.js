@@ -7,6 +7,7 @@ const database_name = 'catatan_kas.db';
 const database_version = '1.0';
 const database_displayname = 'Catatan Kas SQLite Database';
 const database_size = 200000;
+const createFromLocation = 2;
 
 export default class Database {
   async initDb() {
@@ -24,6 +25,8 @@ export default class Database {
               database_version,
               database_displayname,
               database_size,
+              // createFromLocation
+              // 2
             )
             .then(DB => {
               db = DB;
@@ -109,15 +112,21 @@ export default class Database {
                   } else {
                     resolve(null);
                   }
+                })
+                .catch(err => {
+                  console.log('err when query data = ' + err);
                 });
-            }).then(() => {
-              this.closeDatabase(db);
-            });
+            })
+              .then(() => {
+                this.closeDatabase(db);
+              })
+              .catch(err => {
+                console.log('err when get data = ' + err);
+              });
           });
         })
         .catch(er => {
-          console.log(er);
-          // reject(er);
+          reject(er);
         });
     });
   }

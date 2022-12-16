@@ -187,7 +187,7 @@ function ScreenBottomSheet() {
             condition: true,
           }),
         );
-      }, 3000);
+      }, 500);
     });
   };
   const onChangeVisible = () => {

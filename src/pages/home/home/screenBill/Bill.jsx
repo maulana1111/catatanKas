@@ -70,6 +70,9 @@ function Bill() {
               }
               setTotalPemasukan(totall);
               setDataTagihanIn(data1);
+            } else {
+              setTotalPemasukan(0);
+              setDataTagihanIn([]);
             }
           })
           .catch(err => {
@@ -86,6 +89,9 @@ function Bill() {
               }
               setTotalPengeluaran(totall);
               setDataTagihanOut(data2);
+            } else {
+              setTotalPengeluaran(0);
+              setDataTagihanOut([]);
             }
           })
           .catch(err => {
@@ -112,6 +118,9 @@ function Bill() {
               }
               setTotalPemasukan(totall);
               setDataTagihanIn(data1);
+            } else {
+              setTotalPemasukan(0);
+              setDataTagihanIn([]);
             }
           })
           .catch(err => {
@@ -136,6 +145,9 @@ function Bill() {
               }
               setTotalPengeluaran(totall);
               setDataTagihanOut(data2);
+            } else {
+              setTotalPengeluaran(0);
+              setDataTagihanOut([]);
             }
           })
           .catch(err => {
@@ -143,7 +155,17 @@ function Bill() {
           });
       }
     };
-    getData();
+    try {
+      getData();
+    } catch (err) {
+      console.log('somthing err1 = ' + err);
+      ToastAndroid.showWithGravity(
+        'Internal Error',
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+      );
+      navigation.navigate('SecScreen');
+    }
   }, [isFocused, dataFilterTagihan.status, reloadPage]);
 
   const ChangeRupiah = number => {
@@ -222,13 +244,15 @@ function Bill() {
     );
     // console.log(t);
     // <HtmlGenerate />
-    dataTagihanIn.length === 0 &&
-      dataTagihanOut.length === 0 &&
+    // console.log('data in = ' + dataTagihanIn.length + ' data out = ' + dataTagihanOut.length);
+    if (dataTagihanIn.length < 1 && dataTagihanOut.length < 1) {
       setVisibleModalEmpty(true);
-    let file = await RNPrint.print({
-      html: t,
-    });
-    await RNPrint.print({filePath: file.filePath});
+    } else {
+      let file = await RNPrint.print({
+        html: t,
+      });
+      await RNPrint.print({filePath: file.filePath});
+    }
     // let name_pdf =
     //   'document_pemasukan_' +
     //   Math.floor(date.getTime() + date.getSeconds() / 2);
@@ -275,6 +299,7 @@ function Bill() {
         <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
         <View>
           <ModalEmpty
+            text={'Data Tagihan Kosong'}
             visible={visibleModalEmpty}
             onChange={() => onChangeVisible()}
           />

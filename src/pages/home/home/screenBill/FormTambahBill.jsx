@@ -206,19 +206,29 @@ function FormTambahBill() {
       // date: '2022-12-07',
       time: time,
     };
-    console.log('state data = ' + JSON.stringify(data));
-    await db
-      .insertDataTagihan(data)
-      .then(async () => {
-        await _doDownloadImage;
-        setLoading(false);
-        setVisibleSuccess(true);
-        setTimeout(() => {
-          setVisibleSuccess(false);
-          navigation.navigate('Bill');
-        }, 500);
-      })
-      .catch(err => console.log('err ' + err));
+    // console.log('state data = ' + JSON.stringify(data));
+    try {
+      await db
+        .insertDataTagihan(data)
+        .then(async () => {
+          await _doDownloadImage;
+          setLoading(false);
+          setVisibleSuccess(true);
+          setTimeout(() => {
+            setVisibleSuccess(false);
+            navigation.navigate('Bill');
+          }, 500);
+        })
+        .catch(err => console.log('err ' + err));
+    } catch (err) {
+      console.log('somthing err2 = ' + err);
+      ToastAndroid.showWithGravity(
+        'Internal Error',
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+      );
+      navigation.navigate('Home');
+    }
   };
 
   const handleSubmit = async () => {

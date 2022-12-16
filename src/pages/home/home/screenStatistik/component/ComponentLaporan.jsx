@@ -101,15 +101,15 @@ function ComponentLaporan({dataIn, dataOut}) {
       jumlahDataStatistikOut,
       dataUser,
     );
-    // console.log(t);
-    // <HtmlGenerate />
-    dataStatistikIn.length === 0 &&
-      dataStatistikOut.length === 0 &&
+    if (dataStatistikIn.length < 1 && dataStatistikOut.length < 1) {
       setVisibleModalEmpty(true);
-    let file = await RNPrint.print({
-      html: t,
-    });
-    await RNPrint.print({filePath: file.filePath});
+    } else {
+      let file = await RNPrint.print({
+        html: t,
+      });
+      await RNPrint.print({filePath: file.filePath});
+    }
+
     // let name_pdf =
     //   'document_pemasukan_' +
     //   Math.floor(date.getTime() + date.getSeconds() / 2);
@@ -132,7 +132,7 @@ function ComponentLaporan({dataIn, dataOut}) {
     <View style={{padding: 16}}>
       <View style={styles.container}>
         <ModalEmpty
-          text={'Data Tagihan Kosong!'}
+          text={'Data Kosong!'}
           visible={visibleModalEmpty}
           onChange={() => onChangeVisible()}
         />

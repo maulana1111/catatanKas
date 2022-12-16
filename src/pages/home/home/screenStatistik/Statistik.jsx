@@ -85,7 +85,17 @@ function Statistik() {
           console.log('error home2 = ' + err);
         });
     };
-    getData();
+    try {
+      getData();
+    } catch (err) {
+      console.log('somthing err = ' + err);
+      ToastAndroid.showWithGravity(
+        'Internal Error',
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+      );
+      navigation.navigate('Home');
+    }
   }, []);
 
   // console.log("dt = "+totalPemasukan);

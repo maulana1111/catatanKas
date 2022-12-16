@@ -8,6 +8,8 @@ import {
   StyleSheet,
   LogBox,
   PermissionsAndroid,
+  BackHandler,
+  ToastAndroid,
 } from 'react-native';
 import MyStatusBar from '../../auth/component/StatusBar';
 import {Style} from './style/index';
@@ -45,6 +47,8 @@ import {useNavigation} from '@react-navigation/native';
 import ModalAskDelete from './screenBill/component/ModalAskDelete';
 import moment from 'moment';
 import 'moment/locale/id';
+import DoubleClick from 'react-native-double-click';
+import { Alert } from 'react-native';
 
 function Home() {
   const isFocused = useIsFocused();
@@ -82,6 +86,8 @@ function Home() {
     strText = 'Selamat Malam';
   }
 
+  let currentCount = 0;
+
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
@@ -101,6 +107,13 @@ function Home() {
                   data: totall,
                 }),
               );
+            } else {
+              setTotalPemasukan(0);
+              dispatch(
+                storeJumlahDataTransaksiIn({
+                  data: 0,
+                }),
+              );
             }
             setDataPemasukan(data1);
             dispatch(
@@ -110,6 +123,18 @@ function Home() {
             );
           })
           .catch(err => {
+            setDataPemasukan(null);
+            setTotalPemasukan(0);
+            dispatch(
+              storeJumlahDataTransaksiIn({
+                data: 0,
+              }),
+            );
+            dispatch(
+              storeDataTransaksiIn({
+                data: null,
+              }),
+            );
             console.log('error home1 = ' + err);
           });
 
@@ -127,12 +152,31 @@ function Home() {
                   data: total,
                 }),
               );
+            } else {
+              setTotalPengeluaran(0);
+              dispatch(
+                storeJumlahDataTransaksiOut({
+                  data: 0,
+                }),
+              );
             }
             setDataPengeluaran(data2);
             dispatch(storeDataTransaksiOut({data: data2}));
           })
           .catch(err => {
             console.log('error home2 = ' + err);
+            setDataPengeluaran(null);
+            setTotalPengeluaran(0);
+            dispatch(
+              storeJumlahDataTransaksiOut({
+                data: 0,
+              }),
+            );
+            dispatch(
+              storeDataTransaksiOut({
+                data: null,
+              }),
+            );
           });
       }
       if (dataFilter.status === true) {
@@ -154,22 +198,34 @@ function Home() {
                 total = total + row.nominal;
               }
               setTotalPemasukan(total);
-              setDataPemasukan(data1);
-              dispatch(
-                storeDataTransaksiIn({
-                  data: data1,
-                }),
-              );
               dispatch(
                 storeJumlahDataTransaksiIn({
                   data: total,
                 }),
               );
+            } else {
+              setTotalPemasukan(0);
+              dispatch(
+                storeJumlahDataTransaksiIn({
+                  data: 0,
+                }),
+              );
             }
+            setDataPemasukan(data1);
+            dispatch(
+              storeDataTransaksiIn({
+                data: data1,
+              }),
+            );
           })
           .catch(err => {
             console.log('error home3 = ' + err);
             setTotalPemasukan(0);
+            dispatch(
+              storeJumlahDataTransaksiIn({
+                data: 0,
+              }),
+            );
             setDataPemasukan(null);
             dispatch(
               storeDataTransaksiIn({
@@ -194,25 +250,49 @@ function Home() {
                 total = total + row.nominal;
               }
               setTotalPengeluaran(total);
-              setDataPengeluaran(data2);
-              dispatch(storeDataTransaksiOut({data: data2}));
               dispatch(
                 storeJumlahDataTransaksiOut({
                   data: total,
                 }),
               );
+            } else {
+              setTotalPengeluaran(0);
+              dispatch(
+                storeJumlahDataTransaksiOut({
+                  data: 0,
+                }),
+              );
             }
+            setDataPengeluaran(data2);
+            dispatch(storeDataTransaksiOut({data: data2}));
           })
           .catch(err => {
             console.log('error home4 = ' + err);
             setTotalPengeluaran(0);
+            dispatch(
+              storeJumlahDataTransaksiOut({
+                data: 0,
+              }),
+            );
             setDataPengeluaran(null);
             dispatch(storeDataTransaksiOut({data: null}));
           });
       }
       setLoading(false);
     };
-    isFocused && getData();
+    if (isFocused) {
+      try {
+        getData();
+      } catch (err) {
+        console.log('somthing err = ' + err);
+        ToastAndroid.showWithGravity(
+          'Internal Error',
+          ToastAndroid.SHORT,
+          ToastAndroid.BOTTOM,
+        );
+        navigation.navigate("SecScreen");
+      }
+    }
     dispatch(storeConditionDelete({condition: false}));
   }, [isFocused, dataFilter.status, conditionDelete]);
 
@@ -244,6 +324,36 @@ function Home() {
     };
     requestStoragePermission();
   }, []);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      doBackPressHandler,
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+  const doBackPressHandler = () => {
+    if (navigation.isFocused()) {
+      currentCount++;
+      if (currentCount === 1) {
+        ToastAndroid.showWithGravity(
+          'Tekan Lagi Untuk Keluar Aplikasi !',
+          ToastAndroid.SHORT,
+          ToastAndroid.BOTTOM,
+        );
+      } else {
+        BackHandler.exitApp();
+      }
+      setTimeout(() => {
+        currentCount = 0;
+      }, 2000);
+    } else {
+      navigation.goBack();
+    }
+    return true;
+  };
 
   const chooseFile = async () => {
     let options = {
@@ -304,7 +414,6 @@ function Home() {
     }
   };
 
-  let img = dataUser.data.foto;
   // CameraRoll.getPhotos(dataUser.data.foto)
   // console.log('path = ' + dataUser.data.link_foto);
 

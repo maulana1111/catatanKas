@@ -111,7 +111,7 @@ async function GeneratePDF(
     ${logo}
     </div>
     <div class="top">
-        <div class='left_top' style="margin-top: 100px;">
+        <div class='left_top' style="margin-top: 50px;">
             <h1>Laporan</h1><h1>Keuanganmu</h1>
             <p>Laporan:</p>
             <p>${

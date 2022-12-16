@@ -20,6 +20,7 @@ import {useDispatch} from 'react-redux';
 import {storeUser} from '../../../redux/features/globalSlice';
 import Database from '../../../utilSqlite/database';
 import {Circle} from 'react-native-animated-spinkit';
+import {BackHandler} from 'react-native';
 const db = new Database();
 
 function SecScreen() {
@@ -34,6 +35,21 @@ function SecScreen() {
       offlineAccess: true,
     });
   }, []);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      doBackPressHandler,
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+  const doBackPressHandler = () => {
+    BackHandler.exitApp();
+
+    return true;
+  };
 
   async function _isSignedIn() {
     const isSignedIn = await GoogleSignin.isSignedIn();

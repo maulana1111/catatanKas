@@ -16,7 +16,7 @@ function ModalEmpty({text, visible, onChange}) {
             style={{
               backgroundColor: 'rgba(255, 89, 66, 0.9)',
               width: 340,
-              height: 228,
+              height: 150,
               borderRadius: 16,
               paddingVertical: 16,
               paddingLeft: 12,

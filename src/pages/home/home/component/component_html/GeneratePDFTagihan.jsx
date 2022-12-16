@@ -111,7 +111,7 @@ async function GeneratePDFTagihan(
     ${logo}
     </div>
     <div class="top">
-        <div class='left_top' style="margin-top: 100px;">
+        <div class='left_top' style="margin-top: 50px;">
             <h1>Laporan</h1><h1>Tagihan</h1>
             <p>Laporan:</p>
             <p>${

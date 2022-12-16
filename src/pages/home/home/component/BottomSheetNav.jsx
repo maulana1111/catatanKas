@@ -69,7 +69,7 @@ function BottomSheetNav() {
         translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50});
       }
       if (translateY.value > -SCREEN_HEIGHT / 2) {
-        translateY.value = withSpring((50 / 100) * -SCREEN_HEIGHT, {
+        translateY.value = withSpring((58 / 100) * -SCREEN_HEIGHT, {
           damping: 50,
         });
       }
@@ -100,13 +100,15 @@ function BottomSheetNav() {
     );
     // console.log(t);
     // <HtmlGenerate />
-    dataTransaksiIn.length === 0 &&
-      dataTransaksiOut.length === 0 &&
+    // console.log("data = "+dataTransaksiIn.length);
+    if (dataTransaksiIn === null && dataTransaksiOut === null) {
       setVisibleModalEmpty(true);
-    let file = await RNPrint.print({
-      html: t,
-    });
-    await RNPrint.print({filePath: file.filePath});
+    } else {
+      let file = await RNPrint.print({
+        html: t,
+      });
+      await RNPrint.print({filePath: file.filePath});
+    }
     // let name_pdf =
     //   'document_pemasukan_' +
     //   Math.floor(date.getTime() + date.getSeconds() / 2);
@@ -129,7 +131,7 @@ function BottomSheetNav() {
   useEffect(() => {
     conditionChildSheet
       ? (translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50}))
-      : (translateY.value = withSpring((50 / 100) * -SCREEN_HEIGHT, {
+      : (translateY.value = withSpring((58 / 100) * -SCREEN_HEIGHT, {
           damping: 50,
         }));
   }, [conditionChildSheet]);
@@ -137,6 +139,7 @@ function BottomSheetNav() {
     <GestureDetector gesture={gesture}>
       <Animated.View style={[styles.container, rBottomSheetStyle]}>
         <ModalEmpty
+          text={"Data Transaksi Kosong"}
           visible={visibleModalEmpty}
           onChange={() => onChangeVisible()}
         />
