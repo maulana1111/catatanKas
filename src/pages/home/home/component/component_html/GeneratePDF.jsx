@@ -46,8 +46,7 @@ async function GeneratePDF(
             .header {
                 height: 230px;
                 width: 100%;
-                background-color: red;
-                background-image: linear-gradient(white 10%, #FFD16C 100%);
+                background: linear-gradient(180deg, #006F78 0%, rgba(0, 111, 120, 0) 100%);
             }
             .top {
                 display: flex;
@@ -97,7 +96,7 @@ async function GeneratePDF(
             .bottom {
                 width: 100%;
                 height: 155px;
-                background-color: #FFE6B1;       
+                background-color: #006F78;       
             }
             @media print {
                 .pagebreak { page-break-before: always; } /* page-break-after works, as well */
@@ -113,8 +112,8 @@ async function GeneratePDF(
     <div class="top">
         <div class='left_top' style="margin-top: 50px;">
             <h1>Laporan</h1><h1>Keuanganmu</h1>
-            <p>Laporan:</p>
-            <p>${
+            <p style="color : #795B1B">Laporan:</p>
+            <p style="color : #7F0011">${
               dataFilter.status === false
                 ? 'Sekarang'
                 : dataFilter.data.tanggal_dari +
@@ -136,7 +135,7 @@ async function GeneratePDF(
           <br>
           <div class="hr3"></div>
           <br>
-          <h2 style="text-align: center; color: #795B1B;">Catatan Kas 2022</h2>
+          <h2 style="text-align: center; color: white;">Catatan Kas 2023</h2>
       </div>`;
 
   let HTMLBottom = `

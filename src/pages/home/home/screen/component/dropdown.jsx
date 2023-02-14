@@ -12,6 +12,7 @@ function Dropdown({title, text}) {
           paddingLeft: 18,
           paddingVertical: 15,
           marginVertical: 10,
+          backgroundColor: 'white'
         }}>
         <Text
           style={[
@@ -21,6 +22,7 @@ function Dropdown({title, text}) {
               left: 10,
               paddingHorizontal: 10,
               backgroundColor: '#fff',
+              borderRadius: 12
             },
             styles.text2,
           ]}>

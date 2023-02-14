@@ -256,42 +256,42 @@ function ScreenBottomSheetFilter({state}) {
             <Text style={styles.text2}>Jenis</Text>
             <View style={styles.container2}>
               <FilterJenisItem
-                images={require('../../../../assets/filter/transfer.png')}
+                images={require('../screenStatistik/component/assets/filter/transfer.png')}
                 text={'Transfer'}
                 value={'transfer'}
                 state={stateJenis}
                 onChange={value => handleChangeStateJenis(value)}
               />
               <FilterJenisItem
-                images={require('../../../../assets/filter/instant.png')}
+                images={require('../screenStatistik/component/assets/filter/instant.png')}
                 text={'Instant'}
                 value={'instant'}
                 state={stateJenis}
                 onChange={value => handleChangeStateJenis(value)}
               />
               <FilterJenisItem
-                images={require('../../../../assets/filter/coin.png')}
+                images={require('../screenStatistik/component/assets/filter/coin.png')}
                 text={'Tunai'}
                 value={'tunai'}
                 state={stateJenis}
                 onChange={value => handleChangeStateJenis(value)}
               />
               <FilterJenisItem
-                images={require('../../../../assets/filter/entertainment.png')}
+                images={require('../screenStatistik/component/assets/filter/entertainment.png')}
                 text={'Hiburan'}
                 value={'hiburan'}
                 state={stateJenis}
                 onChange={value => handleChangeStateJenis(value)}
               />
               <FilterJenisItem
-                images={require('../../../../assets/filter/lifestyle.png')}
+                images={require('../screenStatistik/component/assets/filter/lifestyle.png')}
                 text={'Gaya Hidup'}
                 value={'gaya_hidup'}
                 state={stateJenis}
                 onChange={value => handleChangeStateJenis(value)}
               />
               <FilterJenisItem
-                images={require('../../../../assets/filter/food.png')}
+                images={require('../screenStatistik/component/assets/filter/food.png')}
                 text={'Makanan & Minuman'}
                 value={'makanan&minuman'}
                 state={stateJenis}

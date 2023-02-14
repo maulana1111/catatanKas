@@ -410,6 +410,9 @@ export default class Database {
                   [],
                 )
                 .then(([tx, res]) => {
+                  console.log(
+                    `data transaksi in = ${transaksi}` + JSON.stringify(res),
+                  );
                   if (res.rows.length !== 0) {
                     const data = new Array();
                     for (let i = 0; i < res.rows.length; i++) {
@@ -432,31 +435,27 @@ export default class Database {
     });
   }
 
-  async getDataUser({id_user}) {
+  async getDataUserById(id_user) {
     return new Promise((resolve, reject) => {
       this.initDb()
         .then(db => {
           db.transaction(async tx => {
             await tx.executeSql(
-              'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), nama_user VARCHAR(30), email VARCHAR(30), foto VARCHAR(255), link_foto VARCHAR(255))',
+              'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), nama_user VARCHAR(30), email VARCHAR(30), foto VARCHAR(255), link_foto VARCHAR(255), user_logged_in VARCHAR(6))',
             );
           })
             .then(async () => {
               db.transaction(async tx => {
                 await tx
-                  .executeSql('SELECT * FROM user WHERE id_user = ?', [id_user])
+                  .executeSql(
+                    'SELECT * FROM user WHERE id_user = ?',
+                    [id_user],
+                  )
                   .then(([tx, res]) => {
                     if (res.rows.length !== 0) {
-                      const row = JSON.parse(JSON.stringify(res.rows.item(0)));
-                      const data_user = {
-                        id_user: row.id_user,
-                        nama_user: row.nama_user,
-                        foto: row.foto,
-                        email: row.email,
-                        user_logged_in: true,
-                        link_foto: row.link_foto,
-                      };
-                      resolve(data_user);
+                      resolve(true);
+                    } else {
+                      resolve(null);
                     }
                   });
               }).then(() => {
@@ -473,20 +472,150 @@ export default class Database {
     });
   }
 
-  async addDataUser({id_user, nama_user, email, foto, link_foto}) {
+  async getDataUser() {
+    return new Promise((resolve, reject) => {
+      this.initDb()
+        .then(db => {
+          db.transaction(async tx => {
+            await tx.executeSql(
+              'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), nama_user VARCHAR(30), email VARCHAR(30), foto VARCHAR(255), link_foto VARCHAR(255), user_logged_in VARCHAR(6))',
+            );
+          })
+            .then(async () => {
+              db.transaction(async tx => {
+                await tx
+                  .executeSql(
+                    'SELECT * FROM user WHERE user_logged_in = ?',
+                    ["true"],
+                  )
+                  .then(([tx, res]) => {
+                    data_user = {};
+                    if (res.rows.length !== 0) {
+                      const row = JSON.parse(JSON.stringify(res.rows.item(0)));
+                      console.log("dataaa = "+JSON.stringify(row));
+                      data_user = {
+                        id_user: row.id_user,
+                        nama_user: row.nama_user,
+                        foto: row.foto,
+                        email: row.email,
+                        user_logged_in: row.user_logged_in,
+                        link_foto: row.link_foto,
+                      };
+                      resolve(data_user);
+                    } else {
+                      resolve(null);
+                    }
+                  });
+              }).then(() => {
+                this.closeDatabase(db);
+              });
+            })
+            .catch(er => {
+              console.log(er);
+            });
+        })
+        .catch(er => {
+          console.log(er);
+        });
+    });
+  }
+
+  async doLoginUser(id_user) {
     return new Promise((resolve, reject) => {
       this.initDb()
         .then(async db => {
           db.transaction(async tx => {
             await tx.executeSql(
-              'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), nama_user VARCHAR(30), email VARCHAR(30), foto VARCHAR(255), link_foto VARCHAR(255))',
+              'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), nama_user VARCHAR(30), email VARCHAR(30), foto VARCHAR(255), link_foto VARCHAR(255), user_logged_in VARCHAR(6))',
             );
           }).then(() => {
             db.transaction(async tx => {
               await tx
                 .executeSql(
-                  'INSERT INTO user(id_user, nama_user, email, foto, link_foto) VALUES(?, ?, ?, ?, ?)',
-                  [id_user, nama_user, email, foto, link_foto],
+                  'UPDATE user SET user_logged_in = ? WHERE id_user = ?',
+                  ["true", id_user],
+                  (tx, res) => {
+                    if (res) {
+                      console.log('Success updated = ' + JSON.stringify(res));
+                      resolve(res);
+                    }
+                  },
+                )
+                .catch(err => {
+                  // console.log();
+                  reject('error when logout user = ' + err);
+                });
+            })
+              .then(() => {
+                this.closeDatabase(db);
+              })
+              .catch(err => {
+                console.log('err 1 = ' + JSON.stringify(err));
+              });
+          });
+        })
+        .catch(err => {
+          console.log('err = ' + err);
+          reject(err);
+        });
+    });
+  }
+
+  async doLogoutUser(id_user) {
+    return new Promise((resolve, reject) => {
+      this.initDb()
+        .then(async db => {
+          db.transaction(async tx => {
+            await tx.executeSql(
+              'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), nama_user VARCHAR(30), email VARCHAR(30), foto VARCHAR(255), link_foto VARCHAR(255), user_logged_in VARCHAR(6))',
+            );
+          }).then(() => {
+            db.transaction(async tx => {
+              await tx
+                .executeSql(
+                  'UPDATE user SET user_logged_in = ? WHERE id_user = ?',
+                  ["false", id_user],
+                  (tx, res) => {
+                    if (res) {
+                      console.log('Success updated = ' + JSON.stringify(res));
+                      resolve(res);
+                    }
+                  },
+                )
+                .catch(err => {
+                  // console.log();
+                  reject('error when logout user = ' + err);
+                });
+            })
+              .then(() => {
+                this.closeDatabase(db);
+              })
+              .catch(err => {
+                console.log('err 1 = ' + JSON.stringify(err));
+              });
+          });
+        })
+        .catch(err => {
+          console.log('err = ' + err);
+          reject(err);
+        });
+    });
+  }
+
+  async addDataUser({id_user, nama_user, email, foto, link_foto, user_logged_in}) {
+    return new Promise((resolve, reject) => {
+      this.initDb()
+        .then(async db => {
+          db.transaction(async tx => {
+            await tx.executeSql(
+              'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, id_user VARCHAR(40), nama_user VARCHAR(30), email VARCHAR(30), foto VARCHAR(255), link_foto VARCHAR(255), user_logged_in VARCHAR(6))',
+            );
+          }).then(() => {
+            db.transaction(async tx => {
+              await tx
+                .executeSql(
+                  'INSERT INTO user(id_user, nama_user, email, foto, link_foto, user_logged_in) VALUES(?, ?, ?, ?, ?, ?)',
+                  [id_user, nama_user, email, foto, link_foto, user_logged_in],
                   (tx, res) => {
                     if (res) {
                       console.log('Success Inserted = ' + res);

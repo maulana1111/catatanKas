@@ -25,6 +25,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   withSpring,
+  color,
 } from 'react-native-reanimated';
 import Transaksi from './component/componentBottomSheet/Transaksi';
 import JenisTransaksi from './component/componentBottomSheet/JenisTransaksi';
@@ -51,7 +52,9 @@ const today = new Date();
 const tanggal =
   today.getFullYear() +
   '-' +
-  (today.getMonth() + 1) +
+  (String(today.getMonth()).length === 1
+    ? '0' + parseInt(today.getMonth()+1)
+    : today.getMonth()) +
   '-' +
   (String(today.getDate()).length === 1
     ? '0' + today.getDate()
@@ -192,7 +195,7 @@ function FormTambah() {
     }).format(number);
   };
 
-  const doSubmit = () => {
+  const doSubmit = async() => {
     const db = new Database();
     data = {
       id_user: dataUser.data.id_user,
@@ -206,7 +209,7 @@ function FormTambah() {
       time: moment(new Date()).format('LT'),
     };
     // setVisibleSuccess(false);
-    // console.log('data form = ' + JSON.stringify(data));
+    console.log('data form = ' + JSON.stringify(data));
     try {
       db.insertDataTransaksi(data)
         .then(data => {
@@ -230,8 +233,8 @@ function FormTambah() {
 
   const handleDoSubmit = () => {
     setLoading(false);
-    setVisibleSuccess(true);
     doSubmit();
+    setVisibleSuccess(true);
   };
 
   const handleSubmit = () => {
@@ -253,9 +256,9 @@ function FormTambah() {
         flex: 1,
         backgroundColor: '#fff',
       }}>
-      <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <MyStatusBar backgroundColor="#006F78" barStyle="light-content" />
       {/* <GestureHandlerRootView> */}
-      <KeyboardAwareScrollView extraHeight={0}>
+      <KeyboardAwareScrollView extraHeight={0} style={{backgroundColor: '#006F78'}}>
         <ModalItem
           visible={loading}
           onChange={() => setLoading(false)}
@@ -333,6 +336,8 @@ function FormTambah() {
                     fontSize: 16,
                     fontFamily: 'BalooBhaijaan2-Bold',
                     textAlign: 'center',
+                    fontWeight: 'bold',
+                    color: 'black'
                   }}>
                   Simpan
                 </Text>

@@ -48,7 +48,8 @@ import ModalAskDelete from './screenBill/component/ModalAskDelete';
 import moment from 'moment';
 import 'moment/locale/id';
 import DoubleClick from 'react-native-double-click';
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
+import ModalLogout from './component/ModalLogout';
 
 function Home() {
   const isFocused = useIsFocused();
@@ -290,7 +291,7 @@ function Home() {
           ToastAndroid.SHORT,
           ToastAndroid.BOTTOM,
         );
-        navigation.navigate("SecScreen");
+        navigation.navigate('SecScreen');
       }
     }
     dispatch(storeConditionDelete({condition: false}));
@@ -387,25 +388,30 @@ function Home() {
   };
 
   const handleLogout = async () => {
+    // console.log('data user home = ' + JSON.stringify(dataUser));
     setVisibleAsk(true);
   };
   const doLogout = async () => {
-    const dt = {
-      status: false,
-      data: {
-        id_user: '',
-        nama_user: '',
-        email: '',
-        foto: '',
-      },
-    };
-    dispatch(
-      storeUser({
-        dt,
-      }),
-    );
+    console.log("data id user = "+dataUser.data.id_user);
+    db.doLogoutUser(dataUser.data.id_user).then(_ => {
+      const dt = {
+        status: false,
+        data: {
+          id_user: '',
+          nama_user: '',
+          email: '',
+          foto: '',
+        },
+      };
+      dispatch(
+        storeUser({
+          dt,
+        }),
+      );
+    }).catch(err => {
+      console.log(err)
+    });
     try {
-      await GoogleSignin.signOut();
       setVisibleAsk(false);
       navigation.navigate('SecScreen');
       // Remember to remove the user from your app's state as well
@@ -420,7 +426,7 @@ function Home() {
   return (
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaView>
-        <MyStatusBar backgroundColor="#40300F" barStyle="light-content" />
+        <MyStatusBar backgroundColor="#006F78" barStyle="light-content" />
         <Modal isVisible={loading}>
           <View
             style={{
@@ -431,13 +437,21 @@ function Home() {
             <Bounce size={48} color="#FFF" />
           </View>
         </Modal>
-        <ModalAskDelete
+        {/* <ModalAskDelete
+          visible={visibleAsk}
+          title="Keluar Aplikasi"
+          desc={'Apakah Anda Yakin Ingin Keluar Dari Aplikasi ini ?'}
+          onClickHandle={() => doLogout()}
+          onClickCancel={() => setVisibleAsk(false)}
+        /> */}
+        <ModalLogout
           visible={visibleAsk}
           title="Keluar Aplikasi"
           desc={'Apakah Anda Yakin Ingin Keluar Dari Aplikasi ini ?'}
           onClickHandle={() => doLogout()}
           onClickCancel={() => setVisibleAsk(false)}
         />
+
         <View
           style={{
             flexDirection: 'row',
@@ -449,7 +463,7 @@ function Home() {
             <View style={{marginRight: 10}}>
               <Image
                 source={{uri: dataUser.data.link_foto}}
-                style={{height: 40, width: 40}}
+                style={{height: 40, width: 40, borderRadius: 30}}
               />
             </View>
             <View>
@@ -482,7 +496,7 @@ function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#40300F',
+    backgroundColor: '#006F78',
   },
 });
 

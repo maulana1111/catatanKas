@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {SafeAreaView} from 'react-native';
+import {BackHandler, SafeAreaView} from 'react-native';
 import {
   View,
   TouchableOpacity,
@@ -168,6 +168,23 @@ function Bill() {
     }
   }, [isFocused, dataFilterTagihan.status, reloadPage]);
 
+  
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      doBackPressHandler,
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+  const doBackPressHandler = () => {
+    navigation.navigate('Home');
+
+    return true;
+  };
+
   const ChangeRupiah = number => {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -293,10 +310,10 @@ function Bill() {
     <View
       style={{
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#006F78',
       }}>
       <SafeAreaView>
-        <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
+        <MyStatusBar backgroundColor="#006F78" barStyle="light-content" />
         <View>
           <ModalEmpty
             text={'Data Tagihan Kosong'}
@@ -432,7 +449,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-start',
     padding: 12,
-    backgroundColor: 'rgba(255, 230, 175, 0.2)',
+    backgroundColor: 'white',
     borderRadius: 16,
   },
   back: {
@@ -447,6 +464,7 @@ const styles = StyleSheet.create({
     lineHeight: 27,
     color: '#DBA42D',
     marginTop: 5,
+    fontWeight: 'bold'
   },
   text1: {
     fontFamily: 'BalooBhaijaan2-SemiBold',
@@ -458,7 +476,7 @@ const styles = StyleSheet.create({
     fontFamily: 'BalooBhaijaan2-Regular',
     fontSize: 16,
     lineHeight: 24,
-    color: '#000000',
+    color: '#fff',
   },
 });
 

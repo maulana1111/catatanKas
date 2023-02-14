@@ -16,7 +16,7 @@ function ModalAskDelete({visible, title, desc, onClickHandle, onClickCancel}) {
             style={{
               backgroundColor: 'rgba(255, 89, 66, 0.9)',
               width: 340,
-              height: 228,
+              height: 200,
               borderRadius: 16,
               paddingVertical: 16,
               paddingLeft: 12,
@@ -27,21 +27,6 @@ function ModalAskDelete({visible, title, desc, onClickHandle, onClickCancel}) {
                 source={require('../assets/trash_icon.png')}
                 style={{width: 45, height: 45, tintColor: '#fff'}}
               />
-            </View>
-            <View
-              style={{
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                right: 0,
-                padding: 10,
-              }}>
-              <TouchableOpacity onPress={() => onClickCancel()}>
-                <Image
-                  source={require('../assets/Cancel.png')}
-                  style={{tintColor: '#fff'}}
-                />
-              </TouchableOpacity>
             </View>
             <View>
               <Text
@@ -62,39 +47,57 @@ function ModalAskDelete({visible, title, desc, onClickHandle, onClickCancel}) {
                 }}>
                 {desc}
               </Text>
-              <TouchableOpacity onPress={() => onClickHandle()}>
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-                    backgroundColor: '#fff',
-                    width: 270,
-                    height: 44,
-                    padding: 10,
-                    borderRadius: 16,
-                    flexDirection: 'row',
-                    marginTop: 30,
-                  }}>
-                  <Text
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+                <TouchableOpacity onPress={() => onClickCancel()}>
+                  <View
                     style={{
-                      fontFamily: 'BalooBhaijaan2-SemiBold',
-                      fontSize: 14,
-                      lineHeight: 18,
-                      color: '#FF5942',
-                      textAlign: 'center',
-                      marginTop: 5,
-                      marginRight: 10,
+                      marginTop: 20,
                     }}>
-                    {title === 'Keluar Aplikasi'
-                      ? 'Keluar Sekarang'
-                      : 'Hapus Sekarang'}
-                  </Text>
-                  <Image
-                    source={require('../assets/arrow_right.png')}
-                    style={{tintColor: '#FF5942'}}
-                  />
-                </View>
-              </TouchableOpacity>
+                    <Text
+                      style={{
+                        fontFamily: 'BalooBhaijaan2-SemiBold',
+                        fontSize: 16,
+                        color: 'white',
+                        textAlign: 'center',
+                        marginTop: 5,
+                      }}>
+                      Tidak
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => onClickHandle()}>
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      backgroundColor: '#fff',
+                      width: 99,
+                      height: 44,
+                      padding: 10,
+                      borderRadius: 16,
+                      flexDirection: 'row',
+                      marginTop: 15,
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: 'BalooBhaijaan2-SemiBold',
+                        fontSize: 14,
+                        lineHeight: 18,
+                        color: '#FF5942',
+                        textAlign: 'center',
+                        marginTop: 5,
+                        marginRight: 1,
+                      }}>
+                      Hapus Sekarang
+                    </Text>
+                    <Image
+                      source={require('../assets/arrow_right.png')}
+                      style={{tintColor: '#FF5942'}}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>

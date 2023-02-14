@@ -45,8 +45,7 @@ async function GenerateStatistik(
             .header {
                 height: 230px;
                 width: 100%;
-                background-color: red;
-                background-image: linear-gradient(white 10%, #FFD16C 100%);
+                background: linear-gradient(180deg, #006F78 0%, rgba(0, 111, 120, 0) 100%);
             }
             .top {
                 display: flex;
@@ -96,7 +95,7 @@ async function GenerateStatistik(
             .bottom {
                 width: 100%;
                 height: 155px;
-                background-color: #FFE6B1;       
+                background-color: #006F78;       
             }
             @media print {
                 .pagebreak { page-break-before: always; } /* page-break-after works, as well */
@@ -127,7 +126,7 @@ async function GenerateStatistik(
           <br>
           <div class="hr3"></div>
           <br>
-          <h2 style="text-align: center; color: #795B1B;">Catatan Kas 2022</h2>
+          <h2 style="text-align: center; color: white;">Catatan Kas 2023</h2>
       </div>`;
 
   let HTMLBottom = `

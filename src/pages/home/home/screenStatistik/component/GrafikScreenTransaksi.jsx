@@ -20,7 +20,7 @@ function GrafikScreenTransaksi() {
     // console.log('state out = ' + state);
     let count = 0;
     let i = 0;
-    console.log("state out = "+state);
+    // console.log("state in = "+state);
 
     if (state !== 1) {
       for (let z = 1; z < state; z++) {
@@ -104,8 +104,8 @@ function GrafikScreenTransaksi() {
     dataOut.push(0, 0, 0, 0, 0, 0, 0);
   }
 
-  console.log('data baru out = ' + JSON.stringify(dataOut));
-  console.log('data baru in = ' + JSON.stringify(dataIn));
+  // console.log('data baru out = ' + JSON.stringify(dataOut));
+  // console.log('data baru in = ' + JSON.stringify(dataIn));
 
   const dataTransaksi = {
     labels: label,

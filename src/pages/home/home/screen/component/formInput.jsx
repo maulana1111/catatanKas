@@ -29,13 +29,15 @@ const styles = StyleSheet.create({
     paddingLeft: 18,
     paddingVertical: 15,
     marginVertical: 10,
+    backgroundColor: 'white'
   },
   conText: {
     position: 'absolute',
-    bottom: 65,
+    bottom: 70,
     left: 10,
     paddingHorizontal: 10,
     backgroundColor: '#fff',
+    borderRadius : 9
   },
   text1: {
     fontFamily: 'BalooBhaijaan2-Regular',

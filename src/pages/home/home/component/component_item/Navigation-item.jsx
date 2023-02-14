@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux';
 import {storeDataFilter} from '../../../../../redux/features/globalSlice';
 
 function NavigationItem(props) {
-  const {state, stateItem, text, image, onChange} = props;
+  const {text, image, scrLoading} = props;
   //   const img = require(image)
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -23,8 +23,11 @@ function NavigationItem(props) {
         real_tanggal_sampai: '',
       }),
     );
-
-    navigation.navigate(text);
+    
+    navigation.navigate('ScreenLoading', {
+      screen: text,
+      image: scrLoading,
+    });
   };
 
   return (
@@ -47,7 +50,7 @@ function NavigationItem(props) {
 
 const style = StyleSheet.create({
   card: {
-    backgroundColor: '#795B1B',
+    backgroundColor: '#A92728',
     padding: 8,
     width: 123,
     height: 94,
@@ -59,7 +62,7 @@ const style = StyleSheet.create({
     fontFamily: 'BalooBhaijaan2-SemiBold',
     fontSize: 12,
     lineHeight: 18,
-    color: '#DBA42D',
+    color: '#FCBC31',
     textAlign: 'center',
   },
   styleShadow: {

@@ -21,8 +21,8 @@ import {useSelector} from 'react-redux';
 function ComponentTransaksi({dataIn, dataOut}) {
   const [stateMetode, setStateMetode] = useState('transaksi');
 
-  const dtCount = Math.round((dataOut / dataIn) * 100);
-  const dataRes = 100 - dtCount;
+  const mathPem = Math.floor((dataIn * 100) / (dataIn+dataOut));
+  const mathPeng = Math.floor((dataOut * 100) / (dataIn+dataOut));
 
   const HandleChangeState = e => {
     setStateMetode(e);
@@ -34,27 +34,6 @@ function ComponentTransaksi({dataIn, dataOut}) {
     }).format(number);
   };
 
-  const onShareData = async () => {
-    try {
-      const result = await Share.share({
-        message: `data Pemasukan Minggu Ini = ${ChangeRupiah(
-          dataIn,
-        )}, Data Pengeluaran Minggu Ini = ${ChangeRupiah(dataOut)} `,
-      });
-      console.log('result = ' + result);
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
 
   return (
     <View>
@@ -88,7 +67,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
               <Text
                 style={[
                   styles.text4,
-                  {fontSize: 12, color: 'rgba(49, 206, 93, 1)'},
+                  {fontSize: 12, color: '#00505E'},
                 ]}>
                 +{dataIn !== null ? ChangeRupiah(dataIn) : 'Rp.0'}
               </Text>
@@ -98,8 +77,8 @@ function ComponentTransaksi({dataIn, dataOut}) {
                 style={[
                   styles.bg2,
                   {
-                    backgroundColor: '#31CE5D',
-                    width: `${dataIn !== null ? dataRes + '%' : '0%'}`,
+                    backgroundColor: '#00505E',
+                    width: `${dataIn !== null ? mathPem + '%' : '0%'}`,
                   },
                 ]}
               />
@@ -111,7 +90,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
                 marginVertical: 5,
               }}>
               <Text style={[styles.text4, {fontSize: 14}]}>Pengeluaran</Text>
-              <Text style={[styles.text4, {fontSize: 12, color: '#FF5942'}]}>
+              <Text style={[styles.text4, {fontSize: 12, color: '#7F0011'}]}>
                 -{dataOut !== null ? ChangeRupiah(dataOut) : 'Rp.0'}
               </Text>
             </View>
@@ -120,8 +99,8 @@ function ComponentTransaksi({dataIn, dataOut}) {
                 style={[
                   styles.bg2,
                   {
-                    backgroundColor: '#FF5942',
-                    width: `${dataOut !== null ? dtCount + '%' : '0%'}`,
+                    backgroundColor: '#A92728',
+                    width: `${dataOut !== null ? mathPeng + '%' : '0%'}`,
                   },
                 ]}
               />
@@ -159,7 +138,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
                   <Text
                     style={[
                       styles.text6,
-                      stateMetode === 'transaksi' && {color: '#fff'},
+                      stateMetode === 'transaksi' && {color: '#7F0011'},
                     ]}>
                     Transaksi
                   </Text>
@@ -176,7 +155,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
                   <Text
                     style={[
                       styles.text6,
-                      stateMetode === 'pemasukan' && {color: '#fff'},
+                      stateMetode === 'pemasukan' && {color: '#7F0011'},
                     ]}>
                     Pemasukan
                   </Text>
@@ -196,7 +175,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
                   <Text
                     style={[
                       styles.text6,
-                      stateMetode === 'pengeluaran' && {color: '#fff'},
+                      stateMetode === 'pengeluaran' && {color: '#7F0011'},
                     ]}>
                     Pengeluaran
                   </Text>
@@ -215,7 +194,7 @@ function ComponentTransaksi({dataIn, dataOut}) {
               )}
             </View>
           </View>
-          <View style={{marginVertical: 70}} />
+          {/* <View style={{marginVertical: 70}} /> */}
         </View>
       </ScrollView>
     </View>
@@ -319,13 +298,14 @@ const styles = StyleSheet.create({
     fontFamily: 'BalooBhaijaan2-SemiBold',
     fontSize: 16,
     lineHeight: 24,
+    fontWeight: 'bold',
     color: '#000',
   },
   text3: {
     fontFamily: 'BalooBhaijaan2-Regular',
     fontSize: 14,
     lineHeight: 21,
-    color: 'rgba(154, 154, 154, 1)',
+    color: '#00505E',
   },
   text4: {
     fontFamily: 'BalooBhaijaan2-SemiBold',
@@ -345,7 +325,7 @@ const styles = StyleSheet.create({
     lineHeight: 15,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    color: '#DBA42D',
+    color: '#00505E',
     marginTop: 2,
   },
 });

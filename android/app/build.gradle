@@ -79,8 +79,13 @@ import org.apache.tools.ant.taskdefs.condition.Os
  */
 
 project.ext.react = [
-    enableHermes: true,  // clean and rebuild if changing
+//    entryFile: "index.js" ,
+    enableHermes: false,  // clean and rebuild if changing
+    deleteDebugFilesForVariant: { false }
 ]
+
+// def jscFlavor = 'org.webkit:android-jsc:+'
+// def enableHermes = project.ext.react.get("enableHermes", false);
 
 apply from: "../../node_modules/react-native/react.gradle"
 
@@ -110,7 +115,8 @@ def enableProguardInReleaseBuilds = false
  * give correct results when using with locales other than en-US.  Note that
  * this variant is about 6MiB larger per architecture than default.
  */
-def jscFlavor = 'org.webkit:android-jsc:+'
+// def jscFlavor = 'org.webkit:android-jsc:+'
+def jscFlavor = 'org.webkit:android-jsc-intl:+'
 
 /**
  * Whether to enable the Hermes VM.
@@ -138,9 +144,10 @@ android {
         applicationId "com.catatankas"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 9
+        versionName "1.0.9"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+        // missingDimensionStrategy 'react-native-camera', 'general'
 
         if (isNewArchitectureEnabled()) {
             // We configure the CMake build only if you decide to opt-in for the New Architecture.
@@ -182,7 +189,7 @@ android {
         afterEvaluate {
             // If you wish to add a custom TurboModule or component locally,
             // you should uncomment this line.
-            // preBuild.dependsOn("generateCodegenArtifactsFromSchema")
+            // preBuild.dependsOn("generateCodegenArtifactsFromSchema")`
             preDebugBuild.dependsOn(packageReactNdkDebugLibs)
             preReleaseBuild.dependsOn(packageReactNdkReleaseLibs)
 
@@ -261,12 +268,15 @@ dependencies {
     implementation project(':react-native-contacts')
     implementation project(':react-native-html-to-pdf')
     implementation project(':react-native-print')
+    // implementation(project(":react-native-google-signin"))
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     // implementation project(':react-native-fs')
     implementation platform('com.google.firebase:firebase-bom:31.1.0')
+    implementation 'com.facebook.soloader:soloader:0.9.0+'
+    // implementation' com.google.firebase:firebase-auth'
     // implementation (project(':stripe_stripe-react-native')) {
     //     exclude group: "org.bouncycastle", module: "bcprov-jdk15to18"
     // }
@@ -288,6 +298,11 @@ dependencies {
 
     if (enableHermes) {
         //noinspection GradleDynamicVersion
+        // def hermesPath = "../../node_modules/hermesvm/android/";
+
+        // adding this
+        // debugImplementation files(hermesPath + "hermes-debug.aar")
+        // releaseImplementation files(hermesPath + "hermes-release.aar")
         implementation("com.facebook.react:hermes-engine:+") { // From node_modules
             exclude group:'com.facebook.fbjni'
         }
@@ -327,4 +342,5 @@ def isNewArchitectureEnabled() {
     // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
     return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
 }
-apply plugin: 'com.google.gms.google-services'
+
+apply plugin: 'com.google.gms.google-services' 

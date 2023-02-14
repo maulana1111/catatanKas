@@ -20,22 +20,13 @@ function SplashScreen(props) {
     <SafeAreaView style={Style.container}>
       <StatusBar hidden={true} />
       <ImageBackground
-        source={require('../../../assets/paper3.jpeg')}
+        source={require('../../../assets/spscr.png')}
         resizeMode="cover"
         style={Style.imageCover}>
-        <View style={[{flexDirection: 'row'}, Style.centerTag]}>
-          <View>
-            <Image source={require('../../../assets/pin.png')} />
-          </View>
-          <View style={{marginLeft: 10}}>
-            <Text style={Style.title}>atatan</Text>
-          </View>
-        </View>
-        <View>
-          <Text style={Style.secTitle}>Kas</Text>
-        </View>
-        <View style={Style.footer}>
-        </View>
+        <Image
+          source={require('../../../assets/logo.png')}
+          style={{justifyContent: 'center', alignSelf: 'center'}}
+        />
       </ImageBackground>
     </SafeAreaView>
   );

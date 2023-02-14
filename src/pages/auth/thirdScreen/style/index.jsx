@@ -3,13 +3,13 @@ import {StyleSheet} from 'react-native';
 export const Style = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#40300F',
+    backgroundColor: '#01626D',
   },
   centerView: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 100,
+    marginTop: 20,
   },
   secView: {
     alignItems: 'center',
@@ -18,7 +18,7 @@ export const Style = StyleSheet.create({
   txt1: {
     fontFamily: 'BalooBhaijaan2-Bold',
     fontSize: 36,
-    color: '#FCBC31',
+    color: '#fff',
   },
   txt2: {
     fontFamily: 'BalooBhaijaan2-SemiBold',

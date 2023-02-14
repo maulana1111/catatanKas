@@ -14,28 +14,44 @@
       },
       "oauth_client": [
         {
-          "client_id": "732363084015-tthb75t6qnbr345i244p8quggmhq20dd.apps.googleusercontent.com",
+          "client_id": "732363084015-hkrbs5fahrsoh7dvab3c78msfttqvv0d.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.catatankas",
-            "certificate_hash": "c9172fd16980b26fbe0ea700efeb55937ad602c8"
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {
-          "client_id": "732363084015-fl8rg588mh76g0urn7k6voi7v7ot2n43.apps.googleusercontent.com",
+          "client_id": "732363084015-jotlo6vbv05vsa1guqfm05me97hgjn5n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.catatankas",
+            "certificate_hash": "2e0df82b44c1dbaa6bf63f93ef887d0c8c16984d"
+          }
+        },
+        {
+          "client_id": "732363084015-obku5aqks4tpr28a08sjt69p5onrk9ge.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.catatankas",
+            "certificate_hash": "8079a0561e0146cc75d8b31dafaf393f041a9b31"
+          }
+        },
+        {
+          "client_id": "732363084015-6b4vtrpshja9odh51kub15uuqjg077v6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCR7zylBhK8-2fz4jP39Buapb0SzO8Isrw"
+          "current_key": "AIzaSyAob1jSmQ_VW-JdjsFz9vlqoTFgF-qjE6I"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "732363084015-fl8rg588mh76g0urn7k6voi7v7ot2n43.apps.googleusercontent.com",
+              "client_id": "732363084015-3higue8eud036dn6gbugj3jb97osl33i.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -52,7 +52,16 @@ function Card({nominal, state}) {
                 {state === true ? (
                   <CircleFade size={20} color="#FFF" />
                 ) : (
-                  <Text style={style.txt4}>{ChangeRupiah(nominal)}</Text>
+                  <Text
+                    style={[
+                      style.txt4,
+                      nominal.length > 10
+                        ? {fontSize: 35}
+                        : {fontSize: 29},
+                    ]}>
+                    {ChangeRupiah(nominal)}
+                  </Text>
+                  // <Text style={style.txt4}>{ChangeRupiah(nominal)}</Text>
                 )}
               </View>
             </View>
@@ -65,7 +74,6 @@ function Card({nominal, state}) {
 
 const style = StyleSheet.create({
   txt4: {
-    fontSize: 36,
     fontFamily: 'BalooBhaijaan2-SemiBold',
     color: '#fff',
   },

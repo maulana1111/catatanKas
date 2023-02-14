@@ -99,9 +99,10 @@ const styles = StyleSheet.create({
     lineHeight: 21,
   },
   txt4: {
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: 'BalooBhaijaan2-Regular',
     lineHeight: 18,
+    fontWeight: 'bold'
   },
 });
 

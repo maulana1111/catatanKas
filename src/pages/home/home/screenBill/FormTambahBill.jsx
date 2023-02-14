@@ -10,6 +10,7 @@ import {
   PermissionsAndroid,
   ToastAndroid,
   Alert,
+  BackHandler,
 } from 'react-native';
 import MyStatusBar from '../../../auth/component/StatusBar';
 // import Dropdown from './component/dropdown';
@@ -64,6 +65,23 @@ function FormTambahBill() {
       transform: [{translateY: translateDropShadow.value}],
     };
   });
+
+  
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      doBackPressHandler,
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+  const doBackPressHandler = () => {
+    navigation.navigate('Bill');
+
+    return true;
+  };
 
   const handleOpenBottomSheetTransaksi = () => {
     setStateScreen('tagihan');
@@ -327,9 +345,9 @@ function FormTambahBill() {
     <View
       style={{
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#006F78',
       }}>
-      <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <MyStatusBar backgroundColor="#006F78" barStyle="light-content" />
       {/* <GestureHandlerRootView> */}
 
       <ModalItem
@@ -414,7 +432,7 @@ function FormTambahBill() {
                       source={require('./assets/image.png')}
                       style={{justifyContent: 'center', alignSelf: 'center'}}
                     />
-                    <Text style={{textAlign: 'center'}}>
+                    <Text style={{textAlign: 'center', color:'#9A9A9A', fontSize: 10}}>
                       Upload / Ambil Gambar
                     </Text>
                   </View>

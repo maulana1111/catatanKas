@@ -37,8 +37,8 @@ import RNPrint from 'react-native-print';
 import ModalEmpty from './component_html/ModalEmpty';
 import GeneratePDF from './component_html/GeneratePDF';
 
-// console.log('height = ' + -SCREEN_HEIGHT / 1.7);
-// console.log('res height = ' + (58 / 100) * -SCREEN_HEIGHT);
+console.log('height = ' + SCREEN_HEIGHT);
+console.log('res height = ' + (50 / 100) * -SCREEN_HEIGHT);
 
 function BottomSheetNav() {
   const navigation = useNavigation();
@@ -69,7 +69,7 @@ function BottomSheetNav() {
         translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50});
       }
       if (translateY.value > -SCREEN_HEIGHT / 2) {
-        translateY.value = withSpring((58 / 100) * -SCREEN_HEIGHT, {
+        translateY.value = withSpring((50 / 100) * -SCREEN_HEIGHT, {
           damping: 50,
         });
       }
@@ -98,9 +98,6 @@ function BottomSheetNav() {
       dataUser,
       dataFilter,
     );
-    // console.log(t);
-    // <HtmlGenerate />
-    // console.log("data = "+dataTransaksiIn.length);
     if (dataTransaksiIn === null && dataTransaksiOut === null) {
       setVisibleModalEmpty(true);
     } else {
@@ -109,19 +106,6 @@ function BottomSheetNav() {
       });
       await RNPrint.print({filePath: file.filePath});
     }
-    // let name_pdf =
-    //   'document_pemasukan_' +
-    //   Math.floor(date.getTime() + date.getSeconds() / 2);
-    // let options = {
-    //   html: t,
-    //   fileName: name_pdf,
-    //   directory: 'Documents',
-    //   base64: true
-    // };
-    // let file = await RNHTMLtoPDF.convert(options);
-    // console.log(file.filePath);
-    // console.log('res = ' + file);
-    // return alert(file.filePath);
   }
 
   const onChangeVisible = () => {
@@ -131,7 +115,7 @@ function BottomSheetNav() {
   useEffect(() => {
     conditionChildSheet
       ? (translateY.value = withSpring(MAX_TRANSLATE_Y, {damping: 50}))
-      : (translateY.value = withSpring((58 / 100) * -SCREEN_HEIGHT, {
+      : (translateY.value = withSpring((52 / 100) * -SCREEN_HEIGHT, {
           damping: 50,
         }));
   }, [conditionChildSheet]);

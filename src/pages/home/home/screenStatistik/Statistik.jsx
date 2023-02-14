@@ -9,6 +9,7 @@ import {
   Dimensions,
   ToastAndroid,
   ScrollView,
+  BackHandler,
 } from 'react-native';
 import MyStatusBar from '../../../auth/component/StatusBar';
 import {useNavigation} from '@react-navigation/native';
@@ -22,6 +23,7 @@ import {
   storeJumlahDataStatistikIn,
   storeJumlahDataStatistikOut,
 } from '../../../../redux/features/globalSlice';
+import ScreenLoading from '../component/ScreenLoading';
 const db = new Database();
 
 function Statistik() {
@@ -33,58 +35,10 @@ function Statistik() {
   const [totalPengeluaran, setTotalPengeluaran] = useState(0);
   const [dataPemasukan, setDataPemasukan] = useState([]);
   const [dataPengeluaran, setDataPengeluaran] = useState([]);
+  const [loading, setLoading] = useState(false);
   // console.log(data);
 
   useEffect(() => {
-    const getData = async () => {
-      await db
-        .getDataTransaksiThisWeek(dataUser.data.id_user, 'pemasukan')
-        .then(data1 => {
-          if (data1 !== null) {
-            let totall = 0;
-            for (const row of data1) {
-              totall = totall + row.nominal;
-            }
-            setTotalPemasukan(totall);
-            setDataPemasukan(data1);
-            dispatch(
-              storeDataStatistikIn({
-                data: data1,
-              }),
-            );
-            dispatch(
-              storeJumlahDataStatistikIn({
-                data: totall,
-              }),
-            );
-          }
-        })
-        .catch(err => {
-          console.log('error home1 = ' + err);
-        });
-
-      await db
-        .getDataTransaksiThisWeek(dataUser.data.id_user, 'pengeluaran')
-        .then(data2 => {
-          if (data2 !== null) {
-            let total = 0;
-            for (const row of data2) {
-              total = total + row.nominal;
-            }
-            setTotalPengeluaran(total);
-            dispatch(
-              storeJumlahDataStatistikOut({
-                data: total,
-              }),
-            );
-          }
-          setDataPengeluaran(data2);
-          dispatch(storeDataStatistikOut({data: data2}));
-        })
-        .catch(err => {
-          console.log('error home2 = ' + err);
-        });
-    };
     try {
       getData();
     } catch (err) {
@@ -94,19 +48,86 @@ function Statistik() {
         ToastAndroid.SHORT,
         ToastAndroid.BOTTOM,
       );
+      setLoading(false);
       navigation.navigate('Home');
     }
   }, []);
 
-  // console.log("dt = "+totalPemasukan);
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      doBackPressHandler,
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+  const doBackPressHandler = () => {
+    navigation.navigate('Home');
+
+    return true;
+  };
+
+  const getData = async () => {
+    setLoading(true);
+    await db
+      .getDataTransaksiThisWeek(dataUser.data.id_user, 'pemasukan')
+      .then(data1 => {
+        if (data1 !== null) {
+          let totall = 0;
+          for (const row of data1) {
+            totall = totall + row.nominal;
+          }
+          setTotalPemasukan(totall);
+          setDataPemasukan(data1);
+          dispatch(
+            storeDataStatistikIn({
+              data: data1,
+            }),
+          );
+          dispatch(
+            storeJumlahDataStatistikIn({
+              data: totall,
+            }),
+          );
+        }
+      })
+      .catch(err => {
+        console.log('error home1 = ' + err);
+      });
+
+    await db
+      .getDataTransaksiThisWeek(dataUser.data.id_user, 'pengeluaran')
+      .then(data2 => {
+        if (data2 !== null) {
+          let total = 0;
+          for (const row of data2) {
+            total = total + row.nominal;
+          }
+          setTotalPengeluaran(total);
+          dispatch(
+            storeJumlahDataStatistikOut({
+              data: total,
+            }),
+          );
+        }
+        setDataPengeluaran(data2);
+        dispatch(storeDataStatistikOut({data: data2}));
+      })
+      .catch(err => {
+        console.log('error home2 = ' + err);
+      });
+
+    setLoading(false);
+  };
 
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#006F78',
       }}>
-      <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <MyStatusBar backgroundColor="#006F78" barStyle="light-content" />
       <View>
         <View
           style={{
@@ -223,10 +244,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 21,
     textAlign: 'center',
-    color: '#000',
+    color: '#fff',
   },
   text1Selected: {
-    color: '#FCBC31',
+    color: '#7F0011',
   },
   cardBtn: {
     paddingVertical: 5,

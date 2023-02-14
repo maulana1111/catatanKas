@@ -23,7 +23,7 @@ function TransaksiItem({text, text2, state}) {
     <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
         {/* {console.log(text)} */}
-        <ItemImage state={text} />
+        <ItemImage state={str} />
         <Text style={styles.text}>{str}</Text>
       </View>
       <View>

@@ -10,20 +10,21 @@ import {
 } from 'react-native';
 import {Style} from './style/';
 import MyStatusBar from '../component/StatusBar';
+import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   GoogleSignin,
-  GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+// import auth from '@react-native-firebase/auth';
 import NetInfo from '@react-native-community/netinfo';
 import Database from '../../../utilSqlite/database';
 import {useDispatch} from 'react-redux';
 // import {storeUser} from '../../../redux/features/globalSlice';
 import {storeUser} from '../../../redux/features/globalSlice';
 
-import RNFetchBlob from 'rn-fetch-blob';
+// import RNFetchBlob from 'rn-fetch-blob';
 
 // import {FileSystem} from 'expo'
 
@@ -47,8 +48,11 @@ function ThirdScreen() {
 
   useEffect(() => {
     GoogleSignin.configure({
+      // scopes: ['https://www.googleapis.com/auth/drive.readonly'],
       webClientId:
-        '732363084015-fl8rg588mh76g0urn7k6voi7v7ot2n43.apps.googleusercontent.com',
+        // '732363084015-obku5aqks4tpr28a08sjt69p5onrk9ge.apps.googleusercontent.com',
+        // '732363084015-02gg5edt14gfq48ftb91p87bse7e8k5n.apps.googleusercontent.com',
+        '732363084015-6b4vtrpshja9odh51kub15uuqjg077v6.apps.googleusercontent.com',
       offlineAccess: true,
     });
   }, []);
@@ -59,8 +63,10 @@ function ThirdScreen() {
         showPlayServicesUpdateDialog: true,
       });
       const userInfo = await GoogleSignin.signIn();
-      const {user} = JSON.parse(JSON.stringify(userInfo));
-      // console.log("data user google = "+JSON.stringify(user));
+      const {idToken, user} = JSON.parse(JSON.stringify(userInfo));
+      console.log('data user google = ' + JSON.stringify(user));
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      auth().signInWithCredential(googleCredential);
 
       db.getDataUser(user.id)
         .then(data => {
@@ -91,16 +97,39 @@ function ThirdScreen() {
         email: user.email,
         foto: image,
         link_foto: user.photo,
+        user_logged_in: 'true',
       };
-      db.addDataUser(dataset)
-        .then(async res => {
-          // stateUser && (await _checkPermission(user.photo));
-          // console.log('res data = ' + res);
-          navigation.navigate('Home');
-        })
-        .catch(err => {
-          console.log('err = ' + err);
-        });
+      const imageLoading = require('../../../assets/imgLog.png');
+
+      db.getDataUserById(user.id).then(async ress => {
+        if (ress === null) {
+          db.addDataUser(dataset)
+            .then(async _ => {
+              await GoogleSignin.revokeAccess();
+              await GoogleSignin.signOut();
+              navigation.navigate('ScreenLoading', {
+                screen: 'Home',
+                image: imageLoading,
+              });
+            })
+            .catch(err => {
+              console.log('err = ' + err);
+            });
+        } else {
+          db.doLoginUser(user.id)
+            .then(async _ => {
+              await GoogleSignin.revokeAccess();
+              await GoogleSignin.signOut();
+              navigation.navigate('ScreenLoading', {
+                screen: 'Home',
+                image: imageLoading,
+              });
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
+      });
     } catch (error) {
       console.log(JSON.stringify(error));
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -114,62 +143,63 @@ function ThirdScreen() {
       }
     }
   }
-  async function _checkPermission(linkImage) {
-    if (Platform.OS === 'ios') {
-      _doDownloadImage();
-    }
 
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        {
-          title: 'Storage Permission Required',
-          message: 'app need access to your storage to download Photo',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('Storage Permission Granted.');
-        await _doDownloadImage(linkImage);
-      } else {
-        alert('Storage Permission Not Granted');
-      }
-    } catch (error) {
-      console.log('error = ' + error);
-    }
-  }
+  // async function _checkPermission(linkImage) {
+  //   if (Platform.OS === 'ios') {
+  //     _doDownloadImage();
+  //   }
 
-  async function _doDownloadImage(linkImage) {
-    const {config, fs} = RNFetchBlob;
-    let PictureDir = fs.dirs.PictureDir;
-    // const imageName = image;
-    let options = {
-      fileCache: true,
-      addAndroidDownloads: {
-        useDownloadManager: true,
-        notification: true,
-        path: PictureDir + '/' + image,
-        description: 'Image',
-      },
-    };
+  //   try {
+  //     const granted = await PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+  //       {
+  //         title: 'Storage Permission Required',
+  //         message: 'app need access to your storage to download Photo',
+  //       },
+  //     );
+  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //       console.log('Storage Permission Granted.');
+  //       await _doDownloadImage(linkImage);
+  //     } else {
+  //       alert('Storage Permission Not Granted');
+  //     }
+  //   } catch (error) {
+  //     console.log('error = ' + error);
+  //   }
+  // }
 
-    // console.log('data photo = ' + linkFoto);
-    config(options)
-      .fetch('GET', linkImage)
-      .then(res => {
-        // Showing alert after successful downloading
-        // console.log('res -> ', JSON.stringify(res));
-        alert('Image For User Downloaded Successfully.');
-      })
-      .catch(err => {
-        console.log('err image = ' + err);
-      });
-  }
+  // async function _doDownloadImage(linkImage) {
+  //   const {config, fs} = RNFetchBlob;
+  //   let PictureDir = fs.dirs.PictureDir;
+  //   // const imageName = image;
+  //   let options = {
+  //     fileCache: true,
+  //     addAndroidDownloads: {
+  //       useDownloadManager: true,
+  //       notification: true,
+  //       path: PictureDir + '/' + image,
+  //       description: 'Image',
+  //     },
+  //   };
+
+  //   // console.log('data photo = ' + linkFoto);
+  //   config(options)
+  //     .fetch('GET', linkImage)
+  //     .then(res => {
+  //       // Showing alert after successful downloading
+  //       // console.log('res -> ', JSON.stringify(res));
+  //       alert('Image For User Downloaded Successfully.');
+  //     })
+  //     .catch(err => {
+  //       console.log('err image = ' + err);
+  //     });
+  // }
 
   return (
     <SafeAreaView style={Style.container}>
-      <MyStatusBar backgroundColor="#40300F" barStyle="light-content" />
+      <MyStatusBar backgroundColor="#01626D" barStyle="light-content" />
       <View style={Style.centerView}>
-        <Image source={require('../../../assets/pen.png')} />
+        <Image source={require('../../../assets/logo.png')} />
         <View style={{marginVertical: 30}}>
           <Text style={Style.txt1}>Masuk</Text>
         </View>
@@ -179,7 +209,7 @@ function ThirdScreen() {
               <Text style={Style.txt2}>Selamat datang di </Text>
             </View>
             <View>
-              <Text style={[Style.txt2, {color: '#FCBC31'}]}>Catatankas</Text>
+              <Text style={[Style.txt2, {color: '#FCBC31'}]}>Catatan Kas.</Text>
             </View>
           </View>
           <View style={Style.secView}>

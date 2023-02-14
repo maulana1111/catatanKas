@@ -13,13 +13,8 @@ import ThirdScreen from './src/pages/auth/thirdScreen/ThirdScreen';
 import FormTambah from './src/pages/home/home/screen/FormTambah';
 import Statistik from './src/pages/home/home/screenStatistik/Statistik';
 import FormTambahBill from './src/pages/home/home/screenBill/FormTambahBill';
+import ScreenLoading from './src/pages/home/home/component/ScreenLoading';
 
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
-import {Text} from 'react-native';
 import Bill from './src/pages/home/home/screenBill/Bill';
 
 const db = new Database();
@@ -50,6 +45,7 @@ function Logic() {
       <Stack.Screen name="SecScreen" component={SecScreen} />
       <Stack.Screen name="ThirdScreen" component={ThirdScreen} />
       <Stack.Screen name="FormTambahTransaksi" component={FormTambah} />
+      <Stack.Screen name="ScreenLoading" component={ScreenLoading} />
       <Stack.Screen name="Statistic" component={Statistik} />
       <Stack.Screen name="Bill" component={Bill} />
       <Stack.Screen name="FormTambahTagihan" component={FormTambahBill} />

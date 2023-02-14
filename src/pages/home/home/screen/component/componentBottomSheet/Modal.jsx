@@ -14,7 +14,7 @@ function ModalItem({visible, onChange, onSubmit}) {
           }}>
           <View
             style={{
-              backgroundColor: 'rgba(255, 230, 175, 0.9)',
+              backgroundColor: 'white',
               width: 340,
               height: 174,
               borderRadius: 16,
@@ -34,12 +34,6 @@ function ModalItem({visible, onChange, onSubmit}) {
                   }}>
                   Buat Transaksi
                 </Text>
-                <View
-                  style={{position: 'absolute', top: 0, bottom: 0, right: 0}}>
-                  <TouchableOpacity onPress={() => onChange()}>
-                    <Image source={require('../../assets/Cancel.png')} />
-                  </TouchableOpacity>
-                </View>
               </View>
               <View>
                 <Text
@@ -51,40 +45,51 @@ function ModalItem({visible, onChange, onSubmit}) {
                     textAlign: 'center',
                     marginTop: 10,
                   }}>
-                  Apakah Anda yakin ingin membuat Transaksi ini? Periksa terlebih
-                  dahulu sebelum membuat Transaksi.
+                  Apakah Anda yakin ingin membuat Transaksi ini? Periksa
+                  terlebih dahulu sebelum membuat Transaksi.
                 </Text>
-                <TouchableOpacity onPress={() => onSubmit()}>
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignSelf: 'center',
-                      backgroundColor: '#FCBC31',
-                      width: 270,
-                      height: 44,
-                      padding: 10,
-                      borderRadius: 16,
-                      flexDirection: 'row',
-                      marginTop: 10,
-                    }}>
-                    <Text
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-around'
+                  }}>
+                  <TouchableOpacity onPress={() => onChange()}>
+                    <View style={{marginTop: 20}}>
+                      <Text style={{color: 'black'}}>Batalkan Transaksi</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => onSubmit()}>
+                    <View
                       style={{
-                        fontFamily: 'BalooBhaijaan2-SemiBold',
-                        fontSize: 14,
-                        lineHeight: 18,
-                        color: '#fff',
-                        textAlign: 'center',
-                        marginTop: 5,
-                        marginRight: 10,
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        backgroundColor: '#FCBC31',
+                        width: 170,
+                        height: 44,
+                        padding: 10,
+                        borderRadius: 16,
+                        flexDirection: 'row',
+                        marginTop: 10,
                       }}>
-                      Simpan Sekarang
-                    </Text>
-                    <Image
-                      source={require('../../assets/arrow_right.png')}
-                      style={{tintColor: 'white'}}
-                    />
-                  </View>
-                </TouchableOpacity>
+                      <Text
+                        style={{
+                          fontFamily: 'BalooBhaijaan2-SemiBold',
+                          fontSize: 14,
+                          lineHeight: 18,
+                          color: '#fff',
+                          textAlign: 'center',
+                          marginTop: 5,
+                          marginRight: 10,
+                        }}>
+                        Simpan Sekarang
+                      </Text>
+                      <Image
+                        source={require('../../assets/arrow_right.png')}
+                        style={{tintColor: 'white'}}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </View>
