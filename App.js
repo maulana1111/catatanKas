@@ -4,7 +4,7 @@ import {useDispatch, Provider, useSelector} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {store} from './src/redux/store/store';
-import Database from './src/utilSqlite/database';
+import Database from './android/app/src/main/assets/database'
 import {storeUser} from './src/redux/features/stmSlice';
 import SplashScreen from './src/pages/auth/splashscreen/SplashScreen';
 import Home from './src/pages/home/home/Home';

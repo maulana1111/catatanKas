@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     fontFamily: 'BalooBhaijaan2-Regular',
     fontSize: 16,
     lineHeight: 24,
-    color: '#9A9A9A',
+    color: '#000',
   },
   text2: {
     fontFamily: 'BalooBhaijaan2-Regular',

@@ -20,7 +20,8 @@ import {
   storeDataTagihanOut,
   storeDataFilterTagihan,
 } from '../../../../redux/features/globalSlice';
-import Database from '../../../../utilSqlite/database';
+// import Database from '../../../../utilSqlite/database';
+import Database from '../../../../../android/app/src/main/assets/database';
 const db = new Database();
 import {useIsFocused} from '@react-navigation/native';
 import ModalItemSuccess from './component/ModalSuccess';

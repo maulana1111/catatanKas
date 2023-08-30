@@ -14,7 +14,8 @@ import {
   ScrollView,
   Share,
 } from 'react-native';
-import Database from '../../../../../utilSqlite/database';
+// import Database from '../../../../../utilSqlite/database';
+import Database from '../../../../../../android/app/src/main/assets/database';
 const db = new Database();
 import {useSelector} from 'react-redux';
 

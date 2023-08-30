@@ -15,7 +15,8 @@ import MyStatusBar from '../../../auth/component/StatusBar';
 import {useNavigation} from '@react-navigation/native';
 import ComponentTransaksi from './component/ComponentTransaksi';
 import ComponentLaporan from './component/ComponentLaporan';
-import Database from '../../../../utilSqlite/database';
+// import Database from '../../../../utilSqlite/database';
+import Database from '../../../../../android/app/src/main/assets/database';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   storeDataStatistikIn,

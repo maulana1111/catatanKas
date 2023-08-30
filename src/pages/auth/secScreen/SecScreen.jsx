@@ -18,7 +18,7 @@ import {
 // import { GoogleSignin, statusCodes } from 'react-native-google-signin';
 import {useDispatch} from 'react-redux';
 import {storeUser} from '../../../redux/features/globalSlice';
-import Database from '../../../utilSqlite/database';
+import Database from '../../../../android/app/src/main/assets/database';
 import {Circle} from 'react-native-animated-spinkit';
 import {BackHandler} from 'react-native';
 const db = new Database();

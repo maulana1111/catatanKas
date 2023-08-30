@@ -19,7 +19,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 // import auth from '@react-native-firebase/auth';
 import NetInfo from '@react-native-community/netinfo';
-import Database from '../../../utilSqlite/database';
+import Database from '../../../../android/app/src/main/assets/database';
 import {useDispatch} from 'react-redux';
 // import {storeUser} from '../../../redux/features/globalSlice';
 import {storeUser} from '../../../redux/features/globalSlice';

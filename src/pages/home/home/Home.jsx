@@ -19,7 +19,7 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import BottomSheetNav from './component/BottomSheetNav';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ScreenBottomSheetFilter from './component/BottomSheetFilter';
-import Database from '../../../utilSqlite/database';
+import Database from '../../../../android/app/src/main/assets/database';
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {

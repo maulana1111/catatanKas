@@ -9,7 +9,7 @@ import {TouchableOpacity} from 'react-native';
 import ModalAskDelete from '../screenBill/component/ModalAskDelete';
 import ModalItemSuccess from '../screenBill/component/ModalSuccess';
 import {storeConditionDelete} from '../../../../redux/features/globalSlice';
-import Database from '../../../../utilSqlite/database';
+import Database from '../../../../../android/app/src/main/assets/database';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import RNPrint from 'react-native-print';
 // import {NOTES_SVG, LOGO_SVG, HTML} from './component_html/assets/StrHTML';
