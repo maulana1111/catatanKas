@@ -7,6 +7,7 @@ import {
   HiburanImage,
   GayaImage,
   MakananImage,
+  LainnyaImage,
 } from './component-item/ImageComponent';
 
 const ListItemBill = ({data, onClickDelete}) => {
@@ -32,6 +33,7 @@ const ListItemBill = ({data, onClickDelete}) => {
         {state === 'hiburan' && <HiburanImage />}
         {state === 'gaya_hidup' && <GayaImage />}
         {state === 'makanan&minuman' && <MakananImage />}
+        {state === 'lainnya' && <LainnyaImage />}
         <View style={{width: '82%'}}>
           <View
             style={{

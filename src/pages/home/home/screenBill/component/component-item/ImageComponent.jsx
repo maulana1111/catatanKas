@@ -62,6 +62,23 @@ const HiburanImage = () => {
   );
 };
 
+const LainnyaImage = () => {
+  return (
+    <View
+      style={[
+        {
+          backgroundColor: 'rgba(130, 255, 240, 0.4)',
+        },
+        styles.container,
+      ]}>
+      <Image
+        source={require('../../../../../../../src/assets/option.png')}
+        style={{width: 50, height: 49, borderRadius: 16}}
+      />
+    </View>
+  );
+};
+
 const GayaImage = () => {
   return (
     <View
@@ -117,4 +134,5 @@ export {
   HiburanImage,
   GayaImage,
   MakananImage,
+  LainnyaImage
 };

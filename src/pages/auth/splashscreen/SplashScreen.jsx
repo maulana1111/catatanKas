@@ -27,6 +27,8 @@ function SplashScreen(props) {
           source={require('../../../assets/logo.png')}
           style={{justifyContent: 'center', alignSelf: 'center'}}
         />
+{/*         
+        <Svg source={require('../../../assets/logo.png')} /> */}
       </ImageBackground>
     </SafeAreaView>
   );

@@ -38,6 +38,8 @@ import ModalItem from './component/Modal';
 import Modal from 'react-native-modal';
 import ModalItemSuccess from './component/ModalSuccess';
 import {useSelector} from 'react-redux';
+import moment from 'moment';
+import 'moment/locale/id';
 
 function FormTambahBill() {
   const {dataUser} = useSelector(state => state.globalStm);
@@ -201,18 +203,12 @@ function FormTambahBill() {
   };
 
   const doSubmit = async () => {
-    const today = new Date();
-    const tanggal =
-      today.getFullYear() +
-      '-' +
-      (today.getMonth() + 1) +
-      '-' +
-      (String(today.getDate()).length === 1
-        ? '0' + today.getDate()
-        : today.getDate());
-    const time =
-      today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+    const date = new Date();
 
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let currentDate = `${year}-${month}-${day}`;
     const data = {
       id_user: dataUser.data.id_user,
       tagihan: tagihan,
@@ -221,9 +217,8 @@ function FormTambahBill() {
       nominal: nominal,
       deskripsi: deskripsi,
       foto: imageForUpload,
-      date: tanggal,
-      // date: '2022-12-07',
-      time: time,
+      date: currentDate,
+      time: moment(new Date()).format('LT'),
     };
     // console.log('state data = ' + JSON.stringify(data));
     try {
@@ -456,8 +451,8 @@ function FormTambahBill() {
               />
             </TouchableOpacity>
             <FormInput
-              title={'Bank/Perorang/Perusahaan/Tokok'}
-              val={'Masukan Bank/Perorang/Perusahaan/Tokok'}
+              title={'Bank/Perorang/Perusahaan/Toko'}
+              val={'Masukan Bank/Perorang/Perusahaan/Toko'}
               type={'text'}
               onChange={e => handleChangeKategori(e)}
             />

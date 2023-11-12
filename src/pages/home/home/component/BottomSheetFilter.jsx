@@ -374,7 +374,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'BalooBhaijaan2-SemiBold',
     lineHeight: 24,
-    color: '#D8D8D8',
+    color: '#000',
     textAlignVertical: 'center',
     marginTop: 3,
     textAlign: 'center',

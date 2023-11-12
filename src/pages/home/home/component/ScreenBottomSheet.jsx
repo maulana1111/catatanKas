@@ -133,39 +133,6 @@ function ScreenBottomSheet() {
     }
   };
 
-  async function createPdfPemasukan() {
-    var t = await GeneratePDF(
-      dataTransaksiIn,
-      dataTransaksiOut,
-      jumlahDataTransaksiIn,
-      jumlahDataTransaksiOut,
-      dataUser,
-      dataFilter,
-    );
-    // console.log(t);
-    // <HtmlGenerate />
-    // dataTransaksiIn.length === 0 && dataTransaksiOut.length === 0
-    //   ? setvisible(true)
-    //   : GeneratePDF();
-    let file = await RNPrint.print({
-      html: t,
-    });
-    await RNPrint.print({filePath: file.filePath});
-    // let name_pdf =
-    //   'document_pemasukan_' +
-    //   Math.floor(date.getTime() + date.getSeconds() / 2);
-    // let options = {
-    //   html: t,
-    //   fileName: name_pdf,
-    //   directory: 'Documents',
-    //   base64: true
-    // };
-    // let file = await RNHTMLtoPDF.convert(options);
-    // console.log(file.filePath);
-    // console.log('res = ' + file);
-    // return alert(file.filePath);
-  }
-
   const handleDelete = id => {
     setvisible(true);
     setId(id);

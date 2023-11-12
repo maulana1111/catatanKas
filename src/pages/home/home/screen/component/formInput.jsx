@@ -8,14 +8,31 @@ function FormInput({title, val, type, onChange}) {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.conText, styles.text2]}>{title}</Text>
+      <Text
+        style={[
+          title === 'Deskripsi' ? styles.conText2 : styles.conText,
+          styles.text2,
+        ]}>
+        {title}
+      </Text>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <TextInput
-          placeholder={val}
-          style={styles.text1}
-          keyboardType={type}
-          onChangeText={e => handleChange(e)}
-        />
+        {title === 'Deskripsi' ? (
+          <TextInput
+            placeholder={val}
+            style={styles.text1}
+            keyboardType={type}
+            multiline={title === 'Deskripsi' ? true : false}
+            numberOfLines={title === 'Deskripsi' ? 5 : 0}
+            onChangeText={e => handleChange(e)}
+          />
+        ) : (
+          <TextInput
+            placeholder={val}
+            style={styles.text1}
+            keyboardType={type}
+            onChangeText={e => handleChange(e)}
+          />
+        )}
       </View>
     </View>
   );
@@ -29,7 +46,7 @@ const styles = StyleSheet.create({
     paddingLeft: 18,
     paddingVertical: 15,
     marginVertical: 10,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   conText: {
     position: 'absolute',
@@ -37,7 +54,15 @@ const styles = StyleSheet.create({
     left: 10,
     paddingHorizontal: 10,
     backgroundColor: '#fff',
-    borderRadius : 9
+    borderRadius: 9,
+  },
+  conText2: {
+    position: 'absolute',
+    bottom: 140,
+    left: 10,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
+    borderRadius: 9,
   },
   text1: {
     fontFamily: 'BalooBhaijaan2-Regular',

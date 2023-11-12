@@ -2,6 +2,16 @@ import React from 'react';
 import {StyleSheet, Image, View} from 'react-native';
 
 function ItemImage({state}) {
+  if (state === 'lainnya') {
+    return (
+      <View style={styles.border}>
+        <Image
+          source={require('../../../../../assets/option.png')}
+          style={styles.container}
+        />
+      </View>
+    );
+  }
   if (state === 'bca') {
     return (
       <View style={styles.border}>

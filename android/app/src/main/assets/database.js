@@ -394,7 +394,7 @@ export default class Database {
     });
   }
 
-  async getDataTransaksiThisWeek(id_user, transaksi) {
+  async getDataTransaksiThisWeek(id_user, transaksi, tanggal) {
     return new Promise((resolve, reject) => {
       this.initDb()
         .then(db => {
@@ -406,7 +406,7 @@ export default class Database {
             db.transaction(async tx => {
               await tx
                 .executeSql(
-                  `SELECT * FROM transaksi WHERE id_user = '${id_user}' AND transaksi = '${transaksi}' AND (strftime('%W', tanggal_transaksi) = strftime('%W', 'now')) ORDER BY tanggal_transaksi ASC`,
+                  `SELECT * FROM transaksi WHERE id_user = '${id_user}' AND transaksi = '${transaksi}' AND (strftime('%W', tanggal_transaksi) = strftime('%W', '${tanggal}')) ORDER BY tanggal_transaksi ASC`,
                   [],
                 )
                 .then(([tx, res]) => {

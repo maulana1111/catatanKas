@@ -45,26 +45,11 @@ import ModalItem from './component/componentBottomSheet/Modal';
 import ModalItemSuccess from './component/componentBottomSheet/ModalSuccess';
 import {useSelector} from 'react-redux';
 import {Alert} from 'react-native';
+import KategoriLainnya from './component/componentBottomSheet/KategoriLainnya';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 60;
 const SEC_MAX_TRANSLATE_Y = -SCREEN_HEIGHT;
-const today = new Date();
-const tanggal =
-  today.getFullYear() +
-  '-' +
-  (String(today.getMonth()).length === 1
-    ? '0' + parseInt(today.getMonth()+1)
-    : today.getMonth()) +
-  '-' +
-  (String(today.getDate()).length === 1
-    ? '0' + today.getDate()
-    : today.getDate());
-const time =
-  today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-// var dt = new Date(tanggal);
-// console.log('tanggal = ' + dt);
-
 function FormTambah() {
   const {dataUser} = useSelector(state => state.globalStm);
   const [stateScreen, setStateScreen] = useState('transaksi');
@@ -148,6 +133,9 @@ function FormTambah() {
     if (jenisTransaksi === 'makanan&minuman') {
       translateY.value = withSpring(-SCREEN_HEIGHT / 1.1, {damping: 50});
     }
+    if (jenisTransaksi === 'lainnya') {
+      translateY.value = withSpring(-SCREEN_HEIGHT / 3.6, {damping: 50});
+    }
   };
 
   const handleCancelClick = () => {
@@ -198,6 +186,12 @@ function FormTambah() {
 
   const doSubmit = async() => {
     const db = new Database();
+    const date = new Date();
+
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let currentDate = `${year}-${month}-${day}`;
     data = {
       id_user: dataUser.data.id_user,
       transaksi: transaksi,
@@ -205,12 +199,11 @@ function FormTambah() {
       kategori: kategori,
       nominal: nominal,
       deskripsi: deskripsi,
-      date: tanggal,
+      date: currentDate,
       // date: '2022-12-05',
       time: moment(new Date()).format('LT'),
     };
     // setVisibleSuccess(false);
-    console.log('data form = ' + JSON.stringify(data));
     try {
       db.insertDataTransaksi(data)
         .then(data => {
@@ -308,10 +301,10 @@ function FormTambah() {
             </TouchableOpacity>
             <TouchableOpacity onPress={() => handleOpenBottomSheetKategori()}>
               <Dropdown
-                title={'Bank/Perorang/Perusahaan/Tokok'}
+                title={'Bank/Perorang/Perusahaan/Toko'}
                 text={
                   kategori === ''
-                    ? 'Pilih Bank/Perorang/Perusahaan/Tokok'
+                    ? 'Pilih Bank/Perorang/Perusahaan/Toko'
                     : kategori
                 }
               />
@@ -401,6 +394,14 @@ function FormTambah() {
           {stateScreen === 'makanan&minuman' && (
             <ScrollView>
               <KategoriMakanan
+                onClickCancel={() => handleCancelClick()}
+                onChangeState={value => handleChangeKategoriClick(value)}
+              />
+            </ScrollView>
+          )}
+          {stateScreen === 'lainnya' && (
+            <ScrollView>
+              <KategoriLainnya
                 onClickCancel={() => handleCancelClick()}
                 onChangeState={value => handleChangeKategoriClick(value)}
               />

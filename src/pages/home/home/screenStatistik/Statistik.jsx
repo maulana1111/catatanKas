@@ -70,9 +70,16 @@ function Statistik() {
   };
 
   const getData = async () => {
+    const date = new Date();
+
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let currentDate = `${year}-${month}-${day}`;
+
     setLoading(true);
     await db
-      .getDataTransaksiThisWeek(dataUser.data.id_user, 'pemasukan')
+      .getDataTransaksiThisWeek(dataUser.data.id_user, 'pemasukan', currentDate)
       .then(data1 => {
         if (data1 !== null) {
           let totall = 0;
@@ -98,7 +105,7 @@ function Statistik() {
       });
 
     await db
-      .getDataTransaksiThisWeek(dataUser.data.id_user, 'pengeluaran')
+      .getDataTransaksiThisWeek(dataUser.data.id_user, 'pengeluaran', currentDate)
       .then(data2 => {
         if (data2 !== null) {
           let total = 0;

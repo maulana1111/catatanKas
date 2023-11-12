@@ -271,19 +271,6 @@ function Bill() {
       });
       await RNPrint.print({filePath: file.filePath});
     }
-    // let name_pdf =
-    //   'document_pemasukan_' +
-    //   Math.floor(date.getTime() + date.getSeconds() / 2);
-    // let options = {
-    //   html: t,
-    //   fileName: name_pdf,
-    //   directory: 'Documents',
-    //   base64: true
-    // };
-    // let file = await RNHTMLtoPDF.convert(options);
-    // console.log(file.filePath);
-    // console.log('res = ' + file);
-    // return alert(file.filePath);
   }
 
   const onChangeVisible = () => {

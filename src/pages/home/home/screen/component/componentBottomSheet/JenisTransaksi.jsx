@@ -63,6 +63,13 @@ function JenisTransaksi({onClickCancel, onChangeState}) {
             image2={require('../../assets/arrow_right.png')}
           />
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleChange('lainnya')}>
+          <ComponentItem
+            image1={require('../../../../../../../src/assets/option.png')}
+            text={'Lainnya'}
+            image2={require('../../assets/arrow_right.png')}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
